@@ -22,7 +22,7 @@ export default function Document() {
     <script src="/assets/js/index-charts.js"></script>  */}
     
     
-    <script src="/assets/js/app.js"></script> 
+    {/* <script src="/assets/js/app.js"></script>  */}
     
     
     
