@@ -1,4 +1,5 @@
 import React from 'react'
+import UsersHome from '../../Components/Users/UsersHome'
 
 export const getServerSideProps = async (context) => {
   const token = context.req.cookies.token
@@ -21,7 +22,7 @@ export const getServerSideProps = async (context) => {
 const index = () => {
   return (
     <div className=''>
-      <h1>OverView</h1>
+      <UsersHome/>
     </div>
   )
 }

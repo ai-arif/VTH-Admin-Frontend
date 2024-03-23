@@ -7,10 +7,12 @@ import { Toaster } from "react-hot-toast";
 
 export default function App({ Component, pageProps }) {
   const router=useRouter()
-  const authRoutes=['/auth/login','/auth/register']
+  const authRoutes=['/auth/login','/auth/register','404']
+  const { asPath } = router;
+  const is404Page = asPath === "/404" || (pageProps.error && pageProps.error.statusCode === 404);
   return <>
   <Provider store={store}>
-    {!authRoutes.includes(router.pathname) && <Navbar />}
+    {(!authRoutes.includes(router.pathname) ) && <Navbar />}
     <Toaster position="bottom-right" />
   <Component {...pageProps} />
   </Provider>
