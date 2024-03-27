@@ -56,7 +56,7 @@ const index = () => {
                             <div className="auth-form-container text-start">
                                 <form className="auth-form login-form">
                                     <div className="phone mb-3">
-                                        <label className="sr-only" for="signin-phone">Email</label>
+                                        <label className="sr-only" for="signin-phone">Phone</label>
                                         <input value={userObj.phone} onChange={handleChange} id="signin-phone" name="phone" type="phone" className="form-control signin-phone" placeholder="Phone number" required="required" />
                                     </div>
                                     <div className="password mb-3">

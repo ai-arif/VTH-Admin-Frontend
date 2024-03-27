@@ -58,7 +58,7 @@ const Navbar = () => {
 							       <div className="item p-3">
 								        <div className="row gx-2 justify-content-between align-items-center">
 									        <div className="col-auto">
-										       <img className="profile-image" src="assets/images/profiles/profile-1.png" alt=""/>
+										       <img className="profile-image" src="/assets/images/profiles/profile-1.png" alt=""/>
 									        </div>
 									        <div className="col">
 										        <div className="info"> 
@@ -109,7 +109,7 @@ const Navbar = () => {
 							       <div className="item p-3">
 								        <div className="row gx-2 justify-content-between align-items-center">
 									        <div className="col-auto">
-										       <img className="profile-image" src="assets/images/profiles/profile-2.png" alt=""/>
+										       <img className="profile-image" src="/assets/images/profiles/profile-2.png" alt=""/>
 									        </div>
 									        <div className="col">
 										        <div className="info"> 
@@ -139,7 +139,7 @@ const Navbar = () => {
 					    </div>
 			            
 			            <div className="app-utility-item app-user-dropdown dropdown">
-				            <a className="dropdown-toggle" id="user-dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false"><img src="assets/images/user.png" alt="user profile"/></a>
+				            <a className="dropdown-toggle" id="user-dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false"><img src="/assets/images/user.png" alt="user profile"/></a>
 				            <ul className="dropdown-menu" aria-labelledby="user-dropdown-toggle">
 								<li><a className="dropdown-item" href="account.html">Account</a></li>
 								<li><a className="dropdown-item" href="settings.html">Settings</a></li>
@@ -157,14 +157,13 @@ const Navbar = () => {
 	        <div className="sidepanel-inner d-flex flex-column">
 		        <a href="#" id="sidepanel-close" className="sidepanel-close d-xl-none">&times;</a>
 		        <div className="app-branding">
-		            <a className="app-logo" href="index.html"><img className="logo-icon me-2" src="assets/images/app-logo.svg" alt="logo"/><span className="logo-text">VTH Dashboard</span></a>
+		            <Link className="app-logo" href="/"><img className="logo-icon me-2" src="/assets/images/app-logo.svg" alt="logo"/><span className="logo-text">VTH Dashboard</span></Link>
 	
 		        </div>
 		        
 			    <nav id="app-nav-main" className="app-nav app-nav-main flex-grow-1">
 				    <ul className="app-menu list-unstyled accordion" id="menu-accordion">
 					    <li className="nav-item">
-					        
 					        <Link className="nav-link active" href="/">
 						        <span className="nav-icon">
 						        <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-house-door" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -174,6 +173,29 @@ const Navbar = () => {
 						         </span>
 		                         <span className="nav-link-text">Users</span>
 					        </Link>
+					    </li>
+						<li className="nav-item has-submenu">     
+					        <a className="nav-link submenu-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#submenu-2" aria-expanded="false" aria-controls="submenu-2">
+						        <span className="nav-icon">
+						        
+						        <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-columns-gap" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+	  <path fill-rule="evenodd" d="M6 1H1v3h5V1zM1 0a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1H1zm14 12h-5v3h5v-3zm-5-1a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1h-5zM6 8H1v7h5V8zM1 7a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1H1zm14-6h-5v7h5V1zm-5-1a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1h-5z"/>
+	</svg>
+						         </span>
+		                         <span className="nav-link-text">Patient Registration</span>
+		                         <span className="submenu-arrow">
+		                             <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-chevron-down" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+	  <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+	</svg>
+	                             </span>
+					        </a>
+					        <div id="submenu-2" className="collapse submenu submenu-2" data-bs-parent="#menu-accordion">
+						        <ul className="submenu-list list-unstyled">
+							        <li className="submenu-item"><Link className="submenu-link" href="/patient-registration/new">New Registration</Link></li>
+							        <li className="submenu-item"><Link className="submenu-link" href="/patient-registration">View Registration</Link></li>
+							        
+						        </ul>
+					        </div>
 					    </li>
 					    <li className="nav-item">
 					        
@@ -227,8 +249,7 @@ const Navbar = () => {
 						        </ul>
 					        </div>
 					    </li>
-					    <li className="nav-item has-submenu">
-					        
+					    <li className="nav-item has-submenu">     
 					        <a className="nav-link submenu-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#submenu-2" aria-expanded="false" aria-controls="submenu-2">
 						        <span className="nav-icon">
 						        
