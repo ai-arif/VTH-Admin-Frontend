@@ -109,7 +109,7 @@ const index = () => {
                     <div className="auth-background-overlay p-3 p-lg-5">
                         <div className="d-flex flex-column align-content-end h-100">
                             {/* <div className="h-100"> */}
-                                <img width={"100%"} src="https://img.freepik.com/free-vector/cat-owner-visiting-talking-vet-doctors_1262-21219.jpg" alt="" />
+                                <img width={"100%"} src="https://cdn.pixabay.com/photo/2023/12/25/03/01/person-8467959_1280.jpg" alt="" />
                             {/* </div> */}
                             <div className="overlay-content p-3 p-lg-4 rounded">
                                 <h5 className="mb-3 overlay-title">Veterinary Doctor Login Portal</h5>
