@@ -249,7 +249,7 @@ const Navbar = () => {
 		                         <span className="nav-link-text">Prescription</span>
 					        </a>
 					    </li>
-					    <li className="nav-item has-submenu">
+					    {/* <li className="nav-item has-submenu">
 					        
 					        <a className="nav-link submenu-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#submenu-1" aria-expanded="false" aria-controls="submenu-1">
 						        <span className="nav-icon">
@@ -273,8 +273,8 @@ const Navbar = () => {
 							        <li className="submenu-item"><a className="submenu-link" href="settings.html">Settings</a></li>
 						        </ul>
 					        </div>
-					    </li>
-					    <li className="nav-item has-submenu">     
+					    </li> */}
+					    {/* <li className="nav-item has-submenu">     
 					        <a className="nav-link submenu-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#submenu-2" aria-expanded="false" aria-controls="submenu-2">
 						        <span className="nav-icon">
 						        
@@ -297,7 +297,7 @@ const Navbar = () => {
 							        <li className="submenu-item"><a className="submenu-link" href="404.html">404 page</a></li>
 						        </ul>
 					        </div>
-					    </li>
+					    </li> */}
 
 					   
 					    <li className="nav-item">
