@@ -110,10 +110,14 @@ const PatientRegistrationForm = () => {
                                         <input type='text' className='form-control' id='phone' />
                                     </div>
                                 </div>
+                                {/* add a submit button */}
+                                <div className='mb-3'>
+                                    <button type='submit' className='btn btn-primary'>Submit</button>
+                                </div>
                                 </div>
                             </form>
                         </div>
-
+<br /><br />
                     </div>
                 </div>
             </div>
