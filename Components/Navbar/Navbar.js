@@ -201,7 +201,7 @@ const Navbar = () => {
 
 					    <li className="nav-item">
 					        
-					        <Link className="nav-link" href="tests">
+					        <Link className="nav-link" href="/tests">
 						        <span className="nav-icon">
 						        <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-folder" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
   <path d="M9.828 4a3 3 0 0 1-2.12-.879l-.83-.828A1 1 0 0 0 6.173 2H2.5a1 1 0 0 0-1 .981L1.546 4h-1L.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3v1z"/>
@@ -236,7 +236,7 @@ const Navbar = () => {
 					    </li>
 					    <li className="nav-item">
 					        
-					        <a className="nav-link" href="orders.html">
+					        <a className="nav-link" href="/prescription">
 						        <span className="nav-icon">
 						        <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-card-list" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
   <path fill-rule="evenodd" d="M14.5 3h-13a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z"/>
@@ -246,7 +246,7 @@ const Navbar = () => {
   <circle cx="3.5" cy="10.5" r=".5"/>
 </svg>
 						         </span>
-		                         <span className="nav-link-text">Orders</span>
+		                         <span className="nav-link-text">Prescription</span>
 					        </a>
 					    </li>
 					    <li className="nav-item has-submenu">
@@ -302,14 +302,14 @@ const Navbar = () => {
 					   
 					    <li className="nav-item">
 					        
-					        <a className="nav-link" href="charts.html">
+					        <Link className="nav-link" href="/test-result">
 						        <span className="nav-icon">
 						        <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-bar-chart-line" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
 	  <path fill-rule="evenodd" d="M11 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h1V7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7h1V2zm1 12h2V2h-2v12zm-3 0V7H7v7h2zm-5 0v-3H2v3h2z"/>
 	</svg>
 						         </span>
-		                         <span className="nav-link-text">Charts</span>
-					        </a>
+		                         <span className="nav-link-text">Test Result</span>
+					        </Link>
 					    </li>
 					    
 					    <li className="nav-item">

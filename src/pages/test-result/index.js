@@ -1,10 +1,10 @@
 import React from 'react'
-import ViewMedicine from '../../../../Components/Medicine/ViewMedicine'
+import TestResultHome from '../../../Components/TestResult/TestResultHome'
 
 const index = () => {
   return (
     <div>
-      <ViewMedicine/>
+      <TestResultHome/>
     </div>
   )
 }

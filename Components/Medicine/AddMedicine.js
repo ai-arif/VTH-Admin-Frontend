@@ -123,7 +123,7 @@ const AddMedicine = () => {
                                         </select>
                                     </div>
                                 </div>
-                                {/* Add Medicine Button */}
+                                
                                 <div className="mb-3">
                                     <button type="submit" className="btn app-btn-primary">Add Medicine</button>
                                 </div>
