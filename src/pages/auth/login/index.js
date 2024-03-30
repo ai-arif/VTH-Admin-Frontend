@@ -3,6 +3,7 @@ import axiosInstance from '../../../../utils/axiosInstance'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import toast from 'react-hot-toast'
+import Link from 'next/link'
 
 export const getServerSideProps = async (context) => {
     const token = context.req.cookies.token
@@ -51,7 +52,7 @@ const index = () => {
                 <div className="col-12 col-md-7 col-lg-6 auth-main-col text-center p-5">
                     <div className="d-flex flex-column align-content-end">
                         <div className="app-auth-body mx-auto">
-                            <div className="app-auth-branding mb-4"><a className="app-logo" href="index.html"><img className="logo-icon me-2" src="assets/images/app-logo.svg" alt="logo" /></a></div>
+                            <div className="app-auth-branding mb-4"><Link className="app-logo" href="/auth/login"><img className="logo-icon me-2" src="/assets/images/logo.png" alt="logo" /></Link></div>
                             <h2 className="auth-heading text-center mb-5">Log in to Portal</h2>
                             <div className="auth-form-container text-start">
                                 <form className="auth-form login-form">
@@ -107,7 +108,9 @@ const index = () => {
                     <div className="auth-background-mask"></div>
                     <div className="auth-background-overlay p-3 p-lg-5">
                         <div className="d-flex flex-column align-content-end h-100">
-                            <div className="h-100"></div>
+                            {/* <div className="h-100"> */}
+                                <img width={"100%"} src="https://img.freepik.com/free-vector/cat-owner-visiting-talking-vet-doctors_1262-21219.jpg" alt="" />
+                            {/* </div> */}
                             <div className="overlay-content p-3 p-lg-4 rounded">
                                 <h5 className="mb-3 overlay-title">Veterinary Doctor Login Portal</h5>
                                 <div>Welcome to the Veterinary Doctor Login Portal. This platform provides access for veterinary doctors to manage their appointments, patients' records, and other administrative tasks efficiently. </div>
