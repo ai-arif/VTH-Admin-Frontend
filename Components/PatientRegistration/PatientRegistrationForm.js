@@ -16,7 +16,7 @@ const PatientRegistrationForm = () => {
                   <button className="btn my-2 mx-1 btn-primary text-white" type="button" id="button-addon2">
                     Search
                   </button>
-                  <span className="text-secondary small">(First search appointment using owner's phone)</span>
+                  <span className="small opacity-75">(First search appointment using owner's phone)</span>
                 </div>
                 <div className="col-md-6"></div>
               </div>
