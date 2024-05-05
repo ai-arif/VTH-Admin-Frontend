@@ -112,6 +112,62 @@ const PatientRegistrationForm = () => {
                       <input type="text" className="form-control" id="phone" />
                     </div>
                   </div>
+                  <div className="row">
+                    <div className="mb-3 col-md-6">
+                      <label htmlFor="disease_history" className="form-label">
+                        Disease History
+                      </label>
+                      <textarea className="form-control" id="disease_history" rows="3"></textarea>
+                    </div>
+                    <div className="mb-3 col-md-6">
+                      <label htmlFor="treatment_history" className="form-label">
+                        Treatment History
+                      </label>
+                      <textarea className="form-control" id="treatment_history" rows="3"></textarea>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="mb-3 col-md-6">
+                      <label htmlFor="management_history" className="form-label">
+                        Management History
+                      </label>
+                      <textarea className="form-control" id="management_history" rows="3"></textarea>
+                    </div>
+                    <div className="mb-3 col-md-6">
+                      <label htmlFor="clinical_signs" className="form-label">
+                        Clinical Signs
+                      </label>
+                      <textarea className="form-control" id="clinical_signs" rows="3"></textarea>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="mb-3 col-md-6">
+                      <label htmlFor="rectal" className="form-label">
+                        Rectal Palpation/ Necropsy/ X-ray/ Ultrasound
+                      </label>
+                      <input type="text" className="form-control" id="rectal" />
+                    </div>
+                    <div className="mb-3 col-md-6">
+                      <label htmlFor="laboratory" className="form-label">
+                        Laboratory Findings
+                      </label>
+                      <input type="text" className="form-control" id="laboratory" />
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="mb-3 col-md-6">
+                      <label htmlFor="diagnosis" className="form-label">
+                        Diagnosis (Presumptive/Confirmatory)
+                      </label>
+                      <input type="text" className="form-control" id="diagnosis" />
+                    </div>
+                    <div className="mb-3 col-md-6">
+                      <label htmlFor="prognosis" className="form-label">
+                        Prognosis
+                      </label>
+                      <input type="text" className="form-control" id="prognosis" />
+                    </div>
+                  </div>
                   {/* add a submit button */}
                   <div className="mb-3">
                     <button type="submit" className="btn btn-primary text-white">
