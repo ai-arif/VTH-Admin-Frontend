@@ -11,6 +11,7 @@ const UsersHome = () => {
       dispatch(fetchAllUsers());
     }
   }, [dispatch]);
+
   return (
     <div>
       <div className="container mb-5">
@@ -28,7 +29,7 @@ const UsersHome = () => {
                 </div>
               </div>
               <div className="mb-4">
-                <table className="table-dark table">
+                <table className="table table-dark">
                   <thead>
                     <tr>
                       <th>Name</th>
