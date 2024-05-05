@@ -96,6 +96,20 @@ const AppointmentHome = () => {
                         <option value="2">Approved</option>
                       </select>
                     </div>
+                    <div className="mb-3 col-md-6">
+                      <label htmlFor="animal" className="form-label">
+                        Number of Animal
+                      </label>
+                      <input type="number" className="form-control" id="animal" />
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="mb-3 col-md-6">
+                      <label htmlFor="department" className="form-label">
+                        Department
+                      </label>
+                      <input type="text" name="name" className="form-control" id="department" />
+                    </div>
                   </div>
                 </div>
               </form>
