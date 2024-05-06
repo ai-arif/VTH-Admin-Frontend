@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getTest } from "./testAPI.js";
+import { getTest,addTest } from "./testAPI.js";
+
 const initialState = {
   test: {},
   tests: [],
@@ -9,6 +10,11 @@ const initialState = {
 
 export const fetchTest = createAsyncThunk("test/fetchTest", async () => {
   const response = await getTest();
+  return response;
+});
+
+export const createTest = createAsyncThunk("test/createTest", async (test) => {
+  const response = await addTest(test);
   return response;
 });
 

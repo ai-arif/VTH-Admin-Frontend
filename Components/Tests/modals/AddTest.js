@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { createUserAsync } from "../../../features/user/userSlice";
+import { createTest } from "../../../features/test/testSlice";
 
 const AddTest = () => {
   const dispatch = useDispatch();
@@ -11,23 +12,14 @@ const AddTest = () => {
     setTest((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   setLoading(true);
-  //   try {
-  //     await dispatch(createUserAsync(userObj));
-  //     setLoading(false);
-  //     setUserObj({ fullName: "", phone: "", password: "", role: "" });
-  //   } catch (error) {
-  //     console.log(error);
-  //     setLoading(false);
-  //   }
-  //   // close modal
-  //   document.getElementById("closeModal").click();
-  // };
 
-  const handleSubmit = () => {
-       console.log(test)
+  const handleSubmit = async() => {
+       if(test.testName === ""){
+            alert("Please fill all fields")
+            return
+        }
+        await dispatch(createTest(test));
+        setTest({ testName: "", testDetails: "" });        
   };
 
   return (
