@@ -26,10 +26,6 @@ const AddTest = () => {
   //   document.getElementById("closeModal").click();
   // };
 
-  const handleSubmit = async() => {
-    
-      if(test.testName === "" ){
-        alert("Please fill all fields");
   const handleSubmit = () => {
        console.log(test)
   };
