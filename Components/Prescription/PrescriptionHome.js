@@ -1,11 +1,44 @@
 import React from "react";
+import Select from "react-select";
+
+// Define custom styles
+const customStyles = {
+  control: (provided, state) => ({
+    ...provided,
+    backgroundColor: "#2d323f",
+    borderColor: state.isFocused ? "#15a362" : "white",
+    "&:hover": {
+      borderColor: state.isFocused ? "#15a362" : "white",
+    },
+  }),
+  option: (provided, state) => ({
+    ...provided,
+    color: "#fff",
+    backgroundColor: state.isSelected ? "#15a362" : "#2d323f",
+  }),
+  multiValue: (provided) => ({
+    ...provided,
+    backgroundColor: "#15a362",
+  }),
+  multiValueLabel: (provided) => ({
+    ...provided,
+    color: "#fff",
+  }),
+};
+
+// Define tests option
+const options = [
+  { value: "test one", label: "Test One" },
+  { value: "test two", label: "Test two" },
+  { value: "test three", label: "Test three" },
+];
 
 const PrescriptionHome = () => {
   return (
-    <div className="container-fluid">
+    <div className="container-fluid py-4">
       <div className="row">
         <div className="col-12">
-          <div className="card">
+          <div className="card py-5">
             <div className="card-header">
               <h4 className="card-header-title">Prescription</h4>
             </div>
@@ -105,6 +138,14 @@ const PrescriptionHome = () => {
                   <div className="mb-3">
                     <label htmlFor="addres">Advice</label>
                     <textarea className="form-control" id="addres" rows="5"></textarea>
+                  </div>
+                  <div className="row">
+                    <div className="mb-3">
+                      <label htmlFor="name" className="form-label">
+                        Tests
+                      </label>
+                      <Select options={options} isMulti name="tests" styles={customStyles} />
+                    </div>
                   </div>
                 </div>
               </form>
