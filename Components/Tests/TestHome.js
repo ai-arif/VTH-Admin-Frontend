@@ -50,7 +50,7 @@ const TestHome = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {tests?.map((test, index) => (
+                    {tests?.data?.map((test, index) => (
                       <tr>
                         <td>{index + 1}</td>
                         <td className="text-nowrap">{test.testName}</td>
