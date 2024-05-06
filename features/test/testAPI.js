@@ -1,5 +1,5 @@
 import axiosInstance from "../../utils/axiosInstance";
-import axios from "axios";
+
 
 export const getTest = async () => {
   try {
@@ -9,3 +9,12 @@ export const getTest = async () => {
     return Promise.reject(error);
   }
 };
+
+export const addTest = async (test) => {
+  try {
+    const response = await axiosInstance.post("/test", test);
+    return response.data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+}
