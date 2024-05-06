@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getTest, addTest } from "./testAPI.js";
+import { getTest } from "./testAPI.js";
 const initialState = {
   test: {},
   tests: [],
@@ -9,11 +9,6 @@ const initialState = {
 
 export const fetchTest = createAsyncThunk("test/fetchTest", async () => {
   const response = await getTest();
-  return response;
-});
-
-export const createTest = createAsyncThunk("test/createTest", async (test) => {
-  const response = await addTest(test);
   return response;
 });
 
@@ -35,17 +30,6 @@ export const testSlice = createSlice({
         state.tests = action.payload.data
       })
       .addCase(fetchTest.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.error.message;
-      })
-      .addCase(createTest.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(createTest.fulfilled, (state, action) => {
-        state.status = "success";
-        state.test = action.payload.data;
-      })
-      .addCase(createTest.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });

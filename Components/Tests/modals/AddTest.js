@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { createUserAsync } from "../../../features/user/userSlice";
-import { createTest } from "../../../features/test/testSlice";
 
 const AddTest = () => {
   const dispatch = useDispatch();
@@ -31,11 +30,8 @@ const AddTest = () => {
     
       if(test.testName === "" ){
         alert("Please fill all fields");
-        return;
-      }
-      await dispatch(createTest(test));
-      setTest({ testName: "", testDetails: "" });
-
+  const handleSubmit = () => {
+       console.log(test)
   };
 
   return (
