@@ -17,3 +17,21 @@ export const addTest = async (test) => {
     return Promise.reject(error);
   }
 };
+
+export const updateTest = async (test) => {
+  try {
+    const response = await axiosInstance.put("/test", test);
+    return response.data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
+export const deleteTest = async (id) => {
+  try {
+    const response = await axiosInstance.delete(`/test/${id}`);
+    return response.data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};

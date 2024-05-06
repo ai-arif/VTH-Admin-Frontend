@@ -38,6 +38,17 @@ export const testSlice = createSlice({
       .addCase(fetchTest.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
+      })
+      .addCase(createTest.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(createTest.fulfilled, (state, action) => {
+        state.status = "success";
+        state.test = action.payload.data;
+      })
+      .addCase(createTest.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
       });
   },
 });
