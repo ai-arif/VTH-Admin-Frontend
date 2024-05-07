@@ -20,7 +20,7 @@ export const addTest = async (test) => {
 
 export const updateTest = async (test) => {
   try {
-    const response = await axiosInstance.put("/test", test);
+    const response = await axiosInstance.put(`/test/${test.id}`, test);
     return response.data;
   } catch (error) {
     return Promise.reject(error);
