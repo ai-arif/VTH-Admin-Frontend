@@ -35,3 +35,13 @@ export const deleteTest = async (id) => {
     return Promise.reject(error);
   }
 };
+
+
+export const addParameter = async (data) => {
+  try {
+    const response = await axiosInstance.post("/parameter", data);
+    return response.data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};

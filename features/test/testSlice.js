@@ -1,11 +1,13 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getTest,addTest } from "./testAPI.js";
+import { getTest,addTest, addParameter } from "./testAPI.js";
+
 
 const initialState = {
   test: {},
   tests: [],
   status: "idle",
   error: null,
+  parameterStatus:'idle'
 };
 
 export const fetchTest = createAsyncThunk("test/fetchTest", async () => {
@@ -13,10 +15,27 @@ export const fetchTest = createAsyncThunk("test/fetchTest", async () => {
   return response;
 });
 
+
+
+
 export const createTest = createAsyncThunk("test/createTest", async (test) => {
   const response = await addTest(test);
   return response;
 });
+
+
+
+
+export const createParameter = createAsyncThunk("test/createParameter", async (test) => {
+  const response = await addParameter()
+  return response;
+});
+
+
+
+
+
+
 
 export const testSlice = createSlice({
   name: "test",
@@ -49,7 +68,8 @@ export const testSlice = createSlice({
       .addCase(createTest.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
-      });
+      })
+    
   },
 });
 
