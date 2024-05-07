@@ -1,10 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
+import Swal from "sweetalert2";
 import { fetchTest } from "../../features/test/testSlice";
 import AddTest from "./modals/AddTest";
+import UpdateTest from "./modals/UpdateTest";
 
 const TestHome = () => {
+  const [existingTest, setExistingTest] = useState({});
   const dispatch = useDispatch();
   const { tests, status } = useSelector((state) => state.test);
 
@@ -19,6 +22,50 @@ const TestHome = () => {
   //   //console.log("here showing all tests", tests);
   // },[])
 
+  // handling update single test
+  const handleUpdateTest = async (test) => {
+    setExistingTest(test);
+  };
+
+  // handling delete single test
+  const handleDeleteTest = async (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#15a362",
+      cancelButtonColor: "#ef4444",
+      confirmButtonText: "Yes, delete it!",
+      color: "#eaeaea",
+      background: "#161719",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          // const response = await dispatch(deleteTestData(id));
+          // console.log(response);
+          Swal.fire({
+            icon: "success",
+            title: "Deleted!",
+            text: "Your test has been deleted.",
+            showConfirmButton: false,
+            timer: 1500,
+            color: "#eaeaea",
+            background: "#161719",
+          });
+        } catch (error) {
+          Swal.fire({
+            icon: "error",
+            title: "Something is wrong",
+            text: error,
+            color: "#eaeaea",
+            background: "#161719",
+          });
+        }
+      }
+    });
+  };
+
   if (status === "loading") return <h2>Loading..</h2>;
 
   return (
@@ -28,7 +75,10 @@ const TestHome = () => {
           {/* also create Actions tr, with edit and delete */}
           <div className="col-12 col-md-11 col-lg-12 col-xl-12 mx-auto">
             <AddTest />
+            {/* update test modal */}
+            <UpdateTest existingTest={existingTest} />
             <div className="app-card p-5 text-center shadow-sm mt-5">
+              <h2>Tests</h2>
               <div className="d-flex justify-content-between mb-4">
                 {/* <h1 className="page-title mb-4">Test List</h1> */}
                 <input type="email" className="form-control w-25" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Search by title" />
@@ -51,13 +101,17 @@ const TestHome = () => {
                   </thead>
                   <tbody>
                     {tests?.data?.map((test, index) => (
-                      <tr>
+                      <tr key={test._id}>
                         <td>{index + 1}</td>
                         <td className="text-nowrap">{test.testName}</td>
                         <td className="w-75">{test.testDetails}</td>
                         <td className="d-flex gap-3">
-                          <button className="btn  btn-info text-white">Edit</button>
-                          <button className="btn btn-danger text-white">Delete</button>
+                          <button onClick={() => handleUpdateTest(test)} data-bs-toggle="modal" data-bs-target="#updateTest" className="btn  btn-info text-white">
+                            Edit
+                          </button>
+                          <button onClick={() => handleDeleteTest(test._id)} className="btn btn-danger text-white">
+                            Delete
+                          </button>
                         </td>
                       </tr>
                     ))}
