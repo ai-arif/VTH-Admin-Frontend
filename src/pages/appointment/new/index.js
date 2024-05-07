@@ -1,9 +1,10 @@
 import React from "react";
+import AppointmentHome from "../../../../Components/Appointment/AppointmentHome";
 
 const index = () => {
   return (
     <div>
-      <h2 className="text-center my-5">View Appointment Page..</h2>
+      <AppointmentHome />
     </div>
   );
 };
