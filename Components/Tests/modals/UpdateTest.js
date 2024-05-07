@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { createTest } from "../../../features/test/testSlice";
-import { createUserAsync } from "../../../features/user/userSlice";
+import { updateTestData } from "../../../features/test/testSlice";
 
-const AddTest = () => {
+const UpdateTest = ({ existingTest }) => {
   const dispatch = useDispatch();
   const [test, setTest] = useState({ testName: "", testDetails: "" });
 
   const handleChange = (event) => {
     const { name, value } = event.target;
+    console.log(name, value);
     setTest((prevData) => ({ ...prevData, [name]: value }));
   };
 
@@ -17,18 +17,18 @@ const AddTest = () => {
       alert("Please fill all fields");
       return;
     }
-    await dispatch(createTest(test));
+    await dispatch(updateTestData(test));
     setTest({ testName: "", testDetails: "" });
   };
 
   return (
     <div>
-      <div className="modal fade" id="addUser" tabIndex="-1" aria-labelledby="addUserLabel" aria-hidden="true">
+      <div className="modal fade" id="updateTest" tabIndex="-1" aria-labelledby="updateTestLabel" aria-hidden="true">
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
             <div className="modal-header">
-              <h1 className="modal-title fs-5" id="addUserLabel">
-                Test
+              <h1 className="modal-title fs-5" id="updateTestLabel">
+                Update Test
               </h1>
               <button id="closeModal" type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -37,13 +37,13 @@ const AddTest = () => {
                 <label htmlFor="testName" className="form-label">
                   Test Name
                 </label>
-                <input value={test.testName} onChange={handleChange} name="testName" className="form-control" id="testName" />
+                <input defaultValue={existingTest.testName} onChange={handleChange} name="testName" className="form-control" id="testName" />
               </div>
               <div className="mb-3">
                 <label htmlFor="testDetails" className="form-label">
                   Short Description
                 </label>
-                <input value={test.testDetails} onChange={handleChange} name="testDetails" className="form-control" id="testDetails" />
+                <input defaultValue={existingTest.testDetails} onChange={handleChange} name="testDetails" className="form-control" id="testDetails" />
               </div>
             </div>
             <div className="modal-footer">
@@ -51,7 +51,7 @@ const AddTest = () => {
                 Close
               </button>
               <button onClick={handleSubmit} type="submit" className="btn app-btn-primary">
-                Submit
+                Update Test
               </button>
             </div>
           </div>
@@ -61,4 +61,4 @@ const AddTest = () => {
   );
 };
 
-export default AddTest;
+export default UpdateTest;
