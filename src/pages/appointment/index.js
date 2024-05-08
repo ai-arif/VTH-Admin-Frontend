@@ -1,10 +1,28 @@
 import React from "react";
+import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
+import "react-tabs/style/react-tabs.css";
+import ApprovedAppointment from "../../../Components/Appointment/ApprovedAppointment";
+import PendingAppointment from "../../../Components/Appointment/PendingAppointment";
 
 const index = () => {
   return (
-    <div>
-      <h2 className="text-center my-5">View Appointment Page..</h2>
-    </div>
+    <section id="appointment" className="my-4 mx-2">
+      <Tabs>
+        <TabList>
+          <Tab>Pending</Tab>
+          <Tab>Approved</Tab>
+        </TabList>
+
+        {/* pending appointment */}
+        <TabPanel>
+          <PendingAppointment />
+        </TabPanel>
+        {/* approved appointment */}
+        <TabPanel>
+          <ApprovedAppointment />
+        </TabPanel>
+      </Tabs>
+    </section>
   );
 };
 
