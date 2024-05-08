@@ -1,4 +1,4 @@
-import { getMedicine,addMedicine,deleteMedicine,updateMedicine } from "./medicineAPI";
+import { getMedicine,addMedicine,deleteMedicine,updateMedicine,getSingleMedicine } from "./medicineAPI";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
@@ -25,6 +25,11 @@ export const updateMedicineData = createAsyncThunk("medicine/updateMedicineData"
 
 export const deleteMedicineData = createAsyncThunk("medicine/deleteMedicineData", async (id) => {
     const response = await deleteMedicine(id);
+    return response;
+});
+
+export const fetchSingleMedicine = createAsyncThunk("medicine/fetchSingleMedicine", async (id) => {
+    const response = await getSingleMedicine(id);
     return response;
 });
 
