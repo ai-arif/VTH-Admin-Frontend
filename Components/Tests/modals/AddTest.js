@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { createTest } from "../../../features/test/testSlice";
+import { createTest,fetchTest } from "../../../features/test/testSlice";
 import { createUserAsync } from "../../../features/user/userSlice";
 
 const AddTest = () => {
@@ -13,11 +13,16 @@ const AddTest = () => {
   };
 
   const handleSubmit = async () => {
+    
+    
     if (test.testName === "") {
       alert("Please fill all fields");
       return;
     }
+    document.getElementById("closeModal").click();
     await dispatch(createTest(test));
+    await dispatch(fetchTest());
+    
     setTest({ testName: "", testDetails: "" });
   };
 
@@ -47,7 +52,7 @@ const AddTest = () => {
               </div>
             </div>
             <div className="modal-footer">
-              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+              <button id="closeModal" type="button" className="btn btn-secondary" data-bs-dismiss="modal">
                 Close
               </button>
               <button onClick={handleSubmit} type="submit" className="btn app-btn-primary">

@@ -20,7 +20,7 @@ export const addTest = async (test) => {
 
 export const updateTest = async (test) => {
   try {
-    const response = await axiosInstance.put("/test", test);
+    const response = await axiosInstance.put(`/test/${test.id}`, test);
     return response.data;
   } catch (error) {
     return Promise.reject(error);
@@ -30,6 +30,16 @@ export const updateTest = async (test) => {
 export const deleteTest = async (id) => {
   try {
     const response = await axiosInstance.delete(`/test/${id}`);
+    return response.data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
+
+export const addParameter = async (data) => {
+  try {
+    const response = await axiosInstance.post("/parameter", data);
     return response.data;
   } catch (error) {
     return Promise.reject(error);

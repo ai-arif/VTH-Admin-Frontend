@@ -1,9 +1,13 @@
+
 import React, { useEffect, useState } from "react";
+
 import { FaPlus } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
-import { fetchTest } from "../../features/test/testSlice";
+import { fetchTest,deleteTestData } from "../../features/test/testSlice";
 import AddTest from "./modals/AddTest";
+
+
 import UpdateTest from "./modals/UpdateTest";
 
 const TestHome = () => {
@@ -42,8 +46,9 @@ const TestHome = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          // const response = await dispatch(deleteTestData(id));
-          // console.log(response);
+          const response = await dispatch(deleteTestData(id));
+          dispatch(fetchTest());
+          
           Swal.fire({
             icon: "success",
             title: "Deleted!",
