@@ -34,4 +34,5 @@ export const deleteDepartment = async (id) => {
         return Promise.reject(error);
     }
     };
+
     
