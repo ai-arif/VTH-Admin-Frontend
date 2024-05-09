@@ -15,11 +15,6 @@ const AddMedicine = () => {
 
   const onSubmit = async (medicine) => {
     try {
-      // Convert number type
-      medicine.price = parseFloat(medicine.price, 10);
-      medicine.unitPrice = parseFloat(medicine.unitPrice, 10);
-      medicine.quantity = parseInt(medicine.quantity, 10);
-
       const response = await dispatch(createMedicine(medicine));
 
       if (response?.payload?.success) {
@@ -40,7 +35,7 @@ const AddMedicine = () => {
         <div className="col-12">
           <div className="card pb-4">
             <div className="card-header">
-              <h4 className="card-header-title">Add Medicine</h4>
+              <h4 className="card-header-title text-center">Add Medicine</h4>
             </div>
             <div className="card-body">
               <form onSubmit={handleSubmit(onSubmit)}>
@@ -106,12 +101,12 @@ const AddMedicine = () => {
                 <div className="row">
                   <div className="mb-3 col-md-6">
                     <label className="form-label">Price</label>
-                    <input type="number" {...register("price", { required: true })} className={`form-control ${errors.price && "border-danger"}`} id="price" />
+                    <input type="number" {...register("price", { required: true, valueAsNumber: true, min: 1 })} className={`form-control ${errors.price && "border-danger"}`} id="price" />
                     {errors.price && <small className="text-danger">Please write price</small>}
                   </div>
                   <div className="mb-3 col-md-6">
                     <label className="form-label">Unit Price</label>
-                    <input type="number" {...register("unitPrice", { required: true, min: 1 })} className={`form-control ${errors.unitPrice && "border-danger"}`} id="unitPrice" />
+                    <input type="number" {...register("unitPrice", { required: true, valueAsNumber: true, min: 1 })} className={`form-control ${errors.unitPrice && "border-danger"}`} id="unitPrice" />
                     {errors.unitPrice && <small className="text-danger">Please write unit price</small>}
                   </div>
                 </div>
@@ -119,7 +114,7 @@ const AddMedicine = () => {
                 <div className="row">
                   <div className="mb-3 col-md-6">
                     <label className="form-label">Quantity</label>
-                    <input type="number" {...register("quantity", { required: true })} className={`form-control ${errors.quantity && "border-danger"}`} id="quantity" />
+                    <input type="number" {...register("quantity", { required: true, valueAsNumber: true, min: 1 })} className={`form-control ${errors.quantity && "border-danger"}`} id="quantity" />
                     {errors.quantity && <small className="text-danger">Please write quantity</small>}
                   </div>
                   <div className="mb-3 col-md-6">
