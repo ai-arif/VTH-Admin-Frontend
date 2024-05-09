@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
@@ -64,6 +65,9 @@ const ViewMedicine = () => {
     });
   };
 
+  // loader
+  if (status === "loading") return <Loader />;
+
   return (
     <div className="container-fluid">
       <div className="app-card p-5 text-center shadow-sm mt-5">
@@ -90,7 +94,9 @@ const ViewMedicine = () => {
                     <td className="">{medicine.brandName}</td>
                     <td className="">{medicine.withdrawalPeriod}</td>
                     <td className="d-flex gap-3 justify-content-center">
-                      <button className="btn btn-info text-white">Edit</button>
+                      <Link href={`/medicine/${medicine._id}`}>
+                        <button className="btn btn-info text-white">Edit</button>
+                      </Link>
                       <button onClick={() => handleDeleteMedicine(medicine._id)} className="btn btn-danger text-white">
                         Delete
                       </button>
@@ -101,7 +107,6 @@ const ViewMedicine = () => {
             </table>
           </div>
         </div>
-        {status === "loading" && <Loader />}
       </div>
     </div>
   );

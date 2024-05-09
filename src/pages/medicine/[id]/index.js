@@ -1,10 +1,10 @@
 import React from "react";
-import AddMedicine from "../../../../Components/Medicine/AddMedicine";
+import UpdateMedicine from "../../../../Components/Medicine/UpdateMedicine";
 
 const index = () => {
   return (
     <div>
-      <AddMedicine />
+      <UpdateMedicine />
     </div>
   );
 };
