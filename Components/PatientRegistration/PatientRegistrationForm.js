@@ -71,7 +71,7 @@ const PatientRegistrationForm = () => {
                   </div>
                 </div>
                 <div className="info-group">
-                  <h5 className="text-center pb-2">Patent Information:</h5>
+                  <h5 className="text-center pb-2">Patent Information :</h5>
                   <div className="row">
                     <div className="mb-3 col-md-6">
                       <label htmlFor="name" className="form-label">
@@ -122,7 +122,7 @@ const PatientRegistrationForm = () => {
                   </div>
                 </div>
                 <div className="info-group">
-                  <h5 className="text-center pb-2">History of Patent:</h5>
+                  <h5 className="text-center pb-2">History of Patent :</h5>
                   <div className="row">
                     <div className="mb-3 col-md-6">
                       <label htmlFor="disease_history" className="form-label">

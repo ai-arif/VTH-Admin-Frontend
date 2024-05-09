@@ -248,7 +248,7 @@ const Navbar = () => {
                       </Link>
                     </li>
                     <li className="submenu-item">
-                      <Link className="submenu-link" href="/appointment">
+                      <Link className="submenu-link" href="/appointment/view">
                         View Appointment
                       </Link>
                     </li>

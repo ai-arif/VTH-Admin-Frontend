@@ -3,6 +3,7 @@
   --vth-secondary-dark: #2d323f;
   --vth-light: #eaeaea;
   --vth-green: #15a362;
+  --vth-white: #fff;
 }
 
 #appointment .react-tabs__tab-list {
@@ -12,16 +13,22 @@
   border-bottom: none;
 }
 
-#appointment .react-tabs__tab--selected {
-  background-color: var(--vth-green);
-  color: var(--vth-light);
-  border: none;
-}
-
 #appointment .react-tabs__tab {
   color: var(--vth-light);
   border: 1px solid;
   border-radius: 5px;
+  font-weight: 500;
+}
+
+#appointment .react-tabs__tab--selected {
+  border-color: var(--vth-green) !important;
+  background-color: var(--vth-green);
+  color: var(--vth-white) !important;
+  border: none;
+}
+
+#appointment .react-tabs__tab:focus:after {
+  content: none;
 }
 
 /* Remove increment and decrement arrows from number input */
