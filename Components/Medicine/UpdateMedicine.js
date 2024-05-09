@@ -1,33 +1,71 @@
-import React from "react";
+import { useRouter } from "next/router";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
-import { createMedicine } from "../../features/medicine/medicineSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchSingleMedicine, updateMedicineData } from "../../features/medicine/medicineSlice";
+import Loader from "../UI/Loader";
 
-const AddMedicine = () => {
+const UpdateMedicine = () => {
+  const router = useRouter();
+  const { id } = router.query;
   const dispatch = useDispatch();
+  const { medicine, status } = useSelector((state) => state.medicine);
   const {
     handleSubmit,
     register,
+    setValue,
     reset,
     formState: { errors },
   } = useForm();
 
-  const onSubmit = async (medicine) => {
+  useEffect(() => {
+    dispatch(fetchSingleMedicine(id));
+  }, [dispatch]);
+
+  // Set default form values with existing data
+  useEffect(() => {
+    const existingMedicine = medicine?.data;
+    if (existingMedicine) {
+      setValue("name", existingMedicine.name || "");
+      setValue("brandName", existingMedicine.brandName || "");
+      setValue("class", existingMedicine.class || "");
+      setValue("composition", existingMedicine.composition || "");
+      setValue("manufacturer", existingMedicine.manufacturer || "");
+      setValue("form", existingMedicine.form || "");
+      setValue("price", existingMedicine.price || 0);
+      setValue("unitPrice", existingMedicine.unitPrice || 0);
+      setValue("quantity", existingMedicine.quantity || 0);
+      setValue("dose", existingMedicine.dose || "");
+      setValue("packSize", existingMedicine.packSize || "");
+      setValue("withdrawalPeriod", existingMedicine.withdrawalPeriod || "");
+      setValue("strength", existingMedicine.strength || "");
+      setValue("route", existingMedicine.route || "");
+      setValue("animalType", existingMedicine.animalType || "");
+      setValue("description", existingMedicine.description || "");
+    }
+  }, [medicine, setValue]);
+
+  const onSubmit = async (medicineData) => {
     try {
-      const response = await dispatch(createMedicine(medicine));
+      medicineData.id = id;
+
+      const response = await dispatch(updateMedicineData(medicineData));
 
       if (response?.payload?.success) {
-        toast.success("Medicine added successfully!");
-        reset();
+        toast.success("Medicine updated successfully!");
+        router.push("/medicine/view");
       } else {
-        toast.error("Failed to add medicine! Please try again later.");
+        toast.error("Failed to update medicine! Please try again later.");
       }
     } catch (error) {
-      console.error("An error occurred while adding medicine:", error);
-      toast.error("An error occurred while adding medicine. Please try again later.");
+      console.error("An error occurred while updating medicine:", error);
+      toast.error("An error occurred while updating medicine. Please try again later.");
     }
   };
+
+  //   loader
+  if (status === "loading") return <Loader />;
 
   return (
     <div className="container-fluid">
@@ -35,30 +73,10 @@ const AddMedicine = () => {
         <div className="col-12">
           <div className="card pb-4">
             <div className="card-header">
-              <h4 className="card-header-title text-center">Add Medicine</h4>
+              <h4 className="card-header-title text-center">Edit Medicine</h4>
             </div>
             <div className="card-body">
               <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="row">
-                  {/* <div className="mb-3 col-md-6">
-                    <label className="form-label">
-                      Select Appointment
-                    </label>
-                    <select className="form-select" aria-label="Default select example">
-                      <option selected>Select</option>
-                      <option value="1">One</option>
-                      <option value="2">Two</option>
-                      <option value="3">Three</option>
-                    </select>
-                  </div> */}
-                  {/* <div className="mb-3 col-md-6">
-                    <label className="form-label">
-                      CASE NO
-                    </label>
-                    <input readOnly={true} type="text" className="form-control" value={"pxx3233Wr"} id="phone" />
-                  </div> */}
-                </div>
-
                 <div className="row">
                   <div className="mb-3 col-md-6">
                     <label className="form-label">Medicine Name</label>
@@ -171,12 +189,9 @@ const AddMedicine = () => {
                   </div>
                 </div>
 
-                <div className="my-3 d-flex justify-content-center gap-4">
-                  <button type="reset" className="btn btn-danger text-white">
-                    Reset
-                  </button>
+                <div className="my-3 d-flex justify-content-center">
                   <button type="submit" className="btn app-btn-primary">
-                    Add Medicine
+                    Update Medicine
                   </button>
                 </div>
               </form>
@@ -188,4 +203,4 @@ const AddMedicine = () => {
   );
 };
 
-export default AddMedicine;
+export default UpdateMedicine;

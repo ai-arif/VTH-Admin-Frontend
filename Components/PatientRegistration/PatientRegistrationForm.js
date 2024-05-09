@@ -2,7 +2,7 @@ import React from "react";
 
 const PatientRegistrationForm = () => {
   return (
-    <div className="container-fluid">
+    <div className="container-fluid px-0">
       <div className="row">
         <div className="col-12">
           <div className="card">
@@ -20,69 +20,77 @@ const PatientRegistrationForm = () => {
                 </div>
                 <div className="col-md-6"></div>
               </div>
-              <form>
-                <div className="row">
-                  <div className="mb-3 col-md-6">
-                    <label htmlFor="name" className="form-label">
-                      Select Appointment
-                    </label>
-                    {/* select field */}
-                    <select className="form-select" aria-label="Default select example">
-                      <option selected>Select</option>
-                      <option value="1">One</option>
-                      <option value="2">Two</option>
-                      <option value="3">Three</option>
-                    </select>
+              <form id="patient-registration">
+                <div className="info-group">
+                  <h5 className="text-center pb-2">Owner Information :</h5>
+                  <div className="row">
+                    <div className="mb-3 col-md-6">
+                      <label htmlFor="name" className="form-label">
+                        Owner Name
+                      </label>
+                      <input type="text" className="form-control" id="name" />
+                    </div>
+                    <div className="mb-3 col-md-6">
+                      <label htmlFor="phone" className="form-label">
+                        Phone
+                      </label>
+                      <input type="text" className="form-control" id="phone" />
+                    </div>
                   </div>
-                  <div className="mb-3 col-md-6">
-                    <label htmlFor="phone" className="form-label">
-                      CASE NO
-                    </label>
-                    <input readOnly={true} type="text" className="form-control" value={"pxx3233Wr"} id="phone" />
+                  <div className="row">
+                    <div className="mb-3 col-md-6">
+                      <label htmlFor="email" className="form-label">
+                        District
+                      </label>
+                      {/* select drop down for district */}
+                      <select className="form-select" aria-label="Default select example">
+                        <option selected>Select</option>
+                        <option value="1">Rajshahi</option>
+                        <option value="2">Mymensingh</option>
+                        <option value="3">Three</option>
+                      </select>
+                    </div>
+                    <div className="mb-3 col-md-6">
+                      <label htmlFor="address" className="form-label">
+                        Upazila
+                      </label>
+                      {/* select dropdown for upazila */}
+                      <select className="form-select" aria-label="Default select example">
+                        <option selected>Select</option>
+                        <option value="1">Chapainawabganj</option>
+                        <option value="2">Sibganj</option>
+                        <option value="3">Three</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="mb-3">
+                      <label htmlFor="addres">Address</label>
+                      <textarea className="form-control" id="addres"></textarea>
+                    </div>
                   </div>
                 </div>
-                <div className="row">
-                  <div className="mb-3 col-md-6">
-                    <label htmlFor="name" className="form-label">
-                      Owner Name
-                    </label>
-                    <input type="text" className="form-control" id="name" />
-                  </div>
-                  <div className="mb-3 col-md-6">
-                    <label htmlFor="phone" className="form-label">
-                      Phone
-                    </label>
-                    <input type="text" className="form-control" id="phone" />
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="mb-3 col-md-6">
-                    <label htmlFor="email" className="form-label">
-                      District
-                    </label>
-                    {/* select drop down for district */}
-                    <select className="form-select" aria-label="Default select example">
-                      <option selected>Select</option>
-                      <option value="1">Rajshahi</option>
-                      <option value="2">Mymensingh</option>
-                      <option value="3">Three</option>
-                    </select>
-                  </div>
-                  <div className="mb-3 col-md-6">
-                    <label htmlFor="address" className="form-label">
-                      Upazila
-                    </label>
-                    {/* select dropdown for upazila */}
-                    <select className="form-select" aria-label="Default select example">
-                      <option selected>Select</option>
-                      <option value="1">Chapainawabganj</option>
-                      <option value="2">Sibganj</option>
-                      <option value="3">Three</option>
-                    </select>
-                  </div>
-                  <div className="mb-3">
-                    <label htmlFor="addres">Address</label>
-                    <textarea className="form-control" id="addres" rows="3"></textarea>
+                <div className="info-group">
+                  <h5 className="text-center pb-2">Patent Information :</h5>
+                  <div className="row">
+                    <div className="mb-3 col-md-6">
+                      <label htmlFor="name" className="form-label">
+                        Select Appointment
+                      </label>
+                      {/* select field */}
+                      <select className="form-select" aria-label="Default select example">
+                        <option selected>Select</option>
+                        <option value="1">One</option>
+                        <option value="2">Two</option>
+                        <option value="3">Three</option>
+                      </select>
+                    </div>
+                    <div className="mb-3 col-md-6">
+                      <label htmlFor="phone" className="form-label">
+                        CASE NO
+                      </label>
+                      <input readOnly={true} type="text" className="form-control" value={"pxx3233Wr"} id="phone" />
+                    </div>
                   </div>
                   <div className="row">
                     <div className="mb-3 col-md-6">
@@ -112,6 +120,9 @@ const PatientRegistrationForm = () => {
                       <input type="text" className="form-control" id="phone" />
                     </div>
                   </div>
+                </div>
+                <div className="info-group">
+                  <h5 className="text-center pb-2">History of Patent :</h5>
                   <div className="row">
                     <div className="mb-3 col-md-6">
                       <label htmlFor="disease_history" className="form-label">
@@ -145,13 +156,22 @@ const PatientRegistrationForm = () => {
                       <label htmlFor="rectal" className="form-label">
                         Rectal Palpation/ Necropsy/ X-ray/ Ultrasound
                       </label>
-                      <input type="text" className="form-control" id="rectal" />
+                      <select className="form-select" aria-label="Default select example">
+                        <option selected>Select</option>
+                        <option value="Necropsy">Necropsy</option>
+                        <option value="X-ray">X-ray</option>
+                        <option value="Ultrasound">Ultrasound</option>
+                      </select>
                     </div>
                     <div className="mb-3 col-md-6">
                       <label htmlFor="laboratory" className="form-label">
                         Laboratory Findings
                       </label>
-                      <input type="text" className="form-control" id="laboratory" />
+                      <select className="form-select" aria-label="Default select example">
+                        <option selected>Select</option>
+                        <option value="Simple Type">Simple Type</option>
+                        <option value="Findings">Findings</option>
+                      </select>
                     </div>
                   </div>
                   <div className="row">
@@ -159,21 +179,34 @@ const PatientRegistrationForm = () => {
                       <label htmlFor="diagnosis" className="form-label">
                         Diagnosis (Presumptive/Confirmatory)
                       </label>
-                      <input type="text" className="form-control" id="diagnosis" />
+                      <select className="form-select" aria-label="Default select example">
+                        <option selected>Select</option>
+                        <option value="Presumptive">Presumptive</option>
+                        <option value="Confirmatory">Confirmatory</option>
+                      </select>
                     </div>
                     <div className="mb-3 col-md-6">
                       <label htmlFor="prognosis" className="form-label">
                         Prognosis
                       </label>
-                      <input type="text" className="form-control" id="prognosis" />
+                      <select className="form-select" aria-label="Default select example">
+                        <option selected>Select</option>
+                        <option value="Excellent">Excellent</option>
+                        <option value="Good">Good</option>
+                        <option value="Questionable">Questionable</option>
+                        <option value="Unfavorable">Unfavorable</option>
+                      </select>
                     </div>
                   </div>
-                  {/* add a submit button */}
-                  <div className="mb-3">
-                    <button type="submit" className="btn btn-primary text-white">
-                      Submit
-                    </button>
-                  </div>
+                </div>
+                {/* add a submit button */}
+                <div className="d-flex d-flex justify-content-center gap-4 my-3">
+                  <button type="reset" className="btn btn-danger text-white">
+                    Reset
+                  </button>
+                  <button type="submit" className="btn btn-primary text-white">
+                    Submit
+                  </button>
                 </div>
               </form>
             </div>

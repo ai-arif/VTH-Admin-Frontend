@@ -1,12 +1,12 @@
-import React from 'react'
-import ViewMedicine from '../../../../Components/Medicine/ViewMedicine'
+import React from "react";
+import ViewMedicine from "../../../../Components/Medicine/ViewMedicine";
 
 const index = () => {
   return (
     <div>
-      <ViewMedicine/>
+      <ViewMedicine />
     </div>
-  )
-}
+  );
+};
 
-export default index
+export default index;
