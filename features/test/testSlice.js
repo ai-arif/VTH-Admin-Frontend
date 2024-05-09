@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { addTest, deleteTest, getTest, updateTest } from "./testAPI.js";
+import { addTest, deleteTest, getTest, updateTest,getParameter,getSubParameter } from "./testAPI.js";
 
 const initialState = {
   test: {},

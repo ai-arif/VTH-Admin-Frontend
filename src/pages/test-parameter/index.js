@@ -32,7 +32,7 @@ export default function TestParameter() {
   const { tests, status, parameterList, subParameterList } = useSelector(
     (state) => state.test
   );
-
+   console.log("showig test",parameterList)
   useEffect(() => {
     dispatch(fetchTest());
   }, [dispatch]);
@@ -170,8 +170,7 @@ export default function TestParameter() {
       <div className="row">
         <div className="col-6">
           <ul class="list-group">
-            {selectedTest.testName &&
-              parameterList.data.length > 0 &&
+            {selectedTest.testName  &&
               parameterList.data?.map((param, index) => (
                 <li class="list-group-item mt-3">
                   <span>{param.name}</span>
