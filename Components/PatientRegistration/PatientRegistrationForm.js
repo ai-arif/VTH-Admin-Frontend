@@ -156,13 +156,22 @@ const PatientRegistrationForm = () => {
                       <label htmlFor="rectal" className="form-label">
                         Rectal Palpation/ Necropsy/ X-ray/ Ultrasound
                       </label>
-                      <input type="text" className="form-control" id="rectal" />
+                      <select className="form-select" aria-label="Default select example">
+                        <option selected>Select</option>
+                        <option value="Necropsy">Necropsy</option>
+                        <option value="X-ray">X-ray</option>
+                        <option value="Ultrasound">Ultrasound</option>
+                      </select>
                     </div>
                     <div className="mb-3 col-md-6">
                       <label htmlFor="laboratory" className="form-label">
                         Laboratory Findings
                       </label>
-                      <input type="text" className="form-control" id="laboratory" />
+                      <select className="form-select" aria-label="Default select example">
+                        <option selected>Select</option>
+                        <option value="Simple Type">Simple Type</option>
+                        <option value="Findings">Findings</option>
+                      </select>
                     </div>
                   </div>
                   <div className="row">
@@ -170,13 +179,23 @@ const PatientRegistrationForm = () => {
                       <label htmlFor="diagnosis" className="form-label">
                         Diagnosis (Presumptive/Confirmatory)
                       </label>
-                      <input type="text" className="form-control" id="diagnosis" />
+                      <select className="form-select" aria-label="Default select example">
+                        <option selected>Select</option>
+                        <option value="Presumptive">Presumptive</option>
+                        <option value="Confirmatory">Confirmatory</option>
+                      </select>
                     </div>
                     <div className="mb-3 col-md-6">
                       <label htmlFor="prognosis" className="form-label">
                         Prognosis
                       </label>
-                      <input type="text" className="form-control" id="prognosis" />
+                      <select className="form-select" aria-label="Default select example">
+                        <option selected>Select</option>
+                        <option value="Excellent">Excellent</option>
+                        <option value="Good">Good</option>
+                        <option value="Questionable">Questionable</option>
+                        <option value="Unfavorable">Unfavorable</option>
+                      </select>
                     </div>
                   </div>
                 </div>
