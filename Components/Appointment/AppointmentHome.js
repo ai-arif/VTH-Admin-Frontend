@@ -34,12 +34,7 @@ const AppointmentHome = () => {
                       <option value="3">Three</option>
                     </select>
                   </div>
-                  <div className="mb-3 col-md-6">
-                    <label htmlFor="phone" className="form-label">
-                      CASE NO
-                    </label>
-                    <input readOnly={true} type="text" className="form-control" value={"pxx3233Wr"} id="phone" />
-                  </div>
+                  
                 </div>
                 <div className="row">
                   <div className="mb-3 col-md-6">

@@ -7,7 +7,16 @@ export const getMedicine = async () => {
     } catch (error) {
         return Promise.reject(error);
     }
-    };
+};
+// get single medicine
+export const getSingleMedicine = async (id) => {
+    try {
+        const response = await axiosInstance.get(`/medicine/${id}`);
+        return response.data;
+    } catch (error) {
+        return Promise.reject(error);
+    }
+};
 
 export const addMedicine = async (medicine) => {
     try {
@@ -16,7 +25,7 @@ export const addMedicine = async (medicine) => {
     } catch (error) {
         return Promise.reject(error);
     }
-    };
+};
 
 export const updateMedicine = async (medicine) => {
     try {
@@ -25,7 +34,7 @@ export const updateMedicine = async (medicine) => {
     } catch (error) {
         return Promise.reject(error);
     }
-    };
+};
 
 export const deleteMedicine = async (id) => {
     try {
@@ -34,4 +43,4 @@ export const deleteMedicine = async (id) => {
     } catch (error) {
         return Promise.reject(error);
     }
-    };
+};
