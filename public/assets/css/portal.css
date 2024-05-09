@@ -12450,3 +12450,15 @@ button.close:focus {
     width: 100%;
   }
 }
+
+#patient-registration h5 {
+  color: #fff;
+  opacity: 0.8;
+}
+
+#patient-registration .info-group {
+  background-color: var(--vth-primary-dark);
+  padding: 40px;
+  margin: 30px 10px;
+  border-radius: 8px;
+}
