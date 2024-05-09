@@ -2,6 +2,10 @@ import Cookies from "js-cookie";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
+import { AiOutlineMedicineBox } from "react-icons/ai";
+import { GrTest } from "react-icons/gr";
+import { HiOutlineUserGroup } from "react-icons/hi2";
+import { SlLayers } from "react-icons/sl";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUser } from "../../features/user/userSlice";
 
@@ -207,6 +211,14 @@ const Navbar = () => {
                       <path fill-rule="evenodd" d="M13 2.5V6l-2-2V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5z" />
                     </svg>
                   </span>
+                  <span className="nav-link-text">Staffs</span>
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link" href="/users">
+                  <span className="nav-icon">
+                    <HiOutlineUserGroup size={20} />
+                  </span>
                   <span className="nav-link-text">Users</span>
                 </Link>
               </li>
@@ -279,26 +291,25 @@ const Navbar = () => {
               <li className="nav-item">
                 <Link className="nav-link" href="/tests">
                   <span className="nav-icon">
-                    <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-folder" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M9.828 4a3 3 0 0 1-2.12-.879l-.83-.828A1 1 0 0 0 6.173 2H2.5a1 1 0 0 0-1 .981L1.546 4h-1L.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3v1z" />
-                      <path
-                        fill-rule="evenodd"
-                        d="M13.81 4H2.19a1 1 0 0 0-.996 1.09l.637 7a1 1 0 0 0 .995.91h10.348a1 1 0 0 0 .995-.91l.637-7A1 1 0 0 0 13.81 4zM2.19 3A2 2 0 0 0 .198 5.181l.637 7A2 2 0 0 0 2.826 14h10.348a2 2 0 0 0 1.991-1.819l.637-7A2 2 0 0 0 13.81 3H2.19z"
-                      />
-                    </svg>
+                    <GrTest size={18} />
                   </span>
                   <span className="nav-link-text">Tests</span>
                 </Link>
               </li>
+
+              <li className="nav-item">
+                <Link className="nav-link" href="/department">
+                  <span className="nav-icon">
+                    <SlLayers size={20} />
+                  </span>
+                  <span className="nav-link-text">Department</span>
+                </Link>
+              </li>
+
               <li className="nav-item has-submenu">
                 <a className="nav-link submenu-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#submenu-3" aria-expanded="false" aria-controls="submenu-3">
                   <span className="nav-icon">
-                    <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-columns-gap" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                      <path
-                        fill-rule="evenodd"
-                        d="M6 1H1v3h5V1zM1 0a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1H1zm14 12h-5v3h5v-3zm-5-1a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1h-5zM6 8H1v7h5V8zM1 7a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1H1zm14-6h-5v7h5V1zm-5-1a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1h-5z"
-                      />
-                    </svg>
+                    <AiOutlineMedicineBox size={23} />
                   </span>
                   <span className="nav-link-text">Medicine</span>
                   <span className="submenu-arrow">
@@ -404,18 +415,6 @@ const Navbar = () => {
                   </span>
                   <span className="nav-link-text">Test Result</span>
                 </Link>
-              </li>
-
-              <li className="nav-item">
-                <a className="nav-link" href="help.html">
-                  <span className="nav-icon">
-                    <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-question-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                      <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-                      <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z" />
-                    </svg>
-                  </span>
-                  <span className="nav-link-text">Help</span>
-                </a>
               </li>
             </ul>
           </nav>
