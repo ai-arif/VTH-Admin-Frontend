@@ -1,20 +1,10 @@
-<<<<<<< HEAD
-
-=======
 import React, { useEffect, useState } from "react";
->>>>>>> 6788e9ed33528bde870fd4247dde8c042c40eb99
 import { FaPlus } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { fetchTest } from "../../features/test/testSlice";
 import AddTest from "./modals/AddTest";
-<<<<<<< HEAD
-import { useEffect } from "react";
-
-
-=======
 import UpdateTest from "./modals/UpdateTest";
->>>>>>> 6788e9ed33528bde870fd4247dde8c042c40eb99
 
 const TestHome = () => {
   const [existingTest, setExistingTest] = useState({});

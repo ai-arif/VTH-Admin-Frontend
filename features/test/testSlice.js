@@ -1,41 +1,63 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getTest,addTest, addParameter } from "./testAPI.js";
+import {} from "./testAPI.js";
 
-import { addTest, deleteTest, getTest, updateTest } from "./testAPI.js";
+import {
+  addTest,
+  deleteTest,
+  updateTest,
+  getTest,
+  addParameter,
+  getParameter,
+  getSubParameter
+} from "./testAPI.js";
+
 
 const initialState = {
   test: {},
   tests: [],
+  parameterList: [],
+  subParameterList:[],
   status: "idle",
   error: null,
-  parameterStatus:'idle'
+  parameterStatus: "idle",
 };
+
+
+export const fetchSubParameter = createAsyncThunk(
+  "test/fetchSubParameter",
+  async (id) => {
+    const response = await getSubParameter(id)
+    return response;
+  }
+);
+
+
+export const fetchParameter = createAsyncThunk(
+  "test/fetchParameter",
+  async (id) => {
+    const response = await getParameter(id);
+    return response;
+  }
+);
+
 
 export const fetchTest = createAsyncThunk("test/fetchTest", async () => {
   const response = await getTest();
   return response;
 });
 
-
-
-
 export const createTest = createAsyncThunk("test/createTest", async (test) => {
   const response = await addTest(test);
   return response;
 });
 
-
-
-
-export const createParameter = createAsyncThunk("test/createParameter", async (test) => {
-  const response = await addParameter()
-  return response;
-});
-
-
-
-
-
+export const createParameter = createAsyncThunk(
+  "test/createParameter",
+  async (test) => {
+    const response = await addParameter();
+    return response;
+  }
+);
 
 // export const updateTestData = createAsyncThunk("test/updateTestData", async (test) => {
 //   const response = await updateTest(test);
@@ -78,7 +100,12 @@ export const testSlice = createSlice({
         state.status = "failed";
         state.error = action.error.message;
       })
-    
+      .addCase(fetchParameter.fulfilled, (state, action) => {
+        (state.status = "success"), (state.parameterList = action.payload.data);
+      })
+      .addCase(fetchSubParameter.fulfilled, (state, action) => {
+        (state.status = "success"), (state.subParameterList = action.payload.data);
+      });
   },
 });
 

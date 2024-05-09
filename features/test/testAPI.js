@@ -1,5 +1,26 @@
 import axiosInstance from "../../utils/axiosInstance";
 
+export const getSubParameter = async (id) => {
+  try {
+    const response = await axiosInstance.get(`/test/parameter/sub/${id}`);
+    return response.data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
+
+
+export const getParameter = async (id) => {
+  try {
+    const response = await axiosInstance.get(`/test/parameter/${id}`);
+    return response.data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
+
 export const getTest = async () => {
   try {
     const response = await axiosInstance.get("/test");
