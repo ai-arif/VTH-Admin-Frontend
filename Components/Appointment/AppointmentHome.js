@@ -24,8 +24,17 @@ const AppointmentHome = () => {
             <div className="card-body">
               <div className="row mb-4">
                 <div className="col-md-6">
-                  <input type="text" className="form-control" placeholder="Recipient's Phone" aria-label="Recipient's phone" aria-describedby="button-addon2" />
-                  <button className="btn my-2 mx-1 btn-primary text-white" type="button">
+                  <input
+                    onChange={(e) => {
+                      setSearchPhone(e.target.value);
+                    }}
+                    type="text"
+                    className="form-control"
+                    placeholder="Recipient's Phone"
+                    aria-label="Recipient's phone"
+                    aria-describedby="button-addon2"
+                  />
+                  <button onClick={getUserByPhone} className="btn my-2 mx-1 btn-primary text-white" type="button" id="button-addon2">
                     Search
                   </button>
                   <span className="small opacity-75 ps-2">(First search appointment using owner's phone)</span>
