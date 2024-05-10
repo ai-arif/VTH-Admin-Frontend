@@ -1,8 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
-import userSlice from "../features/user/userSlice";
-import testSlice from "../features/test/testSlice";
+import departmentSlice from "../features/department/departmentSlice";
 import medicineSlice from "../features/medicine/medicineSlice";
 import appointmentSlice from "../features/appointment/appointmentSlice";
+import testSlice from "../features/test/testSlice";
+import userSlice from "../features/user/userSlice";
 
 const store = configureStore({
   reducer: {
@@ -10,8 +11,8 @@ const store = configureStore({
     test: testSlice,
     medicine: medicineSlice,
     appointment: appointmentSlice,
+    department: departmentSlice,
   },
 });
-
 
 export default store;

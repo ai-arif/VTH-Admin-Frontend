@@ -298,11 +298,11 @@ const Navbar = () => {
               </li>
 
               <li className="nav-item">
-                <Link className="nav-link" href="/department">
+                <Link className="nav-link" href="/departments">
                   <span className="nav-icon">
                     <SlLayers size={20} />
                   </span>
-                  <span className="nav-link-text">Department</span>
+                  <span className="nav-link-text">Departments</span>
                 </Link>
               </li>
 
