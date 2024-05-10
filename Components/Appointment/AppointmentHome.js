@@ -1,111 +1,156 @@
 import React from "react";
+import { useForm } from "react-hook-form";
 
 const AppointmentHome = () => {
+  const {
+    handleSubmit,
+    register,
+    reset,
+    formState: { errors },
+  } = useForm();
+
+  const onSubmit = async (data) => {
+    console.log(data);
+  };
+
   return (
-    <div className="container-fluid">
+    <div className="container">
       <div className="row">
         <div className="col-12">
-          <div className="card">
+          <div className="card pb-4">
             <div className="card-header">
-              <h4 className="card-header-title">Add Appointment</h4>
+              <h4 className="card-header-title text-center">Add Appointment</h4>
             </div>
             <div className="card-body">
               <div className="row mb-4">
                 <div className="col-md-6">
                   <input type="text" className="form-control" placeholder="Recipient's Phone" aria-label="Recipient's phone" aria-describedby="button-addon2" />
-                  <button className="btn my-2 mx-1 btn-primary text-white" type="button" id="button-addon2">
+                  <button className="btn my-2 mx-1 btn-primary text-white" type="button">
                     Search
                   </button>
-                  <span className="small opacity-75">(First search appointment using owner's phone)</span>
+                  <span className="small opacity-75 ps-2">(First search appointment using owner's phone)</span>
                 </div>
                 <div className="col-md-6"></div>
               </div>
-              <form>
+              <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="row">
                   <div className="mb-3 col-md-6">
-                    <label htmlFor="name" className="form-label">
-                      Select Appointment
-                    </label>
-                    {/* select field */}
-                    <select className="form-select" aria-label="Default select example">
-                      <option selected>Select</option>
-                      <option value="1">One</option>
-                      <option value="2">Two</option>
-                      <option value="3">Three</option>
+                    <label className="form-label">Select Appointment</label>
+                    <select {...register("appointment", { required: true })} className={`form-select ${errors.appointment && "border-danger"}`} aria-label="Default select example">
+                      <option value="">Select</option>
+                      <option value="one">One</option>
+                      <option value="two">Two</option>
+                      <option value="three">Three</option>
                     </select>
-                  </div>
-                  
-                </div>
-                <div className="row">
-                  <div className="mb-3 col-md-6">
-                    <label htmlFor="name" className="form-label">
-                      Owner Name
-                    </label>
-                    <input type="text" className="form-control" id="name" />
+                    {errors.appointment && <small className="text-danger">Please select appointment</small>}
                   </div>
                   <div className="mb-3 col-md-6">
-                    <label htmlFor="phone" className="form-label">
-                      Phone
-                    </label>
-                    <input type="text" className="form-control" id="phone" />
+                    <label className="form-label">Number of Animal</label>
+                    <input type="number" {...register("animalNumber", { required: true, valueAsNumber: true, min: 1 })} className={`form-control ${errors.animalNumber && "border-danger"}`} />
+                    {errors.animalNumber && <small className="text-danger">Please write number of animal</small>}
                   </div>
                 </div>
                 <div className="row">
                   <div className="mb-3 col-md-6">
-                    <label htmlFor="email" className="form-label">
-                      District
-                    </label>
+                    <label className="form-label">Owner Name</label>
+                    <input type="text" {...register("ownerName", { required: true })} className={`form-control ${errors.ownerName && "border-danger"}`} />
+                    {errors.ownerName && <small className="text-danger">Please write owner name</small>}
+                  </div>
+                  <div className="mb-3 col-md-6">
+                    <label className="form-label">Phone</label>
+                    <input type="text" {...register("phone", { required: true })} className={`form-control ${errors.phone && "border-danger"}`} />
+                    {errors.phone && <small className="text-danger">Please write phone number</small>}
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="mb-3 col-md-6">
+                    <label className="form-label">District</label>
                     {/* select drop down for district */}
-                    <select className="form-select" aria-label="Default select example">
-                      <option selected>Select</option>
-                      <option value="1">Rajshahi</option>
-                      <option value="2">Mymensingh</option>
-                      <option value="3">Three</option>
+                    <select {...register("district", { required: true })} className={`form-select ${errors.district && "border-danger"}`} aria-label="Default select example">
+                      <option defaultValue>Mymensingh</option>
                     </select>
+                    {errors.district && <small className="text-danger">Please select district</small>}
                   </div>
+
                   <div className="mb-3 col-md-6">
-                    <label htmlFor="address" className="form-label">
-                      Upazila
-                    </label>
+                    <label className="form-label">Upazila</label>
                     {/* select dropdown for upazila */}
-                    <select className="form-select" aria-label="Default select example">
-                      <option selected>Select</option>
-                      <option value="1">Chapainawabganj</option>
-                      <option value="2">Sibganj</option>
-                      <option value="3">Three</option>
+                    <select {...register("upazilla", { required: true })} className={`form-select ${errors.upazilla && "border-danger"}`} aria-label="Default select example">
+                      <option value="">Select</option>
+                      <option value="Mymensingh Sadar">Mymensingh Sadar</option>
+                      <option value="Trishal">Trishal</option>
+                      <option value="Bhaluka">Bhaluka</option>
+                      <option value="Fulbaria">Fulbaria</option>
+                      <option value="Muktagacha">Muktagacha</option>
+                      <option value="Gafargaon">Gafargaon</option>
+                      <option value="Gauripur">Gauripur</option>
+                      <option value="Ishwarganj">Ishwarganj</option>
+                      <option value="Nandail">Nandail</option>
+                      <option value="Tarakanda">Tarakanda</option>
+                      <option value="Fulpur">Fulpur</option>
+                      <option value="Haluaghat">Haluaghat</option>
+                      <option value="Dhubaura">Dhubaura</option>
                     </select>
+                    {errors.upazilla && <small className="text-danger">Please select any upazilla</small>}
                   </div>
                   <div className="mb-3">
-                    <label htmlFor="addres">Address</label>
-                    <textarea className="form-control" id="addres" rows="3"></textarea>
+                    <label>Address</label>
+                    <textarea type="text" {...register("address", { required: true })} className={`form-control ${errors.address && "border-danger"}`}></textarea>
+                    {errors.address && <small className="text-danger">Please write address</small>}
                   </div>
                   <div className="row">
                     <div className="mb-3 col-md-6">
-                      <label htmlFor="name" className="form-label">
-                        Status
-                      </label>
-                      {/* select field */}
-                      <select className="form-select" aria-label="Default select example">
-                        <option selected>Select</option>
-                        <option value="1">Pending</option>
-                        <option value="2">Approved</option>
+                      <label className="form-label">Status</label>
+                      <select {...register("status", { required: true })} className={`form-select ${errors.status && "border-danger"}`} aria-label="Default select example">
+                        <option value="">Select</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Approved">Approved</option>
                       </select>
+                      {errors.status && <small className="text-danger">Please select any status</small>}
                     </div>
                     <div className="mb-3 col-md-6">
-                      <label htmlFor="animal" className="form-label">
-                        Number of Animal
-                      </label>
-                      <input type="number" className="form-control" id="animal" />
+                      <label className="form-label">Department</label>
+                      <select {...register("department", { required: true })} className={`form-select ${errors.department && "border-danger"}`} aria-label="Default select example">
+                        <option value="">Select</option>
+                        <option value="1">Depart one</option>
+                        <option value="2">Depart Two</option>
+                      </select>
+                      {errors.department && <small className="text-danger">Please select any department</small>}
                     </div>
                   </div>
                   <div className="row">
                     <div className="mb-3 col-md-6">
-                      <label htmlFor="department" className="form-label">
-                        Department
-                      </label>
-                      <input type="text" name="name" className="form-control" id="department" />
+                      <label className="form-label">Registration Type</label>
+                      <select {...register("registrationType", { required: true })} className={`form-select ${errors.registrationType && "border-danger"}`} aria-label="Default select example">
+                        <option value="Offline">Offline</option>
+                        <option value="Online">Online</option>
+                      </select>
+                      {errors.registrationType && <small className="text-danger">Please select any registration type</small>}
+                    </div>
+                    <div className="mb-3 col-md-6">
+                      <label className="form-label">Patent Type</label>
+                      <select {...register("patientType", { required: true })} className={`form-select ${errors.patientType && "border-danger"}`} aria-label="Default select example">
+                        <option value="New">New</option>
+                        <option value="Old">Old</option>
+                      </select>
+                      {errors.registrationType && <small className="text-danger">Please select any registration type</small>}
                     </div>
                   </div>
+                  <div className="row">
+                    <div className="mb-3 col-md-6">
+                      <label className="form-label">Date & Time</label>
+                      <input type="datetime-local" {...register("date", { required: true })} className={`form-control ${errors.date && "border-danger"}`} />
+                      {errors.date && <small className="text-danger">Please select date & time</small>}
+                    </div>
+                  </div>
+                </div>
+                <div className="my-4 d-flex justify-content-center gap-4">
+                  <button type="reset" className="btn btn-danger text-white">
+                    Reset
+                  </button>
+                  <button type="submit" className="btn app-btn-primary">
+                    Submit
+                  </button>
                 </div>
               </form>
             </div>

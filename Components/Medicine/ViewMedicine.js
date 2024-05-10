@@ -71,9 +71,7 @@ const ViewMedicine = () => {
   return (
     <div className="container-fluid">
       <div className="app-card p-5 text-center shadow-sm mt-5">
-        <div className="d-flex justify-content-between">
-          <h3 className="page-title mb-4">Medicines</h3>
-        </div>
+        <h3 className="page-title mb-4 text-center">All Medicines</h3>
         <div className="mb-4">
           <div className="table-responsive">
             <table className="table table-hover table-borderless table-striped table-dark">
