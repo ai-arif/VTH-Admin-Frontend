@@ -1,13 +1,39 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import axiosInstance from "../../utils/axiosInstance";
 
 const AppointmentHome = () => {
+  const [searchPhone, setSearchPhone] = useState("");
+  const [oldPatent, setOldPatent] = useState(false);
   const {
     handleSubmit,
     register,
+    setValue,
     reset,
     formState: { errors },
   } = useForm();
+
+  const getUserByPhone = async () => {
+    try {
+      if (searchPhone === "") return;
+
+      const res = await axiosInstance.get(`/admin/user/${searchPhone}`);
+      const existingPatentData = res?.data?.data;
+      if (existingPatentData) {
+        setOldPatent(true);
+        setValue("ownerName", existingPatentData.fullName || "");
+        setValue("phone", existingPatentData.phone || "");
+        setValue("address", existingPatentData.address || "");
+        setValue("upazila", existingPatentData.upazila || "");
+      }
+    } catch (error) {
+      toast.error("No Data Found!");
+      reset();
+      setOldPatent(false);
+      console.error(error);
+    }
+  };
 
   const onSubmit = async (data) => {
     console.log(data);
@@ -84,7 +110,7 @@ const AppointmentHome = () => {
                   <div className="mb-3 col-md-6">
                     <label className="form-label">Upazila</label>
                     {/* select dropdown for upazila */}
-                    <select {...register("upazilla", { required: true })} className={`form-select ${errors.upazilla && "border-danger"}`} aria-label="Default select example">
+                    <select {...register("upazila", { required: true })} className={`form-select ${errors.upazila && "border-danger"}`} aria-label="Default select example">
                       <option value="">Select</option>
                       <option value="Mymensingh Sadar">Mymensingh Sadar</option>
                       <option value="Trishal">Trishal</option>
@@ -100,7 +126,7 @@ const AppointmentHome = () => {
                       <option value="Haluaghat">Haluaghat</option>
                       <option value="Dhubaura">Dhubaura</option>
                     </select>
-                    {errors.upazilla && <small className="text-danger">Please select any upazilla</small>}
+                    {errors.upazila && <small className="text-danger">Please select any upazilla</small>}
                   </div>
                   <div className="mb-3">
                     <label>Address</label>
@@ -139,8 +165,15 @@ const AppointmentHome = () => {
                     <div className="mb-3 col-md-6">
                       <label className="form-label">Patent Type</label>
                       <select {...register("patientType", { required: true })} className={`form-select ${errors.patientType && "border-danger"}`} aria-label="Default select example">
-                        <option value="New">New</option>
-                        <option value="Old">Old</option>
+                        {oldPatent ? (
+                          <>
+                            <option value="Old">Old</option> <option value="New">New</option>
+                          </>
+                        ) : (
+                          <>
+                            <option value="New">New</option> <option value="Old">Old</option>
+                          </>
+                        )}
                       </select>
                       {errors.registrationType && <small className="text-danger">Please select any registration type</small>}
                     </div>
