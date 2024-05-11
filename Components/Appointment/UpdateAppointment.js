@@ -1,72 +1,69 @@
-import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { addNewAppointment } from "../../features/appointment/appointmentSlice";
+import { fetchAppointmentById, updateExistingAppointment } from "../../features/appointment/appointmentSlice";
 import { fetchDepartment } from "../../features/department/departmentSlice";
-import axiosInstance from "../../utils/axiosInstance";
+import Loader from "../UI/Loader";
 
-const AppointmentHome = () => {
-  const [searchPhone, setSearchPhone] = useState("");
-  const [oldPatent, setOldPatent] = useState(false);
-  const [oldPatentData, setOldPatentData] = useState({});
-
+const UpdateAppointment = () => {
+  const router = useRouter();
+  const { id } = router.query;
   const dispatch = useDispatch();
-
+  const { appointment, status } = useSelector((state) => state.appointment);
   const { departments } = useSelector((state) => state.department);
-
   const {
     handleSubmit,
     register,
     setValue,
-    reset,
     formState: { errors },
   } = useForm();
 
   useEffect(() => {
+    dispatch(fetchAppointmentById(id));
     dispatch(fetchDepartment());
   }, [dispatch]);
 
-  const getUserByPhone = async () => {
-    try {
-      if (searchPhone === "") return;
-
-      const res = await axiosInstance.get(`/admin/user/${searchPhone}`);
-      const existingPatentData = res?.data?.data;
-      if (existingPatentData) {
-        setOldPatent(true);
-        setOldPatentData(existingPatentData);
-        setValue("ownerName", existingPatentData.fullName || "");
-        setValue("phone", existingPatentData.phone || "");
-        setValue("address", existingPatentData.address || "");
-        setValue("district", existingPatentData.district || "");
-        setValue("upazila", existingPatentData.upazila || "");
-      }
-    } catch (error) {
-      toast.error("No Data Found!");
-      reset();
-      setOldPatent(false);
-      console.error(error);
+  // Set default form values with existing data
+  useEffect(() => {
+    if (appointment) {
+      setValue("ownerName", appointment.ownerName || "");
+      setValue("phone", appointment.phone || 0);
+      setValue("district", appointment.district || "");
+      setValue("upazila", appointment.upazila || "");
+      setValue("address", appointment.address || "");
+      setValue("numberOfAnimals", appointment.numberOfAnimals || "");
+      setValue("status", appointment.status || "");
+      setValue("department", appointment.department || "");
+      setValue("registrationType", appointment.registrationType || "");
+      setValue("patientType", appointment.patientType || "");
+      setValue("date", appointment.date || "");
+      setValue("amount", appointment.amount || 0);
     }
-  };
+  }, [appointment, setValue]);
 
   const onSubmit = async (appointmentData) => {
-    if (oldPatent) {
-      appointmentData.owner = oldPatentData._id;
-    }
     try {
-      const response = await dispatch(addNewAppointment(appointmentData));
+      appointmentData.id = Number(id);
+
+      console.log(appointmentData);
+      const response = await dispatch(updateExistingAppointment(appointmentData));
+
       if (response?.payload?.success) {
-        toast.success("Appointment added successfully!");
-        reset();
+        toast.success("Appointment updated successfully!");
+        router.push("/appointment/view");
       } else {
-        toast.error("Failed to add appointment! Please try again later.");
+        toast.error("Failed to update appointment! Please try again later.");
       }
     } catch (error) {
-      console.error("An error occurred while adding appointment:", error);
-      toast.error("An error occurred while adding appointment. Please try again later.");
+      console.error("An error occurred while updating appointment:", error);
+      toast.error("An error occurred while updating appointment. Please try again later.");
     }
   };
+
+  //   loader
+  if (status === "loading") return <Loader />;
 
   return (
     <div className="container-fluid">
@@ -74,28 +71,9 @@ const AppointmentHome = () => {
         <div className="col-12">
           <div className="card pb-4">
             <div className="card-header">
-              <h4 className="card-header-title text-center">Add Appointment</h4>
+              <h4 className="card-header-title text-center">Edit Appointment</h4>
             </div>
             <div className="card-body">
-              <div className="row mb-4">
-                <div className="col-md-6">
-                  <input
-                    onChange={(e) => {
-                      setSearchPhone(e.target.value);
-                    }}
-                    type="text"
-                    className="form-control"
-                    placeholder="Recipient's Phone"
-                    aria-label="Recipient's phone"
-                    aria-describedby="button-addon2"
-                  />
-                  <button onClick={getUserByPhone} className="btn my-2 mx-1 btn-primary text-white" type="button" id="button-addon2">
-                    Search
-                  </button>
-                  <span className="small opacity-75 ps-2">(First search appointment using owner's phone)</span>
-                </div>
-                <div className="col-md-6"></div>
-              </div>
               <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="row">
                   <div className="mb-3 col-md-6">
@@ -162,7 +140,6 @@ const AppointmentHome = () => {
                   <div className="mb-3 col-md-6">
                     <label className="form-label">Department</label>
                     <select {...register("department", { required: true })} className={`form-select ${errors.department && "border-danger"}`} aria-label="Default select example">
-                      <option value="">Select</option>
                       {departments?.map((department) => (
                         <option key={department._id} value={department._id}>
                           {department.name}
@@ -184,15 +161,8 @@ const AppointmentHome = () => {
                   <div className="mb-3 col-md-6">
                     <label className="form-label">Patent Type</label>
                     <select {...register("patientType", { required: true })} className={`form-select ${errors.patientType && "border-danger"}`} aria-label="Default select example">
-                      {oldPatent ? (
-                        <>
-                          <option value="old">Old</option> <option value="new">New</option>
-                        </>
-                      ) : (
-                        <>
-                          <option value="new">New</option> <option value="old">Old</option>
-                        </>
-                      )}
+                      <option value="new">New</option>
+                      <option value="old">Old</option>
                     </select>
                     {errors.registrationType && <small className="text-danger">Please select any registration type</small>}
                   </div>
@@ -209,12 +179,9 @@ const AppointmentHome = () => {
                     {errors.amount && <small className="text-danger">Please write pay amount</small>}
                   </div>
                 </div>
-                <div className="my-4 d-flex justify-content-center gap-4">
-                  <button type="reset" className="btn btn-danger text-white">
-                    Reset
-                  </button>
+                <div className="my-4 d-flex justify-content-center">
                   <button type="submit" className="btn app-btn-primary">
-                    Submit
+                    Update Appointment
                   </button>
                 </div>
               </form>
@@ -226,4 +193,4 @@ const AppointmentHome = () => {
   );
 };
 
-export default AppointmentHome;
+export default UpdateAppointment;
