@@ -12,6 +12,7 @@ import { CiEdit } from "react-icons/ci";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import Swal from "sweetalert2";
 
+
 export default function TestParameter() {
   const dispatch = useDispatch();
   const [inputValue, setInputValue] = useState("");
@@ -32,7 +33,6 @@ export default function TestParameter() {
   const { tests, status, parameterList, subParameterList } = useSelector(
     (state) => state.test
   );
-   console.log("showig test",parameterList)
   useEffect(() => {
     dispatch(fetchTest());
   }, [dispatch]);
@@ -45,6 +45,7 @@ export default function TestParameter() {
     dispatch(fetchSubParameter(selectedParameter.id));
   }, [selectedParameter, type, text, check]);
 
+  
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
   };
