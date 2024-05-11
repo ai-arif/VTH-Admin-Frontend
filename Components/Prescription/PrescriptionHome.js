@@ -1,5 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
+import { fetchMedicine } from "../../features/medicine/medicineSlice";
+import { fetchTest } from "../../features/test/testSlice";
 
 // Define custom styles
 const customStyles = {
@@ -16,6 +19,10 @@ const customStyles = {
     color: "#fff",
     backgroundColor: state.isSelected ? "#15a362" : "#2d323f",
   }),
+  input: (provided) => ({
+    ...provided,
+    color: "#fff",
+  }),
   multiValue: (provided) => ({
     ...provided,
     backgroundColor: "#15a362",
@@ -26,14 +33,26 @@ const customStyles = {
   }),
 };
 
-// Define tests option
-const options = [
-  { value: "test one", label: "Test One" },
-  { value: "test two", label: "Test two" },
-  { value: "test three", label: "Test three" },
-];
-
 const PrescriptionHome = () => {
+  const dispatch = useDispatch();
+  const { tests } = useSelector((state) => state.test);
+  const { medicines } = useSelector((state) => state.medicine);
+
+  useEffect(() => {
+    dispatch(fetchMedicine());
+    dispatch(fetchTest());
+  }, [dispatch]);
+
+  // Transforming tests and medicines data
+  const testOptions = tests?.data?.map((test) => ({
+    value: test.testName,
+    label: test.testName,
+  }));
+  const medicineOptions = medicines?.data?.map((medicine) => ({
+    value: medicine.name,
+    label: medicine.name,
+  }));
+
   return (
     <div className="container-fluid">
       <div className="row">
@@ -56,9 +75,7 @@ const PrescriptionHome = () => {
               <form>
                 <div className="row">
                   <div className="mb-3 col-md-6">
-                    <label htmlFor="name" className="form-label">
-                      Select Appointment
-                    </label>
+                    <label className="form-label">Select Appointment</label>
                     <select className="form-select" aria-label="Default select example">
                       <option selected>Select</option>
                       <option value="1">One</option>
@@ -67,36 +84,25 @@ const PrescriptionHome = () => {
                     </select>
                   </div>
                   <div className="mb-3 col-md-6">
-                    <label htmlFor="phone" className="form-label">
-                      CASE NO
-                    </label>
-                    <input readOnly={true} type="text" className="form-control" value={"pxx3233Wr"} id="phone" />
+                    <label className="form-label">CASE NO</label>
+                    <input readOnly={true} type="text" className="form-control" value={"pxx3233Wr"} />
                   </div>
                 </div>
                 <div className="row">
                   <div className="mb-3 col-md-6">
-                    <label htmlFor="name" className="form-label">
-                      Owner Name
-                    </label>
-                    <input type="text" className="form-control" id="name" />
+                    <label className="form-label">Owner Name</label>
+                    <input type="text" className="form-control" />
                   </div>
                   <div className="mb-3 col-md-6">
-                    <label htmlFor="phone" className="form-label">
-                      Phone
-                    </label>
-                    <input type="text" className="form-control" id="phone" />
+                    <label className="form-label">Phone</label>
+                    <input type="text" className="form-control" />
                   </div>
                 </div>
                 <div className="row">
                   <div className="mb-3 col-md-6">
-                    <label htmlFor="email" className="form-label">
-                      District
-                    </label>
+                    <label className="form-label">District</label>
                     <select className="form-select" aria-label="Default select example">
-                      <option selected>Select</option>
-                      <option value="1">Rajshahi</option>
                       <option value="2">Mymensingh</option>
-                      <option value="3">Three</option>
                     </select>
                   </div>
                   <div className="mb-3 col-md-6">
@@ -105,47 +111,56 @@ const PrescriptionHome = () => {
                     </label>
                     {/* select dropdown for upazila */}
                     <select className="form-select" aria-label="Default select example">
-                      <option selected>Select</option>
-                      <option value="1">Chapainawabganj</option>
-                      <option value="2">Sibganj</option>
-                      <option value="3">Three</option>
+                      <option value="">Select</option>
+                      <option value="Mymensingh Sadar">Mymensingh Sadar</option>
+                      <option value="Trishal">Trishal</option>
+                      <option value="Bhaluka">Bhaluka</option>
+                      <option value="Fulbaria">Fulbaria</option>
+                      <option value="Muktagacha">Muktagacha</option>
+                      <option value="Gafargaon">Gafargaon</option>
+                      <option value="Gauripur">Gauripur</option>
+                      <option value="Ishwarganj">Ishwarganj</option>
+                      <option value="Nandail">Nandail</option>
+                      <option value="Tarakanda">Tarakanda</option>
+                      <option value="Fulpur">Fulpur</option>
+                      <option value="Haluaghat">Haluaghat</option>
+                      <option value="Dhubaura">Dhubaura</option>
                     </select>
                   </div>
+                </div>
+                <div className="mb-3">
+                  <label className="form-label">Address</label>
+                  <textarea className="form-control" rows="3"></textarea>
+                </div>
+                <div className="row">
                   <div className="mb-3">
-                    <label htmlFor="addres">Address</label>
-                    <textarea className="form-control" id="addres" rows="3"></textarea>
+                    <label className="form-label">Medicine</label>
+                    <Select options={medicineOptions} isMulti isSearchable name="medicines" styles={customStyles} />
                   </div>
-                  <div className="row">
-                    <div className="mb-3 col-md-6">
-                      <label htmlFor="email" className="form-label">
-                        Medicine
-                      </label>
-                      <select className="form-select" aria-label="Default select example">
-                        <option selected>Select</option>
-                        <option value="1">Napa</option>
-                        <option value="2">Alatrol</option>
-                        <option value="3">Three</option>
-                      </select>
-                    </div>
-                    <div className="mb-3 col-md-6">
-                      <label htmlFor="phone" className="form-label">
-                        Diagnose
-                      </label>
-                      <input type="text" className="form-control" id="phone" />
-                    </div>
+                </div>
+                <div className="row">
+                  <div className="mb-3">
+                    <label className="form-label">Tests</label>
+                    <Select options={testOptions} isMulti isSearchable name="tests" styles={customStyles} />
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="mb-3">
+                    <label className="form-label">Diagnose</label>
+                    <input type="text" className="form-control" />
                   </div>
                   <div className="mb-3">
-                    <label htmlFor="addres">Advice</label>
-                    <textarea className="form-control" id="addres" rows="5"></textarea>
+                    <label className="form-label">Advice</label>
+                    <textarea className="form-control" rows="5"></textarea>
                   </div>
-                  <div className="row">
-                    <div className="mb-3">
-                      <label htmlFor="name" className="form-label">
-                        Tests
-                      </label>
-                      <Select options={options} isMulti name="tests" styles={customStyles} />
-                    </div>
-                  </div>
+                </div>
+                <div className="my-3 d-flex justify-content-center gap-4">
+                  <button type="reset" className="btn btn-danger text-white">
+                    Reset
+                  </button>
+                  <button type="submit" className="btn app-btn-primary">
+                    Submit
+                  </button>
                 </div>
               </form>
             </div>
