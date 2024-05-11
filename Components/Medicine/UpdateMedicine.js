@@ -15,7 +15,6 @@ const UpdateMedicine = () => {
     handleSubmit,
     register,
     setValue,
-    reset,
     formState: { errors },
   } = useForm();
 

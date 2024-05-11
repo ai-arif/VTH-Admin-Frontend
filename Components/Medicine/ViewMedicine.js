@@ -121,7 +121,7 @@ const ViewMedicine = () => {
           </div>
           <nav aria-label="Page navigation example">
             <ul className="pagination">
-              <li class="page-item">
+              <li className="page-item">
                 <a className="page-link" href="#">
                   Previous
                 </a>
