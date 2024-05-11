@@ -44,10 +44,10 @@ const PatientRegistrationForm = () => {
                       </label>
                       {/* select drop down for district */}
                       <select className="form-select" aria-label="Default select example">
-                        <option selected>Select</option>
-                        <option value="1">Rajshahi</option>
-                        <option value="2">Mymensingh</option>
-                        <option value="3">Three</option>
+                        <option value="" selected>
+                          Select
+                        </option>
+                        <option value="Mymensingh">Mymensingh</option>
                       </select>
                     </div>
                     <div className="mb-3 col-md-6">
@@ -56,10 +56,22 @@ const PatientRegistrationForm = () => {
                       </label>
                       {/* select dropdown for upazila */}
                       <select className="form-select" aria-label="Default select example">
-                        <option selected>Select</option>
-                        <option value="1">Chapainawabganj</option>
-                        <option value="2">Sibganj</option>
-                        <option value="3">Three</option>
+                        <option value="" selected>
+                          Select
+                        </option>
+                        <option value="Mymensingh Sadar">Mymensingh Sadar</option>
+                        <option value="Trishal">Trishal</option>
+                        <option value="Bhaluka">Bhaluka</option>
+                        <option value="Fulbaria">Fulbaria</option>
+                        <option value="Muktagacha">Muktagacha</option>
+                        <option value="Gafargaon">Gafargaon</option>
+                        <option value="Gauripur">Gauripur</option>
+                        <option value="Ishwarganj">Ishwarganj</option>
+                        <option value="Nandail">Nandail</option>
+                        <option value="Tarakanda">Tarakanda</option>
+                        <option value="Fulpur">Fulpur</option>
+                        <option value="Haluaghat">Haluaghat</option>
+                        <option value="Dhubaura">Dhubaura</option>
                       </select>
                     </div>
                   </div>

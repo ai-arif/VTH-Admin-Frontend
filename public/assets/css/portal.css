@@ -2037,15 +2037,15 @@ progress {
 }
 .form-control::-webkit-input-placeholder {
   color: var(--vth-light);
-  opacity: 1;
+  opacity: 0.75;
 }
 .form-control::-moz-placeholder {
   color: var(--vth-light);
-  opacity: 1;
+  opacity: 0.75;
 }
 .form-control::placeholder {
   color: var(--vth-light);
-  opacity: 1;
+  opacity: 0.75;
 }
 .form-control:disabled {
   background-color: var(--bs-secondary-bg);
