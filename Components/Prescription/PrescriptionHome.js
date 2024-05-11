@@ -35,12 +35,12 @@ const options = [
 
 const PrescriptionHome = () => {
   return (
-    <div className="container-fluid py-4">
+    <div className="container-fluid">
       <div className="row">
         <div className="col-12">
-          <div className="card py-5">
+          <div className="card">
             <div className="card-header">
-              <h4 className="card-header-title">Prescription</h4>
+              <h4 className="card-header-title text-center">Prescription</h4>
             </div>
             <div className="card-body">
               <div className="row mb-4">
@@ -59,7 +59,6 @@ const PrescriptionHome = () => {
                     <label htmlFor="name" className="form-label">
                       Select Appointment
                     </label>
-                    {/* select field */}
                     <select className="form-select" aria-label="Default select example">
                       <option selected>Select</option>
                       <option value="1">One</option>
