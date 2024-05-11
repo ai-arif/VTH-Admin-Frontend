@@ -70,7 +70,7 @@ const ViewMedicine = () => {
 
   return (
     <div className="container-fluid">
-      <div className="app-card p-5 text-center shadow-sm mt-5">
+      <div className="app-card p-5 text-center shadow-sm">
         <h3 className="page-title mb-4 text-center">All Medicines</h3>
         <div className="pb-4">
           <input type="text" className="form-control w-25" placeholder="Search by name brand" />
