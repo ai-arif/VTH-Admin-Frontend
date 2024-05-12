@@ -1,14 +1,25 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { addTest, deleteTest, getTest, updateTest,getParameter,getSubParameter } from "./testAPI.js";
+import { addTest, deleteTest, getTest, updateTest,getParameter,getSubParameter, getAllSubParameter } from "./testAPI.js";
 
 const initialState = {
   test: {},
   tests: [],
   parameterList: [],
   subParameterList:[],
+  allSubParameterList:[],
   status: "idle",
   error: null,
 };
+
+
+export const fetchAllSubParameter = createAsyncThunk(
+  "test/fetchSubParameterAll",
+  async (id) => {
+    const response = await getAllSubParameter()
+    return response;
+  }
+);
+
 
 
 export const fetchSubParameter = createAsyncThunk(
@@ -88,6 +99,10 @@ export const testSlice = createSlice({
       .addCase(fetchSubParameter.fulfilled, (state, action) => {
         state.status = "success",
         state.subParameterList = action.payload.data
+      })
+      .addCase(fetchAllSubParameter.fulfilled, (state, action) => {
+        state.status = "success",
+        state.allSubParameterList = action.payload.data
       })
       .addCase(updateTestData.pending, (state) => {
         state.status = "loading";
