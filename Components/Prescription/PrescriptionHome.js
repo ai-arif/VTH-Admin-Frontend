@@ -73,14 +73,14 @@ const PrescriptionHome = () => {
     setSelectedPatentInfo(selectedPatent);
   };
 
-  const onSubmit = async (data) => {
-    data.medicines = data?.medicines?.map((medicine) => medicine.value);
-    data.tests = data?.tests?.map((test) => test.value);
-    console.log(data);
+  const onSubmit = async (prescriptionData) => {
+    prescriptionData.medicines = prescriptionData?.medicines?.map((medicine) => medicine.value);
+    prescriptionData.tests = prescriptionData?.tests?.map((test) => test.value);
+    console.log(prescriptionData);
     // try {
-    //   data.medicines = data?.medicines?.map((medicine) => medicine.value);
-    //   data.tests = data?.tests?.map((test) => test.value);
-    //   const response = await dispatch(create(data));
+    //   prescriptionData.medicines = prescriptionData?.medicines?.map((medicine) => medicine.value);
+    //   prescriptionData.tests = prescriptionData?.tests?.map((test) => test.value);
+    //   const response = await dispatch(create(prescriptionData));
     //   if (response?.payload?.success) {
     //     toast.success("Prescription added successfully!");
     //     reset();
