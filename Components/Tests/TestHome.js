@@ -1,12 +1,10 @@
-
 import React, { useEffect, useState } from "react";
 
 import { FaPlus } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
-import { fetchTest,deleteTestData } from "../../features/test/testSlice";
+import { deleteTestData, fetchTest } from "../../features/test/testSlice";
 import AddTest from "./modals/AddTest";
-
 
 import UpdateTest from "./modals/UpdateTest";
 
@@ -48,7 +46,7 @@ const TestHome = () => {
         try {
           const response = await dispatch(deleteTestData(id));
           dispatch(fetchTest());
-          
+
           Swal.fire({
             icon: "success",
             title: "Deleted!",
@@ -135,7 +133,7 @@ const TestHome = () => {
                 </div>
                 <nav aria-label="Page navigation example">
                   <ul className="pagination">
-                    <li class="page-item">
+                    <li className="page-item">
                       <a className="page-link" href="#">
                         Previous
                       </a>

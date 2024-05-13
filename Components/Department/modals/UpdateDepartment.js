@@ -45,9 +45,9 @@ const UpdateDepartment = ({ existingData }) => {
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
             <div className="modal-header">
-              <h1 className="modal-title fs-5" id="updateDepartmentLabel">
-                Update Test
-              </h1>
+              <h2 className="modal-title fs-5" id="updateDepartmentLabel">
+                Update Department
+              </h2>
               <button id="closeModal" type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form onSubmit={handleSubmit(onSubmit)} className="modal-body">

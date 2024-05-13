@@ -13,13 +13,13 @@ const index = () => {
           <Tab>Pending</Tab>
         </TabList>
 
-        {/* pending appointment */}
-        <TabPanel>
-          <PendingAppointment />
-        </TabPanel>
         {/* approved appointment */}
         <TabPanel>
           <ApprovedAppointment />
+        </TabPanel>
+        {/* pending appointment */}
+        <TabPanel>
+          <PendingAppointment />
         </TabPanel>
       </Tabs>
     </section>
