@@ -1,10 +1,11 @@
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 import { fetchMedicine } from "../../features/medicine/medicineSlice";
-import { fetchSinglePrescription } from "../../features/prescription/prescriptionSlice";
+import { fetchSinglePrescription, updatePrescriptionData } from "../../features/prescription/prescriptionSlice";
 import { fetchTest } from "../../features/test/testSlice";
 import Loader from "../UI/Loader";
 
@@ -44,12 +45,43 @@ const UpdatePrescription = () => {
   const { prescription, status } = useSelector((state) => state.prescription);
   const { tests } = useSelector((state) => state.test);
   const { medicines } = useSelector((state) => state.medicine);
-  console.log(prescription?.data);
 
-  const { handleSubmit, register, control } = useForm({ values: prescription?.data });
+  // transforming tests and medicines data
+  const medicineOptions = medicines?.data?.map((medicine) => ({
+    value: medicine._id,
+    label: medicine.name,
+  }));
+  const testOptions = tests?.data?.map((test) => ({
+    value: test._id,
+    label: test.testName,
+  }));
 
-  const onSubmit = (data) => {
-    console.log(data);
+  // find selected medicines and tests then matching
+  const selectedMedicines = prescription?.data?.medicines;
+  const selectedTests = prescription?.data?.tests;
+  const matchingMedicines = medicineOptions?.filter((data) => selectedMedicines?.includes(data.value));
+  const matchingTests = testOptions?.filter((data) => selectedTests?.includes(data.value));
+
+  const { handleSubmit, register, control } = useForm({ values: { ...prescription?.data, medicines: matchingMedicines, tests: matchingTests } });
+
+  const onSubmit = async (prescriptionData) => {
+    try {
+      prescriptionData.id = id;
+      prescriptionData.medicines = prescriptionData?.medicines?.map((medicine) => medicine.value);
+      prescriptionData.tests = prescriptionData?.tests?.map((test) => test.value);
+
+      const response = await dispatch(updatePrescriptionData(prescriptionData));
+
+      if (response?.payload?.success) {
+        toast.success("Prescription updated successfully!");
+        router.push("/prescription/view");
+      } else {
+        toast.error("Failed to update prescription! Please try again later.");
+      }
+    } catch (error) {
+      toast.error("An error occurred while updating prescription. Please try again later.");
+      console.error(error);
+    }
   };
 
   useEffect(() => {
@@ -57,17 +89,6 @@ const UpdatePrescription = () => {
     dispatch(fetchMedicine());
     dispatch(fetchTest());
   }, [dispatch]);
-
-  // Transforming tests and medicines data
-  const testOptions = tests?.data?.map((test) => ({
-    value: test._id,
-    label: test.testName,
-  }));
-
-  const medicineOptions = medicines?.data?.map((medicine) => ({
-    value: medicine._id,
-    label: medicine.name,
-  }));
 
   //   loader
   if (status === "loading") return <Loader />;
@@ -87,8 +108,8 @@ const UpdatePrescription = () => {
                     <label className="form-label">Selected Appointment</label>
                     {/* show case no, owner name & date */}
                     <select {...register("appointment", { required: true })} className="form-select" aria-label="Default select example">
-                      <option selected>
-                        {prescription?.data?.appointment?.caseNo} {prescription?.data?.appointment?.ownerName} {prescription?.data?.appointment?.date}
+                      <option value={prescription?.data?.appointment?._id}>
+                        {prescription?.data?.appointment?.ownerName} {prescription?.data?.appointment?.date}
                       </option>
                     </select>
                   </div>
@@ -124,13 +145,18 @@ const UpdatePrescription = () => {
                 <div className="row">
                   <div className="mb-3">
                     <label className="form-label">Medicine</label>
-                    <Controller name="medicines" control={control} defaultValue={[]} render={({ field }) => <Select options={medicineOptions} isMulti {...field} styles={customStyles} />} />
+                    <Controller
+                      name="medicines"
+                      control={control}
+                      defaultValue={matchingMedicines}
+                      render={({ field }) => <Select options={medicineOptions} isMulti {...field} styles={customStyles} />}
+                    />
                   </div>
                 </div>
                 <div className="row">
                   <div className="mb-3">
                     <label className="form-label">Tests</label>
-                    <Controller name="tests" control={control} defaultValue={[]} render={({ field }) => <Select options={testOptions} isMulti {...field} styles={customStyles} />} />
+                    <Controller name="tests" control={control} defaultValue={matchingTests} render={({ field }) => <Select options={testOptions} isMulti {...field} styles={customStyles} />} />
                   </div>
                 </div>
                 <div className="row">
