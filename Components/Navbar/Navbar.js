@@ -280,12 +280,12 @@ const Navbar = () => {
                 <div id="submenu-2" className="collapse submenu submenu-2" data-bs-parent="#menu-accordion">
                   <ul className="submenu-list list-unstyled">
                     <li className="submenu-item">
-                      <Link className="submenu-link" href="/patient-registration/new">
+                      <Link className="submenu-link" href="/patient-registration/add">
                         New Registration
                       </Link>
                     </li>
                     <li className="submenu-item">
-                      <Link className="submenu-link" href="/patient-registration">
+                      <Link className="submenu-link" href="/patient-registration/view">
                         View Registration
                       </Link>
                     </li>
