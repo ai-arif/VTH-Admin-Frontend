@@ -40,26 +40,6 @@ const AddMedicine = () => {
             <div className="card-body">
               <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="row">
-                  {/* <div className="mb-3 col-md-6">
-                    <label className="form-label">
-                      Select Appointment
-                    </label>
-                    <select className="form-select" aria-label="Default select example">
-                      <option selected>Select</option>
-                      <option value="1">One</option>
-                      <option value="2">Two</option>
-                      <option value="3">Three</option>
-                    </select>
-                  </div> */}
-                  {/* <div className="mb-3 col-md-6">
-                    <label className="form-label">
-                      CASE NO
-                    </label>
-                    <input readOnly={true} type="text" className="form-control" value={"pxx3233Wr"} id="phone" />
-                  </div> */}
-                </div>
-
-                <div className="row">
                   <div className="mb-3 col-md-6">
                     <label className="form-label">Medicine Name</label>
                     <input type="text" {...register("name", { required: true })} className={`form-control ${errors.name && "border-danger"}`} id="name" />
