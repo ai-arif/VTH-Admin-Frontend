@@ -1,9 +1,10 @@
 import React from "react";
+import ViewPrescription from "../../../../Components/Prescription/ViewPrescription";
 
 const index = () => {
   return (
     <div>
-      <h2>View Prescription</h2>
+      <ViewPrescription />
     </div>
   );
 };
