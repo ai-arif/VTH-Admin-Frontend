@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 import { fetchAppointmentsByPhone } from "../../features/appointment/appointmentSlice";
 import { fetchMedicine } from "../../features/medicine/medicineSlice";
+import { createPrescription } from "../../features/prescription/prescriptionSlice";
 import { fetchTest } from "../../features/test/testSlice";
 
 // Define custom styles
@@ -74,23 +75,24 @@ const PrescriptionHome = () => {
   };
 
   const onSubmit = async (prescriptionData) => {
-    prescriptionData.medicines = prescriptionData?.medicines?.map((medicine) => medicine.value);
-    prescriptionData.tests = prescriptionData?.tests?.map((test) => test.value);
-    console.log(prescriptionData);
-    // try {
-    //   prescriptionData.medicines = prescriptionData?.medicines?.map((medicine) => medicine.value);
-    //   prescriptionData.tests = prescriptionData?.tests?.map((test) => test.value);
-    //   const response = await dispatch(create(prescriptionData));
-    //   if (response?.payload?.success) {
-    //     toast.success("Prescription added successfully!");
-    //     reset();
-    //   } else {
-    //     toast.error("Failed to add prescription! Please try again later.");
-    //   }
-    // } catch (error) {
-    //   toast.error("An error occurred while adding prescription. Please try again later.");
-    //   console.error(error);
-    // }
+    try {
+      prescriptionData.medicines = prescriptionData?.medicines?.map((medicine) => medicine.value);
+      prescriptionData.tests = prescriptionData?.tests?.map((test) => test.value);
+
+      const response = await dispatch(createPrescription(prescriptionData));
+
+      if (response?.payload?.success) {
+        toast.success("Prescription added successfully!");
+        reset();
+        setSearchPhone("");
+        // setPatentInfo([]);
+      } else {
+        toast.error("Failed to add prescription! Please try again later.");
+      }
+    } catch (error) {
+      toast.error("An error occurred while adding prescription. Please try again later.");
+      console.error(error);
+    }
   };
 
   useEffect(() => {
@@ -153,32 +155,32 @@ const PrescriptionHome = () => {
                   </div>
                   <div className="mb-3 col-md-6">
                     <label className="form-label">CASE NO</label>
-                    <input type="number" readOnly value={selectedPatentInfo?.caseNo} className="form-control" />
+                    <input type="number" readOnly required value={selectedPatentInfo?.caseNo} className="form-control" />
                   </div>
                 </div>
                 <div className="row">
                   <div className="mb-3 col-md-6">
                     <label className="form-label">Owner Name</label>
-                    <input type="text" readOnly value={selectedPatentInfo?.ownerName} className="form-control" />
+                    <input type="text" readOnly required value={selectedPatentInfo?.ownerName} className="form-control" />
                   </div>
                   <div className="mb-3 col-md-6">
                     <label className="form-label">Phone</label>
-                    <input type="text" readOnly value={selectedPatentInfo?.phone} className="form-control" />
+                    <input type="text" readOnly required value={selectedPatentInfo?.phone} className="form-control" />
                   </div>
                 </div>
                 <div className="row">
                   <div className="mb-3 col-md-6">
                     <label className="form-label">District</label>
-                    <input type="text" readOnly value={selectedPatentInfo?.district} className="form-control" />
+                    <input type="text" readOnly required value={selectedPatentInfo?.district} className="form-control" />
                   </div>
                   <div className="mb-3 col-md-6">
                     <label className="form-label">Upazila</label>
-                    <input type="text" readOnly value={selectedPatentInfo?.upazila} className="form-control" />
+                    <input type="text" readOnly required value={selectedPatentInfo?.upazila} className="form-control" />
                   </div>
                 </div>
                 <div className="mb-3">
                   <label className="form-label">Address</label>
-                  <input readOnly value={selectedPatentInfo?.address} className="form-control"></input>
+                  <input readOnly required value={selectedPatentInfo?.address} className="form-control"></input>
                 </div>
                 <div className="row">
                   <div className="mb-3">
