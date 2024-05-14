@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { createTest,fetchTest } from "../../../features/test/testSlice";
-import { createUserAsync } from "../../../features/user/userSlice";
+import { createUserAsync } from "../../../features/staff/staffSlice";
 
 const AddTest = () => {
   const dispatch = useDispatch();

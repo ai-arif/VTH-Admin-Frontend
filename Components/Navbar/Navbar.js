@@ -9,7 +9,7 @@ import { HiOutlineUserGroup } from "react-icons/hi2";
 import { SlLayers } from "react-icons/sl";
 import { VscOutput } from "react-icons/vsc";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUser } from "../../features/user/userSlice";
+import { fetchUser } from "../../features/staff/staffSlice";
 
 const Navbar = () => {
   const dispatch = useDispatch();

@@ -1,34 +1,34 @@
 import axiosInstance from "../../utils/axiosInstance";
 
-export const getUser = async () => {
+export const getStaffs = async () => {
   try {
-    const response = await axiosInstance.get("/user");
+    const response = await axiosInstance.get("/staffs");
     return response.data;
   } catch (error) {
     return Promise.reject(error);
   }
 };
-export const updateUser = async (data) => {
+export const updateStaffs = async (data) => {
   try {
-    const response = await axiosInstance.put("/user", data);
-    return response.data;
-  } catch (error) {
-    return Promise.reject(error);
-  }
-};
-
-export const getAllUsers = async () => {
-  try {
-    const response = await axiosInstance.get("/user");
+    const response = await axiosInstance.put("/staffs", data);
     return response.data;
   } catch (error) {
     return Promise.reject(error);
   }
 };
 
-export const createUser = async (data) => {
+export const getAllStaffs = async () => {
   try {
-    const response = await axiosInstance.post("/create-user", data);
+    const response = await axiosInstance.get("/staffs");
+    return response.data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
+export const createStaffs = async (data) => {
+  try {
+    const response = await axiosInstance.post("/staffs/create-staff", data);
     return response.data;
   } catch (error) {
     return Promise.reject(error);

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchDepartment } from "../../../features/department/departmentSlice";
-import { createUserAsync } from "../../../features/user/userSlice";
+import { createUserAsync } from "../../../features/staff/staffSlice";
 
 const AddUser = () => {
   const dispatch = useDispatch();

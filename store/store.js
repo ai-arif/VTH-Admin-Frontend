@@ -3,14 +3,14 @@ import departmentSlice from "../features/department/departmentSlice";
 import medicineSlice from "../features/medicine/medicineSlice";
 import appointmentSlice from "../features/appointment/appointmentSlice";
 import testSlice from "../features/test/testSlice";
-import userSlice from "../features/user/userSlice";
 import prescriptionSlice from "../features/prescription/prescriptionSlice";
 import patientRegistrationSlice from "../features/patient-registration/patientRegistrationSlice";
 import userPatientSlice from "../features/userPatient/userPatientSlice";
+import staffSlice from "../features/staff/staffSlice";
 
 const store = configureStore({
   reducer: {
-    user: userSlice,
+    staff: staffSlice,
     test: testSlice,
     medicine: medicineSlice,
     appointment: appointmentSlice,
