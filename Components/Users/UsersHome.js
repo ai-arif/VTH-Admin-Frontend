@@ -1,15 +1,15 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAllUsers } from "../../features/staff/staffSlice";
+// import { fetchAllUsers } from "../../features/staff/staffSlice";
 import AddUser from "./modals/AddUser";
 
 const UsersHome = () => {
   const dispatch = useDispatch();
-  const { users, user } = useSelector((state) => state.user);
+  // const { users, user } = useSelector((state) => state.user);
   useEffect(() => {
-    if (users.length == 0) {
-      dispatch(fetchAllUsers());
-    }
+    // if (users.length == 0) {
+      // dispatch(fetchAllUsers());
+    // }
   }, [dispatch]);
 
   return (
@@ -39,7 +39,7 @@ const UsersHome = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {users.map((user1, index) => {
+                    {/* {users.map((user1, index) => {
                       return (
                         <tr key={index}>
                           <td>
@@ -53,7 +53,7 @@ const UsersHome = () => {
                           </td>
                         </tr>
                       );
-                    })}
+                    })} */}
                   </tbody>
                 </table>
               </div>
