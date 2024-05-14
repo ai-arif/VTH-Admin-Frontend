@@ -26,7 +26,7 @@ export const getAllStaffs = async () => {
   }
 };
 
-export const createStaff = async (data) => {
+export const addStaff = async (data) => {
   try {
     const response = await axiosInstance.post("/staffs/create-staff", data);
     return response.data;
