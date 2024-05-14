@@ -62,7 +62,10 @@ const UpdatePrescription = () => {
   const matchingMedicines = medicineOptions?.filter((data) => selectedMedicines?.includes(data.value));
   const matchingTests = testOptions?.filter((data) => selectedTests?.includes(data.value));
 
-  const { handleSubmit, register, control } = useForm({ values: { ...prescription?.data, medicines: matchingMedicines, tests: matchingTests } });
+  // convert date string to a Date object and Format the date
+  const nextVisitDate = prescription?.data?.nextVisit ? new Date(prescription.data.nextVisit).toISOString().split("T")[0] : "";
+
+  const { handleSubmit, register, control } = useForm({ values: { ...prescription?.data, medicines: matchingMedicines, tests: matchingTests, nextVisit: nextVisitDate } });
 
   const onSubmit = async (prescriptionData) => {
     try {
@@ -106,12 +109,13 @@ const UpdatePrescription = () => {
                 <div className="row">
                   <div className="mb-3 col-md-6">
                     <label className="form-label">Selected Appointment</label>
-                    {/* show case no, owner name & date */}
-                    <select {...register("appointment", { required: true })} className="form-select" aria-label="Default select example">
-                      <option value={prescription?.data?.appointment?._id}>
-                        {prescription?.data?.appointment?.ownerName} {prescription?.data?.appointment?.date}
-                      </option>
-                    </select>
+                    <input
+                      type="text"
+                      readOnly
+                      required
+                      value={`${prescription?.data?.appointment?.caseNo} ${prescription?.data?.appointment?.ownerName} ${prescription?.data?.appointment?.date}`}
+                      className="form-control"
+                    />
                   </div>
                   <div className="mb-3 col-md-6">
                     <label className="form-label">CASE NO</label>

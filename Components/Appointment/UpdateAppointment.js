@@ -13,6 +13,7 @@ const UpdateAppointment = () => {
   const dispatch = useDispatch();
   const { appointment, status } = useSelector((state) => state.appointment);
   const { departments } = useSelector((state) => state.department);
+
   const {
     handleSubmit,
     register,
@@ -47,7 +48,6 @@ const UpdateAppointment = () => {
     try {
       appointmentData.id = Number(id);
 
-      console.log(appointmentData);
       const response = await dispatch(updateExistingAppointment(appointmentData));
 
       if (response?.payload?.success) {
