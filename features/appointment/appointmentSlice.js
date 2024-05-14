@@ -1,15 +1,20 @@
-import {getAppointmentById, getAppointments, addAppointment, updateAppointment, deleteAppointment,getAppointmentsByPhone} from "./appointmentAPI";
+import {getAppointmentById, getPendingAppointments,getApprovedAppointments, addAppointment, updateAppointment, deleteAppointment,getAppointmentsByPhone} from "./appointmentAPI";
 import {createSlice, createAsyncThunk} from "@reduxjs/toolkit";
 
 const initialState = {
     appointments: [],
+    pendingAppointments: [],
     appointment: null,
     status: "idle",
     error: null
 };
 
-export const fetchAppointments = createAsyncThunk("appointment/fetchAppointments", async () => {
-    return await getAppointments();
+export const fetchApprovedAppointments = createAsyncThunk("appointment/fetchApprovedAppointments", async () => {
+    return await getApprovedAppointments();
+});
+
+export const fetchPendingAppointments = createAsyncThunk("appointment/fetchPendingAppointments", async () => {
+    return await getPendingAppointments();
 });
 
 export const fetchAppointmentById = createAsyncThunk("appointment/fetchAppointmentById", async (id) => {
@@ -42,19 +47,27 @@ const appointmentSlice = createSlice({
         }
     },
     extraReducers: (builder) => {
-        builder.addCase(fetchAppointments.pending, (state) => {
+        builder.addCase(fetchApprovedAppointments.pending, (state) => {
             state.status = "loading";
         })
-        .addCase(fetchAppointments.fulfilled, (state, action) => {
+        .addCase(fetchApprovedAppointments.fulfilled, (state, action) => {
             state.status = "success";
             state.appointments = action.payload.data;
         })
-        .addCase(fetchAppointments.rejected, (state, action) => {
+        .addCase(fetchApprovedAppointments.rejected, (state, action) => {
             state.status = "failed";
             state.error = action.error.message;
         })
-        .addCase(fetchAppointmentById.pending, (state) => {
+        .addCase(fetchPendingAppointments.pending, (state) => {
             state.status = "loading";
+        })
+        .addCase(fetchPendingAppointments.fulfilled, (state, action) => {
+            state.status = "success";
+            state.pendingAppointments = action.payload.data;
+        })
+        .addCase(fetchPendingAppointments.rejected, (state, action) => {
+            state.status = "failed";
+            state.error = action.error.message;
         })
         .addCase(fetchAppointmentById.fulfilled, (state, action) => {
             state.status = "success";

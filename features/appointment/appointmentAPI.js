@@ -1,8 +1,17 @@
 import axiosInstance from "../../utils/axiosInstance";
 
-export const getAppointments = async () => {
+export const getApprovedAppointments = async () => {
     try {
-        const response = await axiosInstance.get("/appointment");
+        const response = await axiosInstance.get("/appointment/approved");
+        return response.data;
+    } catch (error) {
+        return Promise.reject(error);
+    }
+    };
+
+export const getPendingAppointments = async () => {
+    try {
+        const response = await axiosInstance.get("/appointment/pending");
         return response.data;
     } catch (error) {
         return Promise.reject(error);
