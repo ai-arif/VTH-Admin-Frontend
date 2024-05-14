@@ -6,6 +6,7 @@ import testSlice from "../features/test/testSlice";
 import userSlice from "../features/user/userSlice";
 import prescriptionSlice from "../features/prescription/prescriptionSlice";
 import patientRegistrationSlice from "../features/patient-registration/patientRegistrationSlice";
+import userPatientSlice from "../features/userPatient/userPatientSlice";
 
 const store = configureStore({
   reducer: {
@@ -15,7 +16,8 @@ const store = configureStore({
     appointment: appointmentSlice,
     department: departmentSlice,
     prescription: prescriptionSlice,
-    patient:patientRegistrationSlice
+    patient:patientRegistrationSlice,
+    userPatient: userPatientSlice,
   },
 });
 
