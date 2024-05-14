@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getStaffs, createStaffs, getAllStaffs, updateStaffs } from "./staffAPI";
+import { getStaffs, createStaff, getAllStaffs, updateStaffs } from "./staffAPI";
 
 const initialState = {
     staffs: [],
@@ -19,7 +19,7 @@ export const fetchAllStaffs = createAsyncThunk("staff/fetchAllStaffs", async () 
 });
 
 export const createStaff = createAsyncThunk("staff/createStaff", async (data) => {
-    const response = await createStaffs(data);
+    const response = await createStaff(data);
     return response;
 });
 
