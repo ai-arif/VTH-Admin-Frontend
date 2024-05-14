@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { deletePatientData, fetchPatient } from "../../features/patient-registration/patientRegistrationSlice";
+import { formatDate } from "../../utils/formatDate";
 import Loader from "../UI/Loader";
 
 const RegistrationList = () => {
@@ -24,10 +25,10 @@ const RegistrationList = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await dispatch(deletePrescriptionData(id));
+          const response = await dispatch(deletePatientData(id));
 
           if (response?.payload?.success) {
-            dispatch(deletePatientData());
+            dispatch(fetchPatient());
 
             Swal.fire({
               icon: "success",
@@ -93,7 +94,7 @@ const RegistrationList = () => {
                     <td>{idx + 1}</td>
                     <td className="text-nowrap">{patientInfo?.appointmentId?.caseNo}</td>
                     <td className="">{patientInfo?.appointmentId?.ownerName}</td>
-                    <td className="">{patientInfo?.appointmentId?.date}</td>
+                    <td className="">{formatDate(patientInfo?.appointmentId?.date)}</td>
                     <td className="d-flex gap-3 justify-content-center">
                       <Link href={`/patient-registration/${patientInfo._id}`}>
                         <button className="btn btn-info text-white">Edit</button>
@@ -113,10 +114,10 @@ const RegistrationList = () => {
           <div className="d-flex gap-2">
             <span className="text-nowrap">Items per page</span>
             <select className="form-select form-select-sm">
-              <option selected>10</option>
-              <option value="1">20</option>
-              <option value="2">50</option>
-              <option value="3">100</option>
+              <option value="1">10</option>
+              <option value="2">20</option>
+              <option value="3">50</option>
+              <option value="4">100</option>
             </select>
           </div>
           <nav aria-label="Page navigation example">

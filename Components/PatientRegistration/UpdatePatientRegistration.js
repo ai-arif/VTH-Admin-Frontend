@@ -178,8 +178,7 @@ const UpdatePatientRegistration = () => {
                   <div className="row">
                     <div className="mb-3 col-md-6">
                       <label className="form-label">Milk Yield</label>
-                      <input type="text" {...register("milkYield", { required: true })} className={`form-control ${errors.milkYield && "border-danger"}`} />
-                      {errors.milkYield && <small className="text-danger">Please write milk yield</small>}
+                      <input type="number" {...register("milkYield", { valueAsNumber: true })} className="form-control" />
                     </div>
                   </div>
                 </div>

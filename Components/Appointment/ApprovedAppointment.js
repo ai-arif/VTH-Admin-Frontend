@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { deleteExistingAppointment, fetchAppointments } from "../../features/appointment/appointmentSlice";
+import { formatDate } from "../../utils/formatDate";
 import Loader from "../UI/Loader";
 
 const ApprovedAppointment = () => {
@@ -92,7 +93,8 @@ const ApprovedAppointment = () => {
                     <td>{idx + 1}</td>
                     <td>{appointment.ownerName}</td>
                     <td>{appointment.phone}</td>
-                    <td>{appointment.date}</td>
+                    {/* Here showing date of this formate for example: Wednesday, May 01, 2024 & 10:45 AM */}
+                    <td>{formatDate(appointment.date)}</td>
                     <td className="d-flex gap-3 justify-content-center">
                       <Link href={`/appointment/${appointment.caseNo}`}>
                         <button className="btn btn-info text-white">Edit</button>
@@ -112,10 +114,10 @@ const ApprovedAppointment = () => {
           <div className="d-flex gap-2">
             <span className="text-nowrap">Items per page</span>
             <select className="form-select form-select-sm">
-              <option selected>10</option>
-              <option value="1">20</option>
-              <option value="2">50</option>
-              <option value="3">100</option>
+              <option value="1">10</option>
+              <option value="2">20</option>
+              <option value="3">50</option>
+              <option value="4">100</option>
             </select>
           </div>
           <nav aria-label="Page navigation example">

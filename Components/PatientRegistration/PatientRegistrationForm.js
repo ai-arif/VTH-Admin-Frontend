@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
+import { appendErrors, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { fetchAppointmentsByPhone } from "../../features/appointment/appointmentSlice";
@@ -47,6 +47,7 @@ const PatientRegistrationForm = () => {
 
   const onSubmit = async (patientData) => {
     try {
+      console.log(patientData);
       const response = await dispatch(createPatient(patientData));
 
       if (response?.payload?.success) {
@@ -221,8 +222,7 @@ const PatientRegistrationForm = () => {
                   <div className="row">
                     <div className="mb-3 col-md-6">
                       <label className="form-label">Milk Yield</label>
-                      <input type="text" {...register("milkYield", { required: true })} className={`form-control ${errors.milkYield && "border-danger"}`} />
-                      {errors.milkYield && <small className="text-danger">Please write milk yield</small>}
+                      <input type="number" {...register("milkYield", { valueAsNumber: true })} className="form-control" />
                     </div>
                   </div>
                 </div>
@@ -249,7 +249,7 @@ const PatientRegistrationForm = () => {
                       <label className="form-label">
                         Management History <small>(optional)</small>
                       </label>
-                      <textarea {...register("treatmentHistory")} className="form-control" rows="3"></textarea>
+                      <textarea {...register("managementHistory")} className="form-control" rows="3"></textarea>
                     </div>
                     <div className="mb-3 col-md-6">
                       <label className="form-label">

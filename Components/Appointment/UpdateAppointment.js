@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,30 +19,7 @@ const UpdateAppointment = () => {
     register,
     setValue,
     formState: { errors },
-  } = useForm();
-
-  useEffect(() => {
-    dispatch(fetchAppointmentById(id));
-    dispatch(fetchDepartment());
-  }, [dispatch]);
-
-  // Set default form values with existing data
-  useEffect(() => {
-    if (appointment) {
-      setValue("ownerName", appointment.ownerName || "");
-      setValue("phone", appointment.phone || 0);
-      setValue("district", appointment.district || "");
-      setValue("upazila", appointment.upazila || "");
-      setValue("address", appointment.address || "");
-      setValue("numberOfAnimals", appointment.numberOfAnimals || "");
-      setValue("status", appointment.status || "");
-      setValue("department", appointment.department || "");
-      setValue("registrationType", appointment.registrationType || "");
-      setValue("patientType", appointment.patientType || "");
-      setValue("date", appointment.date || "");
-      setValue("amount", appointment.amount || 0);
-    }
-  }, [appointment, setValue]);
+  } = useForm({ defaultValues: appointment });
 
   const onSubmit = async (appointmentData) => {
     try {
@@ -61,6 +38,29 @@ const UpdateAppointment = () => {
       toast.error("An error occurred while updating appointment. Please try again later.");
     }
   };
+
+  useEffect(() => {
+    const formatDate = (dateString) => {
+      const date = new Date(dateString);
+      const year = date.getFullYear();
+      let month = (1 + date.getMonth()).toString().padStart(2, "0");
+      let day = date.getDate().toString().padStart(2, "0");
+      let hours = date.getHours().toString().padStart(2, "0");
+      let minutes = date.getMinutes().toString().padStart(2, "0");
+
+      return `${year}-${month}-${day}T${hours}:${minutes}`;
+    };
+
+    if (appointment && appointment.date) {
+      console.log(formatDate(appointment.date));
+      setValue("date", formatDate(appointment.date));
+    }
+  }, [appointment]);
+
+  useEffect(() => {
+    dispatch(fetchAppointmentById(id));
+    dispatch(fetchDepartment());
+  }, [dispatch]);
 
   //   loader
   if (status === "loading") return <Loader />;
