@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAllUsers } from "../../features/user/userSlice";
+import { fetchAllUsers } from "../../features/staff/staffSlice";
 import AddUser from "./modals/AddUser";
 
 const UsersHome = () => {

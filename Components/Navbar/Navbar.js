@@ -9,19 +9,19 @@ import { HiOutlineUserGroup } from "react-icons/hi2";
 import { SlLayers } from "react-icons/sl";
 import { VscOutput } from "react-icons/vsc";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUser } from "../../features/user/userSlice";
+// import {  } from "../../features/staff/staffSlice";
 
 const Navbar = () => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { user } = useSelector((state) => state.user);
-  useEffect(() => {
-    dispatch(fetchUser());
-  }, [dispatch]);
-  const handleLogout = () => {
-    Cookies.remove("token");
-    router.push("/auth/login");
-  };
+  // const { user } = useSelector((state) => state.user);
+  // useEffect(() => {
+  //   dispatch(fetchUser());
+  // }, [dispatch]);
+  // const handleLogout = () => {
+  //   Cookies.remove("token");
+  //   router.push("/auth/login");
+  // };
   return (
     <header className="app-header fixed-top">
       <div className="app-header-inner">
