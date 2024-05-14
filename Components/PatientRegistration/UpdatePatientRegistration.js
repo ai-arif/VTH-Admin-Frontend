@@ -1,69 +1,52 @@
-import React, { useState } from "react";
-import { appendErrors, useForm } from "react-hook-form";
+import { useRouter } from "next/router";
+import React, { useEffect } from "react";
+import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
-import { fetchAppointmentsByPhone } from "../../features/appointment/appointmentSlice";
-import { createPatient } from "../../features/patient-registration/patientRegistrationSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchSinglePatient, updatePatientData } from "../../features/patient-registration/patientRegistrationSlice";
+import Loader from "../UI/Loader";
 
-const PatientRegistrationForm = () => {
-  const [searchPhone, setSearchPhone] = useState("");
-  const [patientInfo, setPatientInfo] = useState([]);
-  const [selectedPatientInfo, setSelectedPatientInfo] = useState({});
+const UpdatePatientRegistration = () => {
+  const router = useRouter();
+  const { id } = router.query;
   const dispatch = useDispatch();
+  const { patient, status } = useSelector((state) => state.patient);
+  console.log(patient);
 
-  const getPatientByPhone = async () => {
-    try {
-      if (searchPhone === "") return;
-
-      const res = await dispatch(fetchAppointmentsByPhone(searchPhone));
-      const existingPatentData = res?.payload?.data;
-
-      if (existingPatentData.length > 0) {
-        setPatientInfo(existingPatentData);
-        toast.success("Patent's Data Found");
-      } else {
-        toast.error("No Data Found!");
-        setSelectedPatientInfo({});
-        setPatientInfo([]);
-        reset();
-      }
-    } catch (error) {
-      toast.error("No Data Found!");
-      console.error(error);
-    }
-  };
-
-  const getPatientInfo = (id) => {
-    const selectedPatient = patientInfo?.find((patent) => patent._id === id);
-    setSelectedPatientInfo(selectedPatient);
-  };
+  // convert date string to a Date object and Format the date
+  const date = patient?.date ? new Date(patient.date).toISOString().split("T")[0] : "";
+  const dob = patient?.dob ? new Date(patient.dob).toISOString().split("T")[0] : "";
 
   const {
     handleSubmit,
     register,
-    reset,
     formState: { errors },
-  } = useForm();
+  } = useForm({ defaultValues: { ...patient, date, dob } });
 
-  const onSubmit = async (patientData) => {
+  const onSubmit = async (prescriptionData) => {
     try {
-      console.log(patientData);
-      const response = await dispatch(createPatient(patientData));
+      prescriptionData.id = id;
+
+      const response = await dispatch(updatePatientData(prescriptionData));
 
       if (response?.payload?.success) {
-        toast.success("Patient registration successfully!");
-        setSearchPhone("");
-        setSelectedPatientInfo({});
-        setPatientInfo([]);
-        reset();
+        toast.success("Patient data updated successfully!");
+        router.push("/patient-registration/view");
       } else {
-        toast.error("Failed to registration! Please try again later.");
+        toast.error("Failed to update patient data! Please try again later.");
       }
     } catch (error) {
-      toast.error("An error occurred while registration. Please try again later.");
+      toast.error("An error occurred while updating patient data. Please try again later.");
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    dispatch(fetchSinglePatient(id));
+  }, [dispatch]);
+
+  //   loader
+  if (status === "loading") return <Loader />;
 
   return (
     <div className="container-fluid px-0">
@@ -71,74 +54,47 @@ const PatientRegistrationForm = () => {
         <div className="col-12">
           <div className="card">
             <div className="card-header">
-              <h4 className="card-header-title text-center">Patient Registration</h4>
+              <h4 className="card-header-title text-center">Edit Patient Registration</h4>
             </div>
             <div className="card-body">
-              <div className="row mb-4">
-                <div className="col-md-6">
-                  <input
-                    onChange={(e) => {
-                      setSearchPhone(e.target.value);
-                    }}
-                    type="text"
-                    className="form-control"
-                    placeholder="Patent's Phone"
-                    aria-label="Patent's phone"
-                    aria-describedby="button-addon2"
-                  />
-                  <button onClick={getPatientByPhone} className="btn my-2 mx-1 btn-primary text-white" type="button" id="button-addon2">
-                    Search
-                  </button>
-                  <span className="small opacity-75">(First search appointment using owner's phone)</span>
-                </div>
-                <div className="col-md-6"></div>
-              </div>
               <form onSubmit={handleSubmit(onSubmit)} id="patient-registration">
                 {/* owner information */}
                 <div className="info-group">
                   <h5 className="text-center pb-2">Owner Information :</h5>
                   <div className="row">
                     <div className="mb-3 col-md-6">
-                      <label className="form-label">Select Appointment</label>
-                      {/* show case no, owner name & date */}
-                      <select {...register("appointmentId", { required: true })} onChange={(e) => getPatientInfo(e.target.value)} className="form-select" aria-label="Default select example">
-                        <option value="">Select</option>
-                        {patientInfo?.map((patent) => (
-                          <option key={patent._id} value={patent._id}>
-                            {patent.caseNo} {patent.ownerName} {patent.date}
-                          </option>
-                        ))}
-                      </select>
+                      <label className="form-label">Selected Appointment</label>
+                      <input type="text" readOnly required value={`${patient?.appointmentId?.caseNo} ${patient?.appointmentId?.ownerName} ${patient?.appointmentId?.date}`} className="form-control" />
                     </div>
                     <div className="mb-3 col-md-6">
                       <label className="form-label">CASE NO</label>
-                      <input type="number" readOnly required value={selectedPatientInfo?.caseNo} className="form-control" />
+                      <input type="number" readOnly required value={patient?.appointmentId?.caseNo} className="form-control" />
                     </div>
                   </div>
                   <div className="row">
                     <div className="mb-3 col-md-6">
                       <label className="form-label">Owner Name</label>
-                      <input type="text" readOnly required value={selectedPatientInfo?.ownerName} className="form-control" />
+                      <input type="text" readOnly required value={patient?.appointmentId?.ownerName} className="form-control" />
                     </div>
                     <div className="mb-3 col-md-6">
                       <label className="form-label">Phone</label>
-                      <input type="text" readOnly required value={selectedPatientInfo?.phone} className="form-control" />
+                      <input type="text" readOnly required value={patient?.appointmentId?.phone} className="form-control" />
                     </div>
                   </div>
                   <div className="row">
                     <div className="mb-3 col-md-6">
                       <label className="form-label">District</label>
-                      <input type="text" readOnly required value={selectedPatientInfo?.district} className="form-control" />
+                      <input type="text" readOnly required value={patient?.appointmentId?.district} className="form-control" />
                     </div>
                     <div className="mb-3 col-md-6">
                       <label className="form-label">Upazila</label>
-                      <input type="text" readOnly required value={selectedPatientInfo?.upazila} className="form-control" />
+                      <input type="text" readOnly required value={patient?.appointmentId?.upazila} className="form-control" />
                     </div>
                   </div>
                   <div className="row">
                     <div className="mb-3 col-md-6">
                       <label className="form-label">Address</label>
-                      <input type="text" readOnly required value={selectedPatientInfo?.address} className="form-control"></input>
+                      <input type="text" readOnly required value={patient?.appointmentId?.address} className="form-control"></input>
                     </div>
                     <div className="mb-3 col-md-6">
                       <label className="form-label">NID</label>
@@ -149,18 +105,18 @@ const PatientRegistrationForm = () => {
                   <div className="row">
                     <div className="mb-3 col-md-6">
                       <label className="form-label">Patient Type</label>
-                      <input type="text" readOnly required value={selectedPatientInfo?.patientType} className="form-control" />
+                      <input type="text" readOnly required value={patient?.appointmentId?.patientType} className="form-control" />
                     </div>
                     <div className="mb-3 col-md-6">
                       <label className="form-label">Registration Type</label>
-                      <input type="text" readOnly required value={selectedPatientInfo?.registrationType} className="form-control" />
+                      <input type="text" readOnly required value={patient?.appointmentId?.registrationType} className="form-control" />
                     </div>
                   </div>
                   <div className="row">
                     <div className="mb-3 col-md-6">
                       <label className="form-label">Date</label>
                       <input type="date" {...register("date", { required: true })} className={`form-control ${errors.date && "border-danger"}`} />
-                      {errors.date && <small className="text-danger">Please select date</small>}
+                      {errors.date && <small className="text-danger">Please write date</small>}
                     </div>
                   </div>
                 </div>
@@ -249,7 +205,7 @@ const PatientRegistrationForm = () => {
                       <label className="form-label">
                         Management History <small>(optional)</small>
                       </label>
-                      <textarea {...register("managementHistory")} className="form-control" rows="3"></textarea>
+                      <textarea {...register("treatmentHistory")} className="form-control" rows="3"></textarea>
                     </div>
                     <div className="mb-3 col-md-6">
                       <label className="form-label">
@@ -352,10 +308,7 @@ const PatientRegistrationForm = () => {
                   </div>
                 </div>
                 {/* add a submit button */}
-                <div className="d-flex d-flex justify-content-center gap-4 my-3">
-                  <button type="reset" className="btn btn-danger text-white">
-                    Reset
-                  </button>
+                <div className="d-flex d-flex justify-content-center gap-4">
                   <button type="submit" className="btn btn-primary text-white">
                     Submit
                   </button>
@@ -371,4 +324,4 @@ const PatientRegistrationForm = () => {
   );
 };
 
-export default PatientRegistrationForm;
+export default UpdatePatientRegistration;

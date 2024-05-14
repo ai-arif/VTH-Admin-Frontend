@@ -2,16 +2,15 @@ import Link from "next/link";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
-import { deletePatientData, fetchPatient } from "../../features/patient-registration/patientRegistrationSlice";
-import { formatDate } from "../../utils/formatDate";
+import { deletePrescriptionData, fetchPrescription } from "../../features/prescription/prescriptionSlice";
 import Loader from "../UI/Loader";
 
-const RegistrationList = () => {
+const ViewPrescription = () => {
   const dispatch = useDispatch();
-  const { patients, status } = useSelector((state) => state.patient);
+  const { prescriptions, status } = useSelector((state) => state.prescription);
 
-  // handling delete single patient
-  const handleDeletePatient = async (id) => {
+  // handling delete single prescription
+  const handleDeletePrescription = async (id) => {
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -25,15 +24,15 @@ const RegistrationList = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await dispatch(deletePatientData(id));
+          const response = await dispatch(deletePrescriptionData(id));
 
           if (response?.payload?.success) {
-            dispatch(fetchPatient());
+            dispatch(fetchPrescription());
 
             Swal.fire({
               icon: "success",
               title: "Deleted!",
-              text: "Patient has been deleted.",
+              text: "Prescription has been deleted.",
               showConfirmButton: false,
               timer: 1500,
               color: "#eaeaea",
@@ -43,7 +42,7 @@ const RegistrationList = () => {
             Swal.fire({
               icon: "error",
               title: "Error!",
-              text: "Failed to delete patient. Please try again later.",
+              text: "Failed to delete prescription. Please try again later.",
               confirmButtonColor: "#15a362",
               color: "#eaeaea",
               background: "#161719",
@@ -63,7 +62,7 @@ const RegistrationList = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchPatient());
+    dispatch(fetchPrescription());
   }, [dispatch]);
 
   // loader
@@ -72,7 +71,7 @@ const RegistrationList = () => {
   return (
     <div className="container-fluid">
       <div className="app-card p-5 text-center shadow-sm">
-        <h3 className="page-title mb-4 text-center">Registration List</h3>
+        <h3 className="page-title mb-4 text-center">All Prescription</h3>
         <div className="pb-4">
           <input type="text" className="form-control w-25" placeholder="Search by name brand" />
         </div>
@@ -82,24 +81,24 @@ const RegistrationList = () => {
               <thead>
                 <tr>
                   <th>SL.No</th>
-                  <th>Case No</th>
-                  <th>Owner Name</th>
-                  <th>Date</th>
+                  <th>Patent Name</th>
+                  <th>Department</th>
+                  <th>Date & Time</th>
                   <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {patients?.data?.map((patientInfo, idx) => (
-                  <tr key={patientInfo._id}>
+                {prescriptions?.data?.map((prescription, idx) => (
+                  <tr key={prescription._id}>
                     <td>{idx + 1}</td>
-                    <td className="text-nowrap">{patientInfo?.appointmentId?.caseNo}</td>
-                    <td className="">{patientInfo?.appointmentId?.ownerName}</td>
-                    <td className="">{formatDate(patientInfo?.appointmentId?.date)}</td>
+                    <td className="text-nowrap">{prescription?.appointment?.ownerName}</td>
+                    <td className="">{prescription?.appointment?.department?.name}</td>
+                    <td className="">{prescription?.appointment?.date}</td>
                     <td className="d-flex gap-3 justify-content-center">
-                      <Link href={`/patient-registration/${patientInfo._id}`}>
+                      <Link href={`/prescription/${prescription._id}`}>
                         <button className="btn btn-info text-white">Edit</button>
                       </Link>
-                      <button onClick={() => handleDeletePatient(patientInfo._id)} className="btn btn-danger text-white">
+                      <button onClick={() => handleDeletePrescription(prescription._id)} className="btn btn-danger text-white">
                         Delete
                       </button>
                     </td>
@@ -114,10 +113,10 @@ const RegistrationList = () => {
           <div className="d-flex gap-2">
             <span className="text-nowrap">Items per page</span>
             <select className="form-select form-select-sm">
-              <option value="1">10</option>
-              <option value="2">20</option>
-              <option value="3">50</option>
-              <option value="4">100</option>
+              <option selected>10</option>
+              <option value="1">20</option>
+              <option value="2">50</option>
+              <option value="3">100</option>
             </select>
           </div>
           <nav aria-label="Page navigation example">
@@ -155,4 +154,4 @@ const RegistrationList = () => {
   );
 };
 
-export default RegistrationList;
+export default ViewPrescription;
