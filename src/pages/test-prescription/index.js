@@ -51,17 +51,24 @@ export default function TestPrescription() {
     }));
   };
 
-  const handleSubmit = async()=>{
-    const response = await axiosInstance.post("/test/appointment", {
+  const handleSubmit = async () => {
+    try {
+      const response = await axiosInstance.post("/test/appointment", {
         caseNo: 1001,
-        test: {...inputValues}
-      })
-
-      if(response.status === 200)
-        toast.success("Successfully created")
-  }
-
-
+        test: {
+          testId: selectedTest.id,
+          ...inputValues
+        }
+      });
+  
+      if (response.status === 200) {
+        toast.success("Successfully created");
+      } 
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+  
 
   return (
     <div className="m-4">
