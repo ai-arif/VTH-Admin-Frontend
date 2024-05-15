@@ -8,18 +8,18 @@ export const getStaffs = async () => {
     return Promise.reject(error);
   }
 };
-export const updateStaffs = async (data) => {
+export const updateStaff = async (data) => {
   try {
-    const response = await axiosInstance.put("/staffs", data);
+    const response = await axiosInstance.put(`/staffs/update-admin/${data.id}`, data);
     return response.data;
   } catch (error) {
     return Promise.reject(error);
   }
 };
 
-export const getAllStaffs = async () => {
+export const deleteStaff = async (id) => {
   try {
-    const response = await axiosInstance.get("/staffs/admins");
+    const response = await axiosInstance.delete(`/staffs/delete-admin/${id}`);
     return response.data;
   } catch (error) {
     return Promise.reject(error);
