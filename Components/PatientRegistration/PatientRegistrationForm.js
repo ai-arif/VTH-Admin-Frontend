@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { appendErrors, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { fetchAppointmentsByPhone } from "../../features/appointment/appointmentSlice";
 import { createPatient } from "../../features/patient-registration/patientRegistrationSlice";
+import { formatDate } from "../../utils/formatDate";
 
 const PatientRegistrationForm = () => {
   const [searchPhone, setSearchPhone] = useState("");
@@ -47,7 +48,6 @@ const PatientRegistrationForm = () => {
 
   const onSubmit = async (patientData) => {
     try {
-      console.log(patientData);
       const response = await dispatch(createPatient(patientData));
 
       if (response?.payload?.success) {
@@ -105,7 +105,7 @@ const PatientRegistrationForm = () => {
                         <option value="">Select</option>
                         {patientInfo?.map((patent) => (
                           <option key={patent._id} value={patent._id}>
-                            {patent.caseNo} {patent.ownerName} {patent.date}
+                            {patent.caseNo} {patent.ownerName} {formatDate(patent.date)}
                           </option>
                         ))}
                       </select>
@@ -222,7 +222,7 @@ const PatientRegistrationForm = () => {
                   <div className="row">
                     <div className="mb-3 col-md-6">
                       <label className="form-label">Milk Yield</label>
-                      <input type="number" {...register("milkYield", { valueAsNumber: true })} className="form-control" />
+                      <input type="text" {...register("milkYield")} className="form-control" />
                     </div>
                   </div>
                 </div>
@@ -326,7 +326,7 @@ const PatientRegistrationForm = () => {
                       </label>
                       <select {...register("pregnancyStatus")} className="form-select" aria-label="Default select example">
                         <option value="">Select</option>
-                        <option value={true}>Yest</option>
+                        <option value={true}>Yes</option>
                         <option value={false}>No</option>
                       </select>
                     </div>

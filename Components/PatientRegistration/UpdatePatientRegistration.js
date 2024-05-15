@@ -3,7 +3,8 @@ import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchSinglePatient, updatePatientData } from "../../features/patient-registration/patientRegistrationSlice";
+import { fetchPatient, fetchSinglePatient, updatePatientData } from "../../features/patient-registration/patientRegistrationSlice";
+import { formatDate } from "../../utils/formatDate";
 import Loader from "../UI/Loader";
 
 const UpdatePatientRegistration = () => {
@@ -11,7 +12,6 @@ const UpdatePatientRegistration = () => {
   const { id } = router.query;
   const dispatch = useDispatch();
   const { patient, status } = useSelector((state) => state.patient);
-  console.log(patient);
 
   // convert date string to a Date object and Format the date
   const date = patient?.date ? new Date(patient.date).toISOString().split("T")[0] : "";
@@ -21,16 +21,17 @@ const UpdatePatientRegistration = () => {
     handleSubmit,
     register,
     formState: { errors },
-  } = useForm({ defaultValues: { ...patient, date, dob } });
+  } = useForm({ values: { ...patient, date, dob } });
 
-  const onSubmit = async (prescriptionData) => {
+  const onSubmit = async (patientData) => {
     try {
-      prescriptionData.id = id;
+      patientData.id = id;
 
-      const response = await dispatch(updatePatientData(prescriptionData));
+      const response = await dispatch(updatePatientData(patientData));
 
       if (response?.payload?.success) {
         toast.success("Patient data updated successfully!");
+        dispatch(fetchPatient());
         router.push("/patient-registration/view");
       } else {
         toast.error("Failed to update patient data! Please try again later.");
@@ -64,7 +65,13 @@ const UpdatePatientRegistration = () => {
                   <div className="row">
                     <div className="mb-3 col-md-6">
                       <label className="form-label">Selected Appointment</label>
-                      <input type="text" readOnly required value={`${patient?.appointmentId?.caseNo} ${patient?.appointmentId?.ownerName} ${patient?.appointmentId?.date}`} className="form-control" />
+                      <input
+                        type="text"
+                        readOnly
+                        required
+                        value={`${patient?.appointmentId?.caseNo} ${patient?.appointmentId?.ownerName} ${formatDate(patient?.appointmentId?.date)}`}
+                        className="form-control"
+                      />
                     </div>
                     <div className="mb-3 col-md-6">
                       <label className="form-label">CASE NO</label>
@@ -178,7 +185,7 @@ const UpdatePatientRegistration = () => {
                   <div className="row">
                     <div className="mb-3 col-md-6">
                       <label className="form-label">Milk Yield</label>
-                      <input type="number" {...register("milkYield", { valueAsNumber: true })} className="form-control" />
+                      <input type="text" {...register("milkYield")} className="form-control" />
                     </div>
                   </div>
                 </div>
@@ -282,7 +289,7 @@ const UpdatePatientRegistration = () => {
                       </label>
                       <select {...register("pregnancyStatus")} className="form-select" aria-label="Default select example">
                         <option value="">Select</option>
-                        <option value={true}>Yest</option>
+                        <option value={true}>Yes</option>
                         <option value={false}>No</option>
                       </select>
                     </div>
