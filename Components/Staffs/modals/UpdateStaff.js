@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchDepartment } from "../../../features/department/departmentSlice";
+import { fetchStaffs, updateStaffData } from "../../../features/staff/staffSlice";
 
 const UpdateStaff = ({ existingData }) => {
   const [isDoctor, setIsDoctor] = useState(false);
@@ -37,14 +38,17 @@ const UpdateStaff = ({ existingData }) => {
         delete staffData.department;
       }
 
-      const response = await dispatch(createStaff(staffData));
+      staffData.id = existingData._id;
+
+      const response = await dispatch(updateStaffData(staffData));
 
       if (response?.payload?.success) {
-        toast.success("Account created successfully!");
+        toast.success("Account updated successfully!");
         reset();
+        await dispatch(fetchStaffs());
         document.getElementById("closeModal").click();
       } else {
-        toast.error("Failed to create account! Please try again later.");
+        toast.error("Failed to update account! Please try again later.");
       }
     } catch (error) {
       toast.error("An error occurred while crating account. Please try again later.");
@@ -53,7 +57,9 @@ const UpdateStaff = ({ existingData }) => {
   };
 
   useEffect(() => {
-    dispatch(fetchDepartment());
+    if (isDoctor) {
+      dispatch(fetchDepartment());
+    }
   }, [dispatch]);
 
   return (

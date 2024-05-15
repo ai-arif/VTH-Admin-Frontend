@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchDepartment } from "../../../features/department/departmentSlice";
-import { createStaff } from "../../../features/staff/staffSlice";
+import { createStaff, fetchStaffs } from "../../../features/staff/staffSlice";
 
 const AddStaff = () => {
   const [isDoctor, setIsDoctor] = useState(false);
