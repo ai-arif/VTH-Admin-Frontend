@@ -9,10 +9,6 @@ const ViewMedicine = () => {
   const dispatch = useDispatch();
   const { medicines, status } = useSelector((state) => state.medicine);
 
-  useEffect(() => {
-    dispatch(fetchMedicine());
-  }, [dispatch]);
-
   // handling delete single medicine
   const handleDeleteMedicine = async (id) => {
     Swal.fire({
@@ -64,6 +60,10 @@ const ViewMedicine = () => {
       }
     });
   };
+
+  useEffect(() => {
+    dispatch(fetchMedicine());
+  }, [dispatch]);
 
   // loader
   if (status === "loading") return <Loader />;
