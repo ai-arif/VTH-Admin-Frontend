@@ -1,17 +1,29 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAllUserPatient } from "../../features/userPatient/userPatientSlice";
+import { fetchAllUserPatient, searchUserPatientAsync } from "../../features/userPatient/userPatientSlice";
+import Loader from "../UI/Loader";
 
 const UserHome = () => {
+  const [searchPhone, setSearchPhone] = useState("");
   const dispatch = useDispatch();
   const { userPatients, status } = useSelector((state) => state.userPatient);
 
-  console.log(userPatients);
-  console.log(status);
+  const getUserByPhone = async () => {
+    try {
+      if (searchPhone === "") return;
+      const res = await dispatch(searchUserPatientAsync(searchPhone));
+      // console.log(res);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
-    dispatch(fetchAllUserPatient);
+    dispatch(fetchAllUserPatient());
   }, [dispatch]);
+
+  // loader
+  if (status === "loading") return <Loader />;
 
   return (
     <div>
@@ -19,34 +31,42 @@ const UserHome = () => {
         <div className="row">
           <div className="col-12 col-md-11 col-lg-12 col-xl-12 mx-auto">
             <div className="app-card p-5 text-center shadow-sm">
-              <div className="d-flex justify-content-between mb-4">
+              <div className="d-flex align-items-center justify-content-between mb-4">
+                <div className="input-group w-50">
+                  <input
+                    onChange={(e) => {
+                      setSearchPhone(e.target.value);
+                    }}
+                    type="text"
+                    className="form-control"
+                    placeholder="Recipient's name or phone"
+                  />
+                  <button onClick={getUserByPhone} className="btn btn-primary text-white" type="button" id="button-addon2">
+                    Search
+                  </button>
+                </div>
                 <h2 className="page-title">All Users</h2>
-                <input type="text" className="form-control w-25" placeholder="Search by name" />
               </div>
               <div className="mb-4">
                 <div className="table-responsive">
                   <table className="table table-hover table-borderless table-striped table-dark">
                     <thead>
                       <tr>
+                        <th>SL.No</th>
                         <th>Name</th>
                         <th>Phone</th>
                         <th>Role</th>
-                        <th>Actions</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {/* {userPatients?.map((user) => (
-                    <tr key={user._id}>
-                      <td>{user.fullName}</td>
-                      <td>{user.phone}</td>
-                      <td>{user.role}</td>
-                      <td className="d-flex gap-3 justify-content-center">
-                        <button onClick={() => handleDeleteUser(user._id)} className="btn btn-danger text-white">
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  ))} */}
+                      {userPatients?.users?.map((user, idx) => (
+                        <tr key={user._id}>
+                          <td>{idx + 1}</td>
+                          <td>{user.fullName}</td>
+                          <td>{user.phone}</td>
+                          <td>{user.role}</td>
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
                 </div>
