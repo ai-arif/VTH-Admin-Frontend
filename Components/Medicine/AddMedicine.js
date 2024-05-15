@@ -6,6 +6,7 @@ import { createMedicine } from "../../features/medicine/medicineSlice";
 
 const AddMedicine = () => {
   const dispatch = useDispatch();
+
   const {
     handleSubmit,
     register,

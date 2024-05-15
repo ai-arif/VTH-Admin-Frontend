@@ -97,7 +97,7 @@ const DepartmentHome = () => {
                   </button>
                 </div>
               </div>
-              <div className="table-responsive">
+              <div className="table-responsive mb-3">
                 <table className="table table-hover table-borderless table-striped table-dark">
                   <thead>
                     <tr>
@@ -123,6 +123,47 @@ const DepartmentHome = () => {
                     ))}
                   </tbody>
                 </table>
+              </div>
+              {/* footer part pagination */}
+              <div className="d-flex justify-content-between align-items-center">
+                <div className="d-flex gap-2">
+                  <span className="text-nowrap">Items per page</span>
+                  <select className="form-select form-select-sm">
+                    <option value="1">10</option>
+                    <option value="2">20</option>
+                    <option value="3">50</option>
+                    <option value="4">100</option>
+                  </select>
+                </div>
+                <nav aria-label="Page navigation example">
+                  <ul className="pagination">
+                    <li className="page-item">
+                      <a className="page-link" href="#">
+                        Previous
+                      </a>
+                    </li>
+                    <li className="page-item">
+                      <a className="page-link" href="#">
+                        1
+                      </a>
+                    </li>
+                    <li className="page-item">
+                      <a className="page-link" href="#">
+                        2
+                      </a>
+                    </li>
+                    <li className="page-item">
+                      <a className="page-link" href="#">
+                        3
+                      </a>
+                    </li>
+                    <li className="page-item">
+                      <a className="page-link" href="#">
+                        Next
+                      </a>
+                    </li>
+                  </ul>
+                </nav>
               </div>
             </div>
           </div>

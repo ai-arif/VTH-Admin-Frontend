@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchSingleMedicine, updateMedicineData } from "../../features/medicine/medicineSlice";
+import { fetchMedicine, fetchSingleMedicine, updateMedicineData } from "../../features/medicine/medicineSlice";
 import Loader from "../UI/Loader";
 
 const UpdateMedicine = () => {
@@ -11,39 +11,12 @@ const UpdateMedicine = () => {
   const { id } = router.query;
   const dispatch = useDispatch();
   const { medicine, status } = useSelector((state) => state.medicine);
+
   const {
     handleSubmit,
     register,
-    setValue,
     formState: { errors },
-  } = useForm();
-
-  useEffect(() => {
-    dispatch(fetchSingleMedicine(id));
-  }, [dispatch]);
-
-  // Set default form values with existing data
-  useEffect(() => {
-    const existingMedicine = medicine?.data;
-    if (existingMedicine) {
-      setValue("name", existingMedicine.name || "");
-      setValue("brandName", existingMedicine.brandName || "");
-      setValue("class", existingMedicine.class || "");
-      setValue("composition", existingMedicine.composition || "");
-      setValue("manufacturer", existingMedicine.manufacturer || "");
-      setValue("form", existingMedicine.form || "");
-      setValue("price", existingMedicine.price || 0);
-      setValue("unitPrice", existingMedicine.unitPrice || 0);
-      setValue("quantity", existingMedicine.quantity || 0);
-      setValue("dose", existingMedicine.dose || "");
-      setValue("packSize", existingMedicine.packSize || "");
-      setValue("withdrawalPeriod", existingMedicine.withdrawalPeriod || "");
-      setValue("strength", existingMedicine.strength || "");
-      setValue("route", existingMedicine.route || "");
-      setValue("animalType", existingMedicine.animalType || "");
-      setValue("description", existingMedicine.description || "");
-    }
-  }, [medicine, setValue]);
+  } = useForm({ values: medicine?.data });
 
   const onSubmit = async (medicineData) => {
     try {
@@ -53,15 +26,20 @@ const UpdateMedicine = () => {
 
       if (response?.payload?.success) {
         toast.success("Medicine updated successfully!");
+        dispatch(fetchMedicine());
         router.push("/medicine/view");
       } else {
         toast.error("Failed to update medicine! Please try again later.");
       }
     } catch (error) {
-      console.error("An error occurred while updating medicine:", error);
       toast.error("An error occurred while updating medicine. Please try again later.");
+      console.error(error);
     }
   };
+
+  useEffect(() => {
+    dispatch(fetchSingleMedicine(id));
+  }, [dispatch]);
 
   //   loader
   if (status === "loading") return <Loader />;
