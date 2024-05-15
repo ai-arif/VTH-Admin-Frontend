@@ -1,9 +1,9 @@
-import React from 'react'
-import UsersHome from '../../Components/Users/UsersHome'
+import React from "react";
+import StaffsHome from "../../Components/Staffs/StaffsHome";
 
 // export const getServerSideProps = async (context) => {
 //   const token = context.req.cookies.token
-  
+
 //   if (!token || token === 'null' || token==='undefined') {
 //     return {
 //       redirect: {
@@ -12,19 +12,18 @@ import UsersHome from '../../Components/Users/UsersHome'
 //       },
 //     }
 //   }
-  
+
 //   return {
 //     props: { token },
 //   }
 // }
 
-
 const index = () => {
   return (
-    <div className=''>
-      <UsersHome/>
+    <div>
+      <StaffsHome />
     </div>
-  )
-}
+  );
+};
 
-export default index
+export default index;

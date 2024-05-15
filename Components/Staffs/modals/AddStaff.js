@@ -1,16 +1,29 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchDepartment } from "../../../features/department/departmentSlice";
+import { createStaff } from "../../../features/staff/staffSlice";
 
-const AddUser = () => {
-  const [department, setDepartment] = useState("");
-
-  const dispatch = useDispatch();
-  const [showPassword, setShowPassword] = useState(false);
+const AddStaff = () => {
   const [isDoctor, setIsDoctor] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const dispatch = useDispatch();
   const { departments } = useSelector((state) => state.department);
+
+  // password show hide toggle
+  const handleTogglePassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const handleGetRole = (role) => {
+    if (role === "doctor") {
+      setIsDoctor(true);
+    } else {
+      setIsDoctor(false);
+    }
+  };
 
   const {
     handleSubmit,
@@ -19,38 +32,25 @@ const AddUser = () => {
     formState: { errors },
   } = useForm();
 
-  console.log(department);
-
-  const handleChange = (e) => {
-    console.log(e);
-    // if (e.target.value === "doctor") {
-    //   setIsDoctor(true);
-    // } else {
-    //   setIsDoctor(false);
-    // }
-  };
-
-  // password show hide toggle
-  const handleTogglePassword = () => {
-    setShowPassword(!showPassword);
-  };
-
   const onSubmit = async (staffData) => {
-    console.log(staffData);
-    // try {
-    //   const response = await dispatch(createDepartment(department));
+    try {
+      if (staffData.role !== "doctor") {
+        delete staffData.department;
+      }
 
-    //   if (response?.payload?.success) {
-    //     toast.success("Department added successfully!");
-    //     reset();
-    //     document.getElementById("closeModal").click();
-    //   } else {
-    //     toast.error("Failed to add department! Please try again later.");
-    //   }
-    // } catch (error) {
-    //   console.error("An error occurred while adding department:", error);
-    //   toast.error("An error occurred while adding department. Please try again later.");
-    // }
+      const response = await dispatch(createStaff(staffData));
+
+      if (response?.payload?.success) {
+        toast.success("Account created successfully!");
+        reset();
+        document.getElementById("closeModal").click();
+      } else {
+        toast.error("Failed to create account! Please try again later.");
+      }
+    } catch (error) {
+      toast.error("An error occurred while crating account. Please try again later.");
+      console.error(error);
+    }
   };
 
   useEffect(() => {
@@ -64,7 +64,7 @@ const AddUser = () => {
           <div className="modal-content">
             <div className="modal-header">
               <h1 className="modal-title fs-5" id="addUserLabel">
-                User
+                Create Staff Account
               </h1>
               <button id="closeModal" type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -99,7 +99,12 @@ const AddUser = () => {
                   <label htmlFor="role" className="form-label">
                     Role
                   </label>
-                  <select onChange={(e) => handleChange(e)} {...register("role", { required: true })} className={`form-select ${errors.role && "border-danger"}`} aria-label="Default select example">
+                  <select
+                    {...register("role", { required: true })}
+                    onChange={(e) => handleGetRole(e.target.value)}
+                    className={`form-select ${errors.role && "border-danger"}`}
+                    aria-label="Default select example"
+                  >
                     <option value="">Open this select menu</option>
                     <option value="admin">Admin</option>
                     <option value="doctor">Doctor</option>
@@ -141,4 +146,4 @@ const AddUser = () => {
   );
 };
 
-export default AddUser;
+export default AddStaff;
