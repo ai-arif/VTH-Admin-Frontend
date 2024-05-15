@@ -113,10 +113,10 @@ const ViewPrescription = () => {
           <div className="d-flex gap-2">
             <span className="text-nowrap">Items per page</span>
             <select className="form-select form-select-sm">
-              <option selected>10</option>
-              <option value="1">20</option>
-              <option value="2">50</option>
-              <option value="3">100</option>
+              <option value="1">10</option>
+              <option value="2">20</option>
+              <option value="3">50</option>
+              <option value="4">100</option>
             </select>
           </div>
           <nav aria-label="Page navigation example">

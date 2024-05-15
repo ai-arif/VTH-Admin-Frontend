@@ -7,6 +7,7 @@ import { fetchAppointmentsByPhone } from "../../features/appointment/appointment
 import { fetchMedicine } from "../../features/medicine/medicineSlice";
 import { createPrescription } from "../../features/prescription/prescriptionSlice";
 import { fetchTest } from "../../features/test/testSlice";
+import { formatDate } from "../../utils/formatDate";
 
 // Define custom styles
 const customStyles = {
@@ -96,11 +97,6 @@ const PrescriptionHome = () => {
     }
   };
 
-  useEffect(() => {
-    dispatch(fetchMedicine());
-    dispatch(fetchTest());
-  }, [dispatch]);
-
   // Transforming tests and medicines data
   const testOptions = tests?.data?.map((test) => ({
     value: test._id,
@@ -111,6 +107,11 @@ const PrescriptionHome = () => {
     value: medicine._id,
     label: medicine.name,
   }));
+
+  useEffect(() => {
+    dispatch(fetchMedicine());
+    dispatch(fetchTest());
+  }, [dispatch]);
 
   return (
     <div className="container-fluid">
@@ -144,12 +145,11 @@ const PrescriptionHome = () => {
                 <div className="row">
                   <div className="mb-3 col-md-6">
                     <label className="form-label">Select Appointment</label>
-                    {/* show case no, owner name & date */}
                     <select {...register("appointment", { required: true })} onChange={(e) => getPatentInfo(e.target.value)} className="form-select" aria-label="Default select example">
                       <option value="">Select</option>
                       {patentInfo?.map((patent) => (
                         <option key={patent._id} value={patent._id}>
-                          {patent.caseNo} {patent.ownerName} {patent.date}
+                          {patent.caseNo} {patent.ownerName} {formatDate(patent.date)}
                         </option>
                       ))}
                     </select>

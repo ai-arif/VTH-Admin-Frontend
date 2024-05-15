@@ -5,8 +5,9 @@ import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 import { fetchMedicine } from "../../features/medicine/medicineSlice";
-import { fetchSinglePrescription, updatePrescriptionData } from "../../features/prescription/prescriptionSlice";
+import { fetchPrescription, fetchSinglePrescription, updatePrescriptionData } from "../../features/prescription/prescriptionSlice";
 import { fetchTest } from "../../features/test/testSlice";
+import { formatDate } from "../../utils/formatDate";
 import Loader from "../UI/Loader";
 
 // Define custom styles
@@ -77,6 +78,7 @@ const UpdatePrescription = () => {
 
       if (response?.payload?.success) {
         toast.success("Prescription updated successfully!");
+        dispatch(fetchPrescription());
         router.push("/prescription/view");
       } else {
         toast.error("Failed to update prescription! Please try again later.");
@@ -113,7 +115,7 @@ const UpdatePrescription = () => {
                       type="text"
                       readOnly
                       required
-                      value={`${prescription?.data?.appointment?.caseNo} ${prescription?.data?.appointment?.ownerName} ${prescription?.data?.appointment?.date}`}
+                      value={`${prescription?.data?.appointment?.caseNo} ${prescription?.data?.appointment?.ownerName} ${formatDate(prescription?.data?.appointment?.date)}`}
                       className="form-control"
                     />
                   </div>
