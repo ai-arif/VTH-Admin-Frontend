@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAppointmentById, updateExistingAppointment } from "../../features/appointment/appointmentSlice";
+import { fetchAppointmentById, fetchApprovedAppointments, fetchPendingAppointments, updateExistingAppointment } from "../../features/appointment/appointmentSlice";
 import { fetchDepartment } from "../../features/department/departmentSlice";
 import Loader from "../UI/Loader";
 
@@ -19,16 +19,17 @@ const UpdateAppointment = () => {
     register,
     setValue,
     formState: { errors },
-  } = useForm({ defaultValues: appointment });
+  } = useForm({ values: appointment });
 
   const onSubmit = async (appointmentData) => {
     try {
       appointmentData.id = Number(id);
-
       const response = await dispatch(updateExistingAppointment(appointmentData));
 
       if (response?.payload?.success) {
         toast.success("Appointment updated successfully!");
+        dispatch(fetchApprovedAppointments());
+        dispatch(fetchPendingAppointments());
         router.push("/appointment/view");
       } else {
         toast.error("Failed to update appointment! Please try again later.");
@@ -52,7 +53,6 @@ const UpdateAppointment = () => {
     };
 
     if (appointment && appointment.date) {
-      console.log(formatDate(appointment.date));
       setValue("date", formatDate(appointment.date));
     }
   }, [appointment]);

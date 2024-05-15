@@ -2,17 +2,13 @@ import Link from "next/link";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
-import { deleteExistingAppointment, fetchAppointments } from "../../features/appointment/appointmentSlice";
+import { deleteExistingAppointment, fetchApprovedAppointments } from "../../features/appointment/appointmentSlice";
 import { formatDate } from "../../utils/formatDate";
 import Loader from "../UI/Loader";
 
 const ApprovedAppointment = () => {
   const dispatch = useDispatch();
   const { appointments, status } = useSelector((state) => state.appointment);
-
-  useEffect(() => {
-    dispatch(fetchAppointments());
-  }, [dispatch]);
 
   // handling delete single appointment
   const handleDeleteAppointment = async (caseNo) => {
@@ -31,7 +27,7 @@ const ApprovedAppointment = () => {
         try {
           const response = await dispatch(deleteExistingAppointment(caseNo));
           if (response?.payload?.success) {
-            dispatch(fetchAppointments());
+            dispatch(fetchApprovedAppointments());
 
             Swal.fire({
               icon: "success",
@@ -65,6 +61,10 @@ const ApprovedAppointment = () => {
     });
   };
 
+  useEffect(() => {
+    dispatch(fetchApprovedAppointments());
+  }, [dispatch]);
+
   // loader
   if (status === "loading") return <Loader />;
 
@@ -88,12 +88,11 @@ const ApprovedAppointment = () => {
                 </tr>
               </thead>
               <tbody>
-                {appointments?.map((appointment, idx) => (
+                {appointments?.appointments?.map((appointment, idx) => (
                   <tr key={appointment._id}>
                     <td>{idx + 1}</td>
                     <td>{appointment.ownerName}</td>
                     <td>{appointment.phone}</td>
-                    {/* Here showing date of this formate for example: Wednesday, May 01, 2024 & 10:45 AM */}
                     <td>{formatDate(appointment.date)}</td>
                     <td className="d-flex gap-3 justify-content-center">
                       <Link href={`/appointment/${appointment.caseNo}`}>

@@ -23,10 +23,6 @@ const AppointmentHome = () => {
     formState: { errors },
   } = useForm();
 
-  useEffect(() => {
-    dispatch(fetchDepartment());
-  }, [dispatch]);
-
   const getUserByPhone = async () => {
     try {
       if (searchPhone === "") return;
@@ -51,10 +47,11 @@ const AppointmentHome = () => {
   };
 
   const onSubmit = async (appointmentData) => {
-    if (oldPatent) {
-      appointmentData.owner = oldPatentData._id;
-    }
     try {
+      if (oldPatent) {
+        appointmentData.owner = oldPatentData._id;
+      }
+
       const response = await dispatch(addNewAppointment(appointmentData));
       if (response?.payload?.success) {
         toast.success("Appointment added successfully!");
@@ -67,6 +64,10 @@ const AppointmentHome = () => {
       toast.error("An error occurred while adding appointment. Please try again later.");
     }
   };
+
+  useEffect(() => {
+    dispatch(fetchDepartment());
+  }, [dispatch]);
 
   return (
     <div className="container-fluid">
