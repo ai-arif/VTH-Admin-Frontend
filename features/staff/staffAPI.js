@@ -34,3 +34,12 @@ export const addStaff = async (data) => {
     return Promise.reject(error);
   }
 };
+
+export const searchStaff = async (search) => {
+  try {
+    const response = await axiosInstance.get(`/staffs/search?search=${search}`);
+    return response.data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};

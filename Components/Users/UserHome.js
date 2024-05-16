@@ -1,20 +1,32 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef } from "react";
+import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllUserPatient, searchUserPatientAsync } from "../../features/userPatient/userPatientSlice";
 import Loader from "../UI/Loader";
 
 const UserHome = () => {
-  const [searchPhone, setSearchPhone] = useState("");
+  const search = useRef("");
   const dispatch = useDispatch();
   const { userPatients, status } = useSelector((state) => state.userPatient);
 
-  const getUserByPhone = async () => {
+  const handleSearch = async () => {
     try {
-      if (searchPhone === "") return;
-      const res = await dispatch(searchUserPatientAsync(searchPhone));
-      // console.log(res);
+      const searchValue = search.current.value;
+      if (searchValue.trim()) {
+        // const res = await dispatch(searchUserPatientAsync(searchValue));
+        // console.log(res);
+        // if (res?.payload?.data?.data?.length <= 0) {
+        //   toast.error("Data Not Found!");
+        // }
+      }
     } catch (error) {
-      console.error(error);
+      console.log(error);
+    }
+  };
+
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      handleSearch();
     }
   };
 
@@ -33,19 +45,12 @@ const UserHome = () => {
             <div className="app-card p-5 text-center shadow-sm">
               <div className="d-flex align-items-center justify-content-between mb-4">
                 <div className="input-group w-50">
-                  <input
-                    onChange={(e) => {
-                      setSearchPhone(e.target.value);
-                    }}
-                    type="text"
-                    className="form-control"
-                    placeholder="Recipient's name or phone"
-                  />
-                  <button onClick={getUserByPhone} className="btn btn-primary text-white" type="button" id="button-addon2">
+                  <input ref={search} onKeyDown={handleKeyPress} type="text" className="form-control" placeholder="Recipient's name or phone" />
+                  <button onClick={handleSearch} className="btn btn-primary text-white" type="button" id="button-addon2">
                     Search
                   </button>
                 </div>
-                <h2 className="page-title">All Users</h2>
+                <h3 className="page-title">All Users</h3>
               </div>
               <div className="mb-4">
                 <div className="table-responsive">

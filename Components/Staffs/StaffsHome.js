@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
-import { deleteStaffData, fetchStaffs } from "../../features/staff/staffSlice";
+import { deleteStaffData, fetchStaffs, searchStaffData } from "../../features/staff/staffSlice";
 import Loader from "../UI/Loader";
 import AddStaff from "./modals/AddStaff";
 import UpdateStaff from "./modals/UpdateStaff";
 
 const StaffsHome = () => {
+  const search = useRef("");
   const [existingData, setExistingData] = useState({});
   const dispatch = useDispatch();
   const { staffs, status } = useSelector((state) => state.staff);
@@ -69,6 +70,27 @@ const StaffsHome = () => {
     });
   };
 
+  const handleSearch = async () => {
+    try {
+      const searchValue = search.current.value;
+      if (searchValue.trim()) {
+        // const res = await dispatch(searchStaffData(searchValue));
+        // console.log(res);
+        // if (res?.payload?.data?.data?.length <= 0) {
+        //   toast.error("Data Not Found!");
+        // }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      handleSearch();
+    }
+  };
+
   useEffect(() => {
     dispatch(fetchStaffs());
   }, [dispatch]);
@@ -86,9 +108,14 @@ const StaffsHome = () => {
             {/* update staff modal */}
             <UpdateStaff existingData={existingData} />
             <div className="app-card p-5 text-center shadow-sm">
-              <h2 className="page-title">All Staffs</h2>
+              <h3 className="page-title pb-3">All Staffs</h3>
               <div className="d-flex justify-content-between mb-4">
-                <input type="text" className="form-control w-25" placeholder="Search by name" />
+                <div className="input-group w-50">
+                  <input ref={search} onKeyDown={handleKeyPress} type="text" className="form-control" placeholder="Recipient's name or phone" />
+                  <button onClick={handleSearch} className="btn btn-primary text-white" type="button" id="button-addon2">
+                    Search
+                  </button>
+                </div>
                 <div>
                   <button data-bs-toggle="modal" data-bs-target="#addUser" className="btn gap-2 d-flex align-items-center app-btn-primary">
                     <FaPlus /> Add Staff

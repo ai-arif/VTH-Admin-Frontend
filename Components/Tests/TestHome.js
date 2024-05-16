@@ -1,28 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import { FaPlus } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
-import { deleteTestData, fetchTest } from "../../features/test/testSlice";
+import { deleteTestData, fetchTest, searchTestData } from "../../features/test/testSlice";
 import AddTest from "./modals/AddTest";
 
 import UpdateTest from "./modals/UpdateTest";
 
 const TestHome = () => {
   const [existingTest, setExistingTest] = useState({});
+  const search = useRef("");
   const dispatch = useDispatch();
   const { tests, status } = useSelector((state) => state.test);
-
-  useEffect(() => {
-    dispatch(fetchTest());
-  }, [dispatch]);
-
-  // useEffect(()=>{
-  //   const response = axios.get('http://localhost:8080/api/v1/test')
-  //   console.log(response)
-
-  //   //console.log("here showing all tests", tests);
-  // },[])
 
   // handling update single test
   const handleUpdateTest = async (test) => {
@@ -69,6 +59,31 @@ const TestHome = () => {
     });
   };
 
+  const handleSearch = async () => {
+    try {
+      const searchValue = search.current.value;
+      if (searchValue.trim()) {
+        // const res = await dispatch(searchTestData(searchValue));
+        // console.log(res);
+        // if (res?.payload?.data?.data?.length <= 0) {
+        //   toast.error("Data Not Found!");
+        // }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      handleSearch();
+    }
+  };
+
+  useEffect(() => {
+    dispatch(fetchTest());
+  }, [dispatch]);
+
   if (status === "loading") return <h2>Loading..</h2>;
 
   return (
@@ -80,11 +95,15 @@ const TestHome = () => {
             <AddTest />
             {/* update test modal */}
             <UpdateTest existingTest={existingTest} />
-            <div className="app-card p-5 text-center shadow-sm mt-5">
-              <h2>Tests</h2>
+            <div className="app-card p-5 text-center shadow-sm">
+              <h3 className="pb-3">Tests</h3>
               <div className="d-flex justify-content-between mb-4">
-                {/* <h1 className="page-title mb-4">Test List</h1> */}
-                <input type="email" className="form-control w-25" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Search by title" />
+                <div className="input-group w-50">
+                  <input ref={search} onKeyDown={handleKeyPress} type="text" className="form-control" placeholder="Search by test name" />
+                  <button onClick={handleSearch} className="btn btn-primary text-white" type="button" id="button-addon2">
+                    Search
+                  </button>
+                </div>
 
                 <div>
                   <button data-bs-toggle="modal" data-bs-target="#addUser" className="btn app-btn-primary">
@@ -125,10 +144,10 @@ const TestHome = () => {
                 <div className="d-flex  align-items-center gap-2">
                   <span className="text-nowrap">Items per page</span>
                   <select className="form-select">
-                    <option selected>10</option>
-                    <option value="1">20</option>
-                    <option value="2">50</option>
-                    <option value="3">100</option>
+                    <option value="1">10</option>
+                    <option value="2">20</option>
+                    <option value="3">50</option>
+                    <option value="4">100</option>
                   </select>
                 </div>
                 <nav aria-label="Page navigation example">

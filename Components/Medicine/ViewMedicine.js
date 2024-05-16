@@ -1,11 +1,12 @@
 import Link from "next/link";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
-import { deleteMedicineData, fetchMedicine } from "../../features/medicine/medicineSlice";
+import { deleteMedicineData, fetchMedicine, searchMedicineData } from "../../features/medicine/medicineSlice";
 import Loader from "../UI/Loader";
 
 const ViewMedicine = () => {
+  const search = useRef("");
   const dispatch = useDispatch();
   const { medicines, status } = useSelector((state) => state.medicine);
 
@@ -61,6 +62,27 @@ const ViewMedicine = () => {
     });
   };
 
+  const handleSearch = async () => {
+    try {
+      const searchValue = search.current.value;
+      if (searchValue.trim()) {
+        // const res = await dispatch(searchMedicineData(searchValue));
+        // console.log(res);
+        // if (res?.payload?.data?.data?.length <= 0) {
+        //   toast.error("Data Not Found!");
+        // }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      handleSearch();
+    }
+  };
+
   useEffect(() => {
     dispatch(fetchMedicine());
   }, [dispatch]);
@@ -71,9 +93,14 @@ const ViewMedicine = () => {
   return (
     <div className="container-fluid">
       <div className="app-card p-5 text-center shadow-sm">
-        <h3 className="page-title mb-4 text-center">All Medicines</h3>
-        <div className="pb-4">
-          <input type="text" className="form-control w-25" placeholder="Search by name brand" />
+        <div className="d-flex align-items-center justify-content-between mb-4">
+          <div className="input-group w-50">
+            <input ref={search} onKeyDown={handleKeyPress} type="text" className="form-control" placeholder="Search by medicine name or brand" />
+            <button onClick={handleSearch} className="btn btn-primary text-white" type="button" id="button-addon2">
+              Search
+            </button>
+          </div>
+          <h3 className="page-title">All Medicine</h3>
         </div>
         <div className="mb-4">
           <div className="table-responsive">

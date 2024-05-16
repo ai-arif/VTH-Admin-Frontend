@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { addStaff, deleteStaff, getStaffs, updateStaff } from "./staffAPI";
+import { addStaff, deleteStaff, getStaffs, searchStaff, updateStaff } from "./staffAPI";
 
 const initialState = {
   staffs: [],
@@ -25,6 +25,11 @@ export const createStaff = createAsyncThunk("staff/createStaff", async (data) =>
 
 export const updateStaffData = createAsyncThunk("staff/updateStaffData", async (data) => {
   const response = await updateStaff(data);
+  return response;
+});
+
+export const searchStaffData = createAsyncThunk("staff/searchStaffData", async (search) => {
+  const response = await searchStaff(search);
   return response;
 });
 
@@ -75,6 +80,16 @@ export const staffSlice = createSlice({
       })
       .addCase(deleteStaffData.fulfilled, (state, action) => {
         state.status = "success";
+      })
+      .addCase(searchStaffData.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(searchStaffData.fulfilled, (state, action) => {
+        (state.status = "success"), (state.patients = action.payload.data);
+      })
+      .addCase(searchStaffData.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
       });
   },
 });

@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { addPrescription, deletePrescription, getPrescriptions, getSinglePrescription, updatePrescription } from "./prescriptionAPI";
+import { addPrescription, deletePrescription, getPrescriptions, getSinglePrescription, searchPrescription, updatePrescription } from "./prescriptionAPI";
 
 const initialState = {
   prescription: {},
@@ -30,6 +30,11 @@ export const deletePrescriptionData = createAsyncThunk("prescription/deletePresc
 
 export const fetchSinglePrescription = createAsyncThunk("prescription/fetchSinglePrescription", async (id) => {
   const response = await getSinglePrescription(id);
+  return response;
+});
+
+export const searchPrescriptionData = createAsyncThunk("patient/searchPrescriptionData", async (search) => {
+  const response = await searchPrescription(search);
   return response;
 });
 
@@ -91,6 +96,16 @@ export const prescriptionSlice = createSlice({
       })
       .addCase(deletePrescriptionData.rejected, (state, action) => {
         state.status = "failed";
+      })
+      .addCase(searchPrescriptionData.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(searchPrescriptionData.fulfilled, (state, action) => {
+        (state.status = "success"), (state.patients = action.payload.data);
+      })
+      .addCase(searchPrescriptionData.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
       });
   },
 });
