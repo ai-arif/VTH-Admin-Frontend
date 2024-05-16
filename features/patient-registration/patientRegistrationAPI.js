@@ -44,3 +44,13 @@ export const deletePatient = async (id) => {
     return Promise.reject(error);
   }
 };
+
+// search?search=&page&limit
+export const searchPatient = async (search) => {
+  try {
+    const response = await axiosInstance.get(`/patient-registration/search?search=${search}`);
+    return response.data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
