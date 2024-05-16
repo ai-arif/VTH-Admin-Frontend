@@ -36,6 +36,10 @@
   right: 15px;
 }
 
+/* .app-nav .vth-submenu-toggle[aria-expanded="true"][aria-expanded="true"] .submenu-arrow svg {
+  -webkit-transform: rotate(180deg);
+} */
+
 /* Remove increment and decrement arrows from number input */
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {

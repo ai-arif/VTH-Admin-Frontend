@@ -2,13 +2,16 @@ import Cookies from "js-cookie";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
-import { AiOutlineMedicineBox } from "react-icons/ai";
-import { BsBarChartLine } from "react-icons/bs";
+import { AiOutlineHome, AiOutlineMedicineBox } from "react-icons/ai";
+import { BsBarChartLine, BsFolder } from "react-icons/bs";
 import { GrTest } from "react-icons/gr";
 import { HiOutlineUserGroup } from "react-icons/hi2";
+import { IoHomeOutline } from "react-icons/io5";
 import { SlLayers } from "react-icons/sl";
 import { VscOutput } from "react-icons/vsc";
 import { useDispatch, useSelector } from "react-redux";
+import NavItem from "./NavItem";
+import SubmenuNavItem from "./SubmenuNavItem";
 // import {  } from "../../features/staff/staffSlice";
 
 const Navbar = () => {
@@ -202,200 +205,106 @@ const Navbar = () => {
 
           <nav id="app-nav-main" className="app-nav app-nav-main flex-grow-1">
             <ul className="app-menu list-unstyled accordion" id="menu-accordion">
-              <li className="nav-item">
-                <Link className="nav-link active" href="/">
-                  <span className="nav-icon">
-                    <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-house-door" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                      <path
-                        fill-rule="evenodd"
-                        d="M7.646 1.146a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 .146.354v7a.5.5 0 0 1-.5.5H9.5a.5.5 0 0 1-.5-.5v-4H7v4a.5.5 0 0 1-.5.5H2a.5.5 0 0 1-.5-.5v-7a.5.5 0 0 1 .146-.354l6-6zM2.5 7.707V14H6v-4a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5v4h3.5V7.707L8 2.207l-5.5 5.5z"
-                      />
-                      <path fill-rule="evenodd" d="M13 2.5V6l-2-2V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5z" />
-                    </svg>
-                  </span>
-                  <span className="nav-link-text">Staffs</span>
-                </Link>
-              </li>
+              <NavItem href="/">
+                <span className="nav-icon">
+                  <AiOutlineHome size={22} />
+                </span>
+                <span className="nav-link-text">Staffs</span>
+              </NavItem>
 
-              <li className="nav-item">
-                <Link className="nav-link" href="/users">
-                  <span className="nav-icon">
-                    <HiOutlineUserGroup size={20} />
-                  </span>
-                  <span className="nav-link-text">Users</span>
-                </Link>
-              </li>
+              <NavItem href="/users">
+                <span className="nav-icon">
+                  <HiOutlineUserGroup size={20} />
+                </span>
+                <span className="nav-link-text">Users</span>
+              </NavItem>
 
-              <li className="nav-item has-submenu">
-                <a className="nav-link submenu-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#submenu-1" aria-expanded="false" aria-controls="submenu-1">
-                  <span className="nav-icon">
-                    <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-folder" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M9.828 4a3 3 0 0 1-2.12-.879l-.83-.828A1 1 0 0 0 6.173 2H2.5a1 1 0 0 0-1 .981L1.546 4h-1L.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3v1z" />
-                      <path
-                        fill-rule="evenodd"
-                        d="M13.81 4H2.19a1 1 0 0 0-.996 1.09l.637 7a1 1 0 0 0 .995.91h10.348a1 1 0 0 0 .995-.91l.637-7A1 1 0 0 0 13.81 4zM2.19 3A2 2 0 0 0 .198 5.181l.637 7A2 2 0 0 0 2.826 14h10.348a2 2 0 0 0 1.991-1.819l.637-7A2 2 0 0 0 13.81 3H2.19z"
-                      />
-                    </svg>
-                  </span>
-                  <span className="nav-link-text">Appointment</span>
-                  <span className="submenu-arrow">
-                    <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-chevron-down" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                      <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
-                    </svg>
-                  </span>
-                </a>
-                <div id="submenu-1" className="collapse submenu submenu-1" data-bs-parent="#menu-accordion">
-                  <ul className="submenu-list list-unstyled">
-                    <li className="submenu-item">
-                      <Link className="submenu-link" href="/appointment/new">
-                        New Appointment
-                      </Link>
-                    </li>
-                    <li className="submenu-item">
-                      <Link className="submenu-link" href="/appointment/view">
-                        View Appointment
-                      </Link>
-                    </li>
-                  </ul>
-                </div>
-              </li>
+              <SubmenuNavItem hrefParent="/appointment" hrefOne="/appointment/new" hrefTwo="/appointment/view" hrefNameOne="New Appointment" hrefNameTwo="View Appointment" submenuNumber="submenu-1">
+                <span className="nav-icon">
+                  <BsFolder size={20} />
+                </span>
+                <span className="nav-link-text">Appointment</span>
+              </SubmenuNavItem>
 
-              <li className="nav-item has-submenu">
-                <a className="nav-link submenu-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#submenu-2" aria-expanded="false" aria-controls="submenu-2">
-                  <span className="nav-icon">
-                    <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-columns-gap" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                      <path
-                        fill-rule="evenodd"
-                        d="M6 1H1v3h5V1zM1 0a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1H1zm14 12h-5v3h5v-3zm-5-1a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1h-5zM6 8H1v7h5V8zM1 7a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1H1zm14-6h-5v7h5V1zm-5-1a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1h-5z"
-                      />
-                    </svg>
-                  </span>
-                  <span className="nav-link-text">Patient Registration</span>
-                  <span className="submenu-arrow">
-                    <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-chevron-down" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                      <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
-                    </svg>
-                  </span>
-                </a>
-                <div id="submenu-2" className="collapse submenu submenu-2" data-bs-parent="#menu-accordion">
-                  <ul className="submenu-list list-unstyled">
-                    <li className="submenu-item">
-                      <Link className="submenu-link" href="/patient-registration/add">
-                        New Registration
-                      </Link>
-                    </li>
-                    <li className="submenu-item">
-                      <Link className="submenu-link" href="/patient-registration/view">
-                        View Registration
-                      </Link>
-                    </li>
-                  </ul>
-                </div>
-              </li>
+              <SubmenuNavItem
+                hrefParent="/patient-registration"
+                hrefOne="/patient-registration/add"
+                hrefTwo="/patient-registration/view"
+                hrefNameOne="Add Registration"
+                hrefNameTwo="View Registration"
+                submenuNumber="submenu-2"
+              >
+                <span className="nav-icon">
+                  <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-columns-gap" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      fill-rule="evenodd"
+                      d="M6 1H1v3h5V1zM1 0a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1H1zm14 12h-5v3h5v-3zm-5-1a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1h-5zM6 8H1v7h5V8zM1 7a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1H1zm14-6h-5v7h5V1zm-5-1a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1h-5z"
+                    />
+                  </svg>
+                </span>
+                <span className="nav-link-text">Patient Registration</span>
+              </SubmenuNavItem>
 
-              <li className="nav-item has-submenu">
-                <a className="nav-link submenu-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#submenu-4" aria-expanded="false" aria-controls="submenu-4">
-                  <span className="nav-icon">
-                    <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-card-list" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                      <path
-                        fill-rule="evenodd"
-                        d="M14.5 3h-13a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z"
-                      />
-                      <path
-                        fill-rule="evenodd"
-                        d="M5 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 5 8zm0-2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm0 5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5z"
-                      />
-                      <circle cx="3.5" cy="5.5" r=".5" />
-                      <circle cx="3.5" cy="8" r=".5" />
-                      <circle cx="3.5" cy="10.5" r=".5" />
-                    </svg>
-                  </span>
-                  <span className="nav-link-text">Prescription</span>
-                  <span className="submenu-arrow">
-                    <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-chevron-down" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                      <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
-                    </svg>
-                  </span>
-                </a>
-                <div id="submenu-4" className="collapse submenu submenu-3" data-bs-parent="#menu-accordion">
-                  <ul className="submenu-list list-unstyled">
-                    <li className="submenu-item">
-                      <Link className="submenu-link" href="/prescription/add">
-                        Add Prescription
-                      </Link>
-                    </li>
-                    <li className="submenu-item">
-                      <Link className="submenu-link" href="/prescription/view">
-                        View Prescription
-                      </Link>
-                    </li>
-                  </ul>
-                </div>
-              </li>
+              <SubmenuNavItem
+                hrefParent="/prescription"
+                hrefOne="/prescription/add"
+                hrefTwo="/prescription/view"
+                hrefNameOne="Add Prescription"
+                hrefNameTwo="View Prescription"
+                submenuNumber="submenu-3"
+              >
+                <span className="nav-icon">
+                  <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-card-list" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      fill-rule="evenodd"
+                      d="M14.5 3h-13a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z"
+                    />
+                    <path
+                      fill-rule="evenodd"
+                      d="M5 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 5 8zm0-2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm0 5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5z"
+                    />
+                    <circle cx="3.5" cy="5.5" r=".5" />
+                    <circle cx="3.5" cy="8" r=".5" />
+                    <circle cx="3.5" cy="10.5" r=".5" />
+                  </svg>
+                </span>
+                <span className="nav-link-text">Prescription</span>
+              </SubmenuNavItem>
 
-              <li className="nav-item">
-                <Link className="nav-link" href="/tests">
-                  <span className="nav-icon">
-                    <GrTest size={18} />
-                  </span>
-                  <span className="nav-link-text">Tests</span>
-                </Link>
-              </li>
+              <NavItem href="/tests">
+                <span className="nav-icon">
+                  <GrTest size={18} />
+                </span>
+                <span className="nav-link-text">Tests</span>
+              </NavItem>
 
-              <li className="nav-item">
-                <Link className="nav-link" href="/test-parameter">
-                  <span className="nav-icon">
-                    <BsBarChartLine size={18} />
-                  </span>
-                  <span className="nav-link-text">Test Parameter</span>
-                </Link>
-              </li>
+              <NavItem href="/test-parameter">
+                <span className="nav-icon">
+                  <BsBarChartLine size={18} />
+                </span>
+                <span className="nav-link-text">Test Parameter</span>
+              </NavItem>
 
-              <li className="nav-item">
-                <Link className="nav-link" href="/departments">
-                  <span className="nav-icon">
-                    <SlLayers size={20} />
-                  </span>
-                  <span className="nav-link-text">Departments</span>
-                </Link>
-              </li>
+              <NavItem href="/departments">
+                <span className="nav-icon">
+                  <SlLayers size={20} />
+                </span>
+                <span className="nav-link-text">Departments</span>
+              </NavItem>
 
-              <li className="nav-item has-submenu">
-                <a className="nav-link submenu-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#submenu-3" aria-expanded="false" aria-controls="submenu-3">
-                  <span className="nav-icon">
-                    <AiOutlineMedicineBox size={23} />
-                  </span>
-                  <span className="nav-link-text">Medicine</span>
-                  <span className="submenu-arrow">
-                    <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-chevron-down" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                      <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
-                    </svg>
-                  </span>
-                </a>
-                <div id="submenu-3" className="collapse submenu submenu-3" data-bs-parent="#menu-accordion">
-                  <ul className="submenu-list list-unstyled">
-                    <li className="submenu-item">
-                      <Link className="submenu-link" href="/medicine/add">
-                        Add Medicine
-                      </Link>
-                    </li>
-                    <li className="submenu-item">
-                      <Link className="submenu-link" href="/medicine/view">
-                        View Medicine
-                      </Link>
-                    </li>
-                  </ul>
-                </div>
-              </li>
+              <SubmenuNavItem hrefParent="/medicine" hrefOne="/medicine/add" hrefTwo="/medicine/view" hrefNameOne="Add Medicine" hrefNameTwo="View Medicine" submenuNumber="submenu-4">
+                <span className="nav-icon">
+                  <AiOutlineMedicineBox size={23} />
+                </span>
+                <span className="nav-link-text">Medicine</span>
+              </SubmenuNavItem>
 
-              <li className="nav-item">
-                <Link className="nav-link" href="/test-result">
-                  <span className="nav-icon">
-                    <VscOutput size={18} />
-                  </span>
-                  <span className="nav-link-text">Test Result</span>
-                </Link>
-              </li>
+              <NavItem href="/test-result">
+                <span className="nav-icon">
+                  <VscOutput size={18} />
+                </span>
+                <span className="nav-link-text">Test Result</span>
+              </NavItem>
             </ul>
           </nav>
           <div className="app-sidepanel-footer">
