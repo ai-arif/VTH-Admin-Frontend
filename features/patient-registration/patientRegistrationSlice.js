@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import {registerPatient, getPatient, getSinglePatient, updatePatient, deletePatient} from "./patientRegistrationAPI";
+import {registerPatient, getPatient,searchPatient, getSinglePatient, updatePatient, deletePatient} from "./patientRegistrationAPI";
 
 const initialState = {
     patient: {},
@@ -30,6 +30,11 @@ export const deletePatientData = createAsyncThunk("patient/deletePatientData", a
 
 export const fetchSinglePatient = createAsyncThunk("patient/fetchSinglePatient", async (id) => {
     const response = await getSinglePatient(id);
+    return response;
+});
+
+export const searchPatientData = createAsyncThunk("patient/searchPatientData", async (search) => {
+    const response = await searchPatient(search);
     return response;
 });
 
@@ -88,7 +93,18 @@ export const patientRegistrationSlice = createSlice({
             .addCase(deletePatientData.rejected, (state, action) => {
                 state.status = "failed";
                 state.error = action.error.message;
+            })
+            .addCase(searchPatientData.pending, (state) => {
+                state.status = "loading";
+            })
+            .addCase(searchPatientData.fulfilled, (state, action) => {
+                (state.status = "success"), (state.patients = action.payload.data);
+            })
+            .addCase(searchPatientData.rejected, (state, action) => {
+                state.status = "failed";
+                state.error = action.error.message;
             });
+            
     },
 });
 
