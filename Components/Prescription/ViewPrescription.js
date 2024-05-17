@@ -1,11 +1,13 @@
 import Link from "next/link";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
-import { deletePrescriptionData, fetchPrescription } from "../../features/prescription/prescriptionSlice";
+import { deletePrescriptionData, fetchPrescription, searchPrescriptionData } from "../../features/prescription/prescriptionSlice";
+import { formatDate } from "../../utils/formatDate";
 import Loader from "../UI/Loader";
 
 const ViewPrescription = () => {
+  const search = useRef("");
   const dispatch = useDispatch();
   const { prescriptions, status } = useSelector((state) => state.prescription);
 
@@ -61,6 +63,27 @@ const ViewPrescription = () => {
     });
   };
 
+  const handleSearch = async () => {
+    try {
+      const searchValue = search.current.value;
+      if (searchValue.trim()) {
+        const res = await dispatch(searchPrescriptionData(searchValue));
+        // console.log(res);
+        // if (res?.payload?.data?.data?.length <= 0) {
+        //   toast.error("Data Not Found!");
+        // }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      handleSearch();
+    }
+  };
+
   useEffect(() => {
     dispatch(fetchPrescription());
   }, [dispatch]);
@@ -71,20 +94,25 @@ const ViewPrescription = () => {
   return (
     <div className="container-fluid">
       <div className="app-card p-5 text-center shadow-sm">
-        <h3 className="page-title mb-4 text-center">All Prescription</h3>
-        <div className="pb-4">
-          <input type="text" className="form-control w-25" placeholder="Search by name brand" />
+        <div className="d-flex align-items-center justify-content-between mb-4">
+          <div className="input-group w-50">
+            <input ref={search} onKeyDown={handleKeyPress} type="text" className="form-control" placeholder="Recipient's name, phone, case no" />
+            <button onClick={handleSearch} className="btn btn-primary text-white" type="button" id="button-addon2">
+              Search
+            </button>
+          </div>
+          <h3 className="page-title">All Prescription</h3>
         </div>
         <div className="mb-4">
           <div className="table-responsive">
             <table className="table table-hover table-borderless table-striped table-dark">
               <thead>
                 <tr>
-                  <th>SL.No</th>
-                  <th>Patent Name</th>
-                  <th>Department</th>
-                  <th>Date & Time</th>
-                  <th>Actions</th>
+                  <th className="text-nowrap">SL.No.</th>
+                  <th className="text-nowrap">Patent Name</th>
+                  <th className="text-nowrap">Department</th>
+                  <th className="text-nowrap">Date & Time</th>
+                  <th className="text-nowrap">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -93,7 +121,7 @@ const ViewPrescription = () => {
                     <td>{idx + 1}</td>
                     <td className="text-nowrap">{prescription?.appointment?.ownerName}</td>
                     <td className="">{prescription?.appointment?.department?.name}</td>
-                    <td className="">{prescription?.appointment?.date}</td>
+                    <td className="">{formatDate(prescription?.appointment?.date)}</td>
                     <td className="d-flex gap-3 justify-content-center">
                       <Link href={`/prescription/${prescription._id}`}>
                         <button className="btn btn-info text-white">Edit</button>

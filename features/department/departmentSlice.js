@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { addDepartment, deleteDepartment, getDepartments, updateDepartment } from "./departmentAPI";
+import { addDepartment, deleteDepartment, getDepartments, searchDepartment, updateDepartment } from "./departmentAPI";
 
 const initialState = {
   department: {},
@@ -25,6 +25,10 @@ export const updateDepartmentData = createAsyncThunk("department/updateDepartmen
 
 export const deleteDepartmentData = createAsyncThunk("department/deleteDepartmentData", async (id) => {
   const response = await deleteDepartment(id);
+  return response;
+});
+export const searchDepartmentData = createAsyncThunk("patient/searchDepartmentData", async (search) => {
+  const response = await searchDepartment(search);
   return response;
 });
 
@@ -65,6 +69,16 @@ export const departmentSlice = createSlice({
       })
       .addCase(deleteDepartmentData.fulfilled, (state, action) => {
         state.status = "success";
+      })
+      .addCase(searchDepartmentData.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(searchDepartmentData.fulfilled, (state, action) => {
+        (state.status = "success"), (state.patients = action.payload.data);
+      })
+      .addCase(searchDepartmentData.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
       });
   },
 });

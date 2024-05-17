@@ -1,44 +1,30 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { addTest, deleteTest, getTest, updateTest,getParameter,getSubParameter, getAllSubParameter } from "./testAPI.js";
+import { addTest, deleteTest, getAllSubParameter, getParameter, getSubParameter, getTest, searchTest, updateTest } from "./testAPI.js";
 
 const initialState = {
   test: {},
   tests: [],
   parameterList: [],
-  subParameterList:[],
-  allSubParameterList:[],
+  subParameterList: [],
+  allSubParameterList: [],
   status: "idle",
   error: null,
 };
 
+export const fetchAllSubParameter = createAsyncThunk("test/fetchSubParameterAll", async (id) => {
+  const response = await getAllSubParameter();
+  return response;
+});
 
-export const fetchAllSubParameter = createAsyncThunk(
-  "test/fetchSubParameterAll",
-  async (id) => {
-    const response = await getAllSubParameter()
-    return response;
-  }
-);
+export const fetchSubParameter = createAsyncThunk("test/fetchSubParameter", async (id) => {
+  const response = await getSubParameter(id);
+  return response;
+});
 
-
-
-export const fetchSubParameter = createAsyncThunk(
-  "test/fetchSubParameter",
-  async (id) => {
-    const response = await getSubParameter(id)
-    return response;
-  }
-);
-
-
-export const fetchParameter = createAsyncThunk(
-  "test/fetchParameter",
-  async (id) => {
-    const response = await getParameter(id);
-    return response;
-  }
-);
-
+export const fetchParameter = createAsyncThunk("test/fetchParameter", async (id) => {
+  const response = await getParameter(id);
+  return response;
+});
 
 export const fetchTest = createAsyncThunk("test/fetchTest", async () => {
   const response = await getTest();
@@ -50,7 +36,6 @@ export const createTest = createAsyncThunk("test/createTest", async (test) => {
   return response;
 });
 
-
 export const updateTestData = createAsyncThunk("test/updateTestData", async (test) => {
   const response = await updateTest(test);
   return response;
@@ -58,6 +43,11 @@ export const updateTestData = createAsyncThunk("test/updateTestData", async (tes
 
 export const deleteTestData = createAsyncThunk("test/deleteTestData", async (id) => {
   const response = await deleteTest(id);
+  return response;
+});
+
+export const searchTestData = createAsyncThunk("patient/searchTestData", async (search) => {
+  const response = await searchTest(search);
   return response;
 });
 
@@ -93,16 +83,13 @@ export const testSlice = createSlice({
         state.error = action.error.message;
       })
       .addCase(fetchParameter.fulfilled, (state, action) => {
-        state.status = "success",
-         state.parameterList = action.payload.data
+        (state.status = "success"), (state.parameterList = action.payload.data);
       })
       .addCase(fetchSubParameter.fulfilled, (state, action) => {
-        state.status = "success",
-        state.subParameterList = action.payload.data
+        (state.status = "success"), (state.subParameterList = action.payload.data);
       })
       .addCase(fetchAllSubParameter.fulfilled, (state, action) => {
-        state.status = "success",
-        state.allSubParameterList = action.payload.data
+        (state.status = "success"), (state.allSubParameterList = action.payload.data);
       })
       .addCase(updateTestData.pending, (state) => {
         state.status = "loading";
@@ -123,6 +110,16 @@ export const testSlice = createSlice({
         state.test = action.payload.data;
       })
       .addCase(deleteTestData.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(searchTestData.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(searchTestData.fulfilled, (state, action) => {
+        (state.status = "success"), (state.patients = action.payload.data);
+      })
+      .addCase(searchTestData.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });

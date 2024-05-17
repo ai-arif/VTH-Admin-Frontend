@@ -1,5 +1,5 @@
 import Link from "next/link";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { deleteExistingAppointment, fetchPendingAppointments } from "../../features/appointment/appointmentSlice";
@@ -7,6 +7,7 @@ import { formatDate } from "../../utils/formatDate";
 import Loader from "../UI/Loader";
 
 const PendingAppointment = () => {
+  const search = useRef("");
   const dispatch = useDispatch();
   const { pendingAppointments, status } = useSelector((state) => state.appointment);
 
@@ -61,6 +62,27 @@ const PendingAppointment = () => {
     });
   };
 
+  const handleSearch = async () => {
+    try {
+      const searchValue = search.current.value;
+      if (searchValue.trim()) {
+        // const res = await dispatch(searchApprovedAppointmentData(searchValue));
+        // console.log(res);
+        // if (res?.payload?.data?.data?.length <= 0) {
+        //   toast.error("Data Not Found!");
+        // }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      handleSearch();
+    }
+  };
+
   useEffect(() => {
     dispatch(fetchPendingAppointments());
   }, [dispatch]);
@@ -71,26 +93,33 @@ const PendingAppointment = () => {
   return (
     <div className="container-fluid">
       <div className="app-card p-5 mt-4 text-center shadow-sm">
-        <h3 className="page-title mb-4 text-center">Pending Appointment</h3>
-        <div className="pb-4">
-          <input type="text" className="form-control w-25" placeholder="Search by name" />
+        <div className="d-flex align-items-center justify-content-between mb-4">
+          <div className="input-group w-50">
+            <input ref={search} onKeyDown={handleKeyPress} type="text" className="form-control" placeholder="Recipient's name, phone, case no" />
+            <button onClick={handleSearch} className="btn btn-primary text-white" type="button" id="button-addon2">
+              Search
+            </button>
+          </div>
+          <h3 className="page-title">Pending Appointment</h3>
         </div>
         <div className="mb-4">
           <div className="table-responsive">
             <table className="table table-hover table-borderless table-striped table-dark">
               <thead>
                 <tr>
-                  <th>SL.No</th>
-                  <th>Owner Name</th>
-                  <th>Phone No.</th>
-                  <th>Date & Time</th>
-                  <th>Actions</th>
+                  <th className="text-nowrap">SL. No.</th>
+                  <th className="text-nowrap">Case No.</th>
+                  <th className="text-nowrap">Owner Name</th>
+                  <th className="text-nowrap">Phone No.</th>
+                  <th className="text-nowrap">Date & Time</th>
+                  <th className="text-nowrap">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {pendingAppointments?.appointments?.map((appointment, idx) => (
                   <tr key={appointment._id}>
                     <td>{idx + 1}</td>
+                    <td>{appointment.caseNo}</td>
                     <td>{appointment.ownerName}</td>
                     <td>{appointment.phone}</td>
                     <td>{formatDate(appointment.date)}</td>

@@ -1,12 +1,14 @@
 import Link from "next/link";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
+import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
-import { deletePatientData, fetchPatient } from "../../features/patient-registration/patientRegistrationSlice";
+import { deletePatientData, fetchPatient, searchPatientData } from "../../features/patient-registration/patientRegistrationSlice";
 import { formatDate } from "../../utils/formatDate";
 import Loader from "../UI/Loader";
 
 const RegistrationList = () => {
+  const search = useRef("");
   const dispatch = useDispatch();
   const { patients, status } = useSelector((state) => state.patient);
 
@@ -62,6 +64,26 @@ const RegistrationList = () => {
     });
   };
 
+  const handleSearch = async () => {
+    try {
+      const searchValue = search.current.value;
+      if (searchValue.trim()) {
+        const res = await dispatch(searchPatientData(searchValue));
+        if (res?.payload?.data?.data?.length <= 0) {
+          toast.error("Data Not Found!");
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      handleSearch();
+    }
+  };
+
   useEffect(() => {
     dispatch(fetchPatient());
   }, [dispatch]);
@@ -72,29 +94,36 @@ const RegistrationList = () => {
   return (
     <div className="container-fluid">
       <div className="app-card p-5 text-center shadow-sm">
-        <h3 className="page-title mb-4 text-center">Registration List</h3>
-        <div className="pb-4">
-          <input type="text" className="form-control w-25" placeholder="Search by name brand" />
+        <div className="d-flex align-items-center justify-content-between mb-4">
+          <div className="input-group w-50">
+            <input ref={search} onKeyDown={handleKeyPress} type="text" className="form-control" placeholder="Recipient's name, phone, case no" />
+            <button onClick={handleSearch} className="btn btn-primary text-white" type="button">
+              Search
+            </button>
+          </div>
+          <h3 className="page-title">Registration List</h3>
         </div>
         <div className="mb-4">
           <div className="table-responsive">
             <table className="table table-hover table-borderless table-striped table-dark">
               <thead>
                 <tr>
-                  <th>SL.No</th>
-                  <th>Case No</th>
-                  <th>Owner Name</th>
-                  <th>Date</th>
-                  <th>Actions</th>
+                  <th className="text-nowrap">SL.No.</th>
+                  <th className="text-nowrap">Case No.</th>
+                  <th className="text-nowrap">Owner Name</th>
+                  <th className="text-nowrap">Phone</th>
+                  <th className="text-nowrap">Date & Time</th>
+                  <th className="text-nowrap">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {patients?.data?.map((patientInfo, idx) => (
                   <tr key={patientInfo._id}>
                     <td>{idx + 1}</td>
-                    <td className="text-nowrap">{patientInfo?.appointmentId?.caseNo}</td>
-                    <td className="">{patientInfo?.appointmentId?.ownerName}</td>
-                    <td className="">{formatDate(patientInfo?.appointmentId?.date)}</td>
+                    <td>{patientInfo?.appointmentId?.caseNo}</td>
+                    <td>{patientInfo?.appointmentId?.ownerName}</td>
+                    <td>{patientInfo?.appointmentId?.phone}</td>
+                    <td>{formatDate(patientInfo?.appointmentId?.date)}</td>
                     <td className="d-flex gap-3 justify-content-center">
                       <Link href={`/patient-registration/${patientInfo._id}`}>
                         <button className="btn btn-info text-white">Edit</button>

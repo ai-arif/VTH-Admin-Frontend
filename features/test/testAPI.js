@@ -1,6 +1,5 @@
 import axiosInstance from "../../utils/axiosInstance";
 
-
 export const getAllSubParameter = async (id) => {
   try {
     const response = await axiosInstance.get(`/test/parameter/all/sub`);
@@ -9,8 +8,6 @@ export const getAllSubParameter = async (id) => {
     return Promise.reject(error);
   }
 };
-
-
 
 export const getSubParameter = async (id) => {
   try {
@@ -21,8 +18,6 @@ export const getSubParameter = async (id) => {
   }
 };
 
-
-
 export const getParameter = async (id) => {
   try {
     const response = await axiosInstance.get(`/test/parameter/${id}`);
@@ -31,7 +26,6 @@ export const getParameter = async (id) => {
     return Promise.reject(error);
   }
 };
-
 
 export const getTest = async () => {
   try {
@@ -69,10 +63,18 @@ export const deleteTest = async (id) => {
   }
 };
 
-
 export const addParameter = async (data) => {
   try {
     const response = await axiosInstance.post("/parameter", data);
+    return response.data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
+export const searchTest = async (search) => {
+  try {
+    const response = await axiosInstance.get(`/test/search?search=${search}`);
     return response.data;
   } catch (error) {
     return Promise.reject(error);

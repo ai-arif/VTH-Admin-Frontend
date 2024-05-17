@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
-import { deleteDepartmentData, fetchDepartment } from "../../features/department/departmentSlice";
+import { deleteDepartmentData, fetchDepartment, searchDepartmentData } from "../../features/department/departmentSlice";
 import Loader from "../UI/Loader";
 import AddDepartment from "./modals/AddDepartment";
 import UpdateDepartment from "./modals/UpdateDepartment";
@@ -10,11 +10,8 @@ import UpdateDepartment from "./modals/UpdateDepartment";
 const DepartmentHome = () => {
   const dispatch = useDispatch();
   const [existingData, setExistingData] = useState({});
+  const search = useRef("");
   const { departments, status } = useSelector((state) => state.department);
-
-  useEffect(() => {
-    dispatch(fetchDepartment());
-  }, [dispatch]);
 
   // handle get single department for update
   const handleGetDepartment = (department) => {
@@ -73,6 +70,31 @@ const DepartmentHome = () => {
     });
   };
 
+  const handleSearch = async () => {
+    try {
+      const searchValue = search.current.value;
+      if (searchValue.trim()) {
+        // const res = await dispatch(searchDepartmentData(searchValue));
+        // console.log(res);
+        // if (res?.payload?.data?.data?.length <= 0) {
+        //   toast.error("Data Not Found!");
+        // }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      handleSearch();
+    }
+  };
+
+  useEffect(() => {
+    dispatch(fetchDepartment());
+  }, [dispatch]);
+
   // loader
   if (status === "loading") return <Loader />;
 
@@ -86,11 +108,15 @@ const DepartmentHome = () => {
             {/* update department modal */}
             <UpdateDepartment existingData={existingData} />
 
-            <div className="app-card p-5 text-center shadow-sm mt-5">
-              <h2>All Department</h2>
+            <div className="app-card p-5 text-center shadow-sm">
+              <h3 className="pb-3">All Department</h3>
               <div className="d-flex justify-content-between mb-4">
-                <input type="email" className="form-control w-25" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Search by title" />
-
+                <div className="input-group w-50">
+                  <input ref={search} onKeyDown={handleKeyPress} type="text" className="form-control" placeholder="Recipient's name, phone, case no" />
+                  <button onClick={handleSearch} className="btn btn-primary text-white" type="button" id="button-addon2">
+                    Search
+                  </button>
+                </div>
                 <div>
                   <button data-bs-toggle="modal" data-bs-target="#addDepartment" className="btn app-btn-primary">
                     <FaPlus /> Add Department

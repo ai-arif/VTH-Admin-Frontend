@@ -35,3 +35,12 @@ export const deleteDepartment = async (id) => {
     return Promise.reject(error);
   }
 };
+
+export const searchDepartment = async (search) => {
+  try {
+    const response = await axiosInstance.get(`/department/search?search=${search}`);
+    return response.data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
