@@ -101,7 +101,7 @@ const RegistrationList = () => {
               Search
             </button>
           </div>
-          <h3 className="page-title">Registration List</h3>
+          <h3 className="page-title">History & Clinical Examination</h3>
         </div>
         <div className="mb-4">
           <div className="table-responsive">
