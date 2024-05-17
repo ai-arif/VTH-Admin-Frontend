@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { addTest, deleteTest, getAllSubParameter, getParameter, getSubParameter, getTest, searchTest, updateTest } from "./testAPI.js";
+import { addTest,searchTest, deleteTest, getAllSubParameter, getParameter, getSubParameter, getTest, searchTest, updateTest } from "./testAPI.js";
 
 const initialState = {
   test: {},
@@ -46,10 +46,11 @@ export const deleteTestData = createAsyncThunk("test/deleteTestData", async (id)
   return response;
 });
 
-export const searchTestData = createAsyncThunk("patient/searchTestData", async (search) => {
-  const response = await searchTest(search);
+export const searchTestData = createAsyncThunk("test/searchTestData", async (search,page=1,limit=20) => {
+  const response = await searchTest(search,page,limit);
   return response;
 });
+
 
 export const testSlice = createSlice({
   name: "test",
@@ -117,7 +118,7 @@ export const testSlice = createSlice({
         state.status = "loading";
       })
       .addCase(searchTestData.fulfilled, (state, action) => {
-        (state.status = "success"), (state.patients = action.payload.data);
+        (state.status = "success"), (state.tests = action.payload.data);
       })
       .addCase(searchTestData.rejected, (state, action) => {
         state.status = "failed";
