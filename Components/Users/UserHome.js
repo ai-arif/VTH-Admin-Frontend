@@ -13,11 +13,10 @@ const UserHome = () => {
     try {
       const searchValue = search.current.value;
       if (searchValue.trim()) {
-        // const res = await dispatch(searchUserPatientAsync(searchValue));
-        // console.log(res);
-        // if (res?.payload?.data?.data?.length <= 0) {
-        //   toast.error("Data Not Found!");
-        // }
+        const res = await dispatch(searchUserPatientAsync(searchValue));
+        if (res?.payload?.data?.users?.length <= 0) {
+          toast.error("Data Not Found!");
+        }
       }
     } catch (error) {
       console.log(error);

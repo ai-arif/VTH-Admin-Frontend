@@ -66,8 +66,8 @@ const ViewMedicine = () => {
     try {
       const searchValue = search.current.value;
       if (searchValue.trim()) {
-        // const res = await dispatch(searchMedicineData(searchValue));
-        // console.log(res);
+        const res = await dispatch(searchMedicineData(searchValue));
+        console.log(res);
         // if (res?.payload?.data?.data?.length <= 0) {
         //   toast.error("Data Not Found!");
         // }
