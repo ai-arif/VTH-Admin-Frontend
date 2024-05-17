@@ -27,6 +27,16 @@ export const getParameter = async (id) => {
   }
 };
 
+// /test/search?search=a&page=1&limit=10 , take search, page, limit as query params
+export const searchTest= async (search, page, limit) => {
+  try {
+    const response = await axiosInstance.get(`/test/search?search=${search}&page=${page}&limit=${limit}`);
+    return response.data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+}
+
 export const getTest = async () => {
   try {
     const response = await axiosInstance.get("/test");
@@ -72,11 +82,3 @@ export const addParameter = async (data) => {
   }
 };
 
-export const searchTest = async (search) => {
-  try {
-    const response = await axiosInstance.get(`/test/search?search=${search}`);
-    return response.data;
-  } catch (error) {
-    return Promise.reject(error);
-  }
-};

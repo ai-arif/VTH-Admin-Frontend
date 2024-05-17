@@ -45,7 +45,6 @@ export const deleteMedicine = async (id) => {
   }
 };
 
-// /medicine/search?search=Hasan&page=1&limit=10
 export const searchMedicine = async (search,page=1,limit=20) => {
   try {
     const response = await axiosInstance.get(`/medicine/search?search=${search}&page=${page}&limit=${limit}`);
