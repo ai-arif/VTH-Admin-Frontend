@@ -56,7 +56,7 @@ const UpdateMedicine = () => {
               <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="row">
                   <div className="mb-3 col-md-6">
-                    <label className="form-label">Medicine Name</label>
+                    <label className="form-label">Medicine Name (Generic Name)</label>
                     <input type="text" {...register("name", { required: true })} className={`form-control ${errors.name && "border-danger"}`} id="name" />
                     {errors.name && <small className="text-danger">Please write Medicine name</small>}
                   </div>
