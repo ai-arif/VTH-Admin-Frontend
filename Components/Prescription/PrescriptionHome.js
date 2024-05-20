@@ -185,8 +185,20 @@ const PrescriptionHome = () => {
                 </div>
                 <div className="row">
                   <div className="mb-3">
+                    <label className="form-label">Diagnosis</label>
+                    <textarea type="text" {...register("diagnosis")} className="form-control" />
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="mb-3">
                     <label className="form-label">Medicine</label>
                     <Controller name="medicines" control={control} defaultValue={[]} render={({ field }) => <Select options={medicineOptions} isMulti {...field} styles={customStyles} />} />
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="mb-3">
+                    <label className="form-label">Therapeutics</label>
+                    <input type="text" {...register("therapeutics")} className="form-control" />
                   </div>
                 </div>
                 <div className="row">
@@ -196,13 +208,15 @@ const PrescriptionHome = () => {
                   </div>
                 </div>
                 <div className="row">
-                  <div className="mb-3 col-md-6">
-                    <label className="form-label">Diagnosis</label>
-                    <input type="text" {...register("diagnosis")} className="form-control" />
-                  </div>
-                  <div className="mb-3 col-md-6">
+                  <div className="mb-3">
                     <label className="form-label">Next Visit</label>
                     <input type="date" {...register("nextVisit")} className="form-control" />
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="mb-3">
+                    <label className="form-label">Prognosis</label>
+                    <textarea type="text" {...register("prognosis")} className="form-control" />
                   </div>
                 </div>
                 <div className="row">

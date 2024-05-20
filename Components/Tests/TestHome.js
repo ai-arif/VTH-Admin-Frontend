@@ -6,6 +6,8 @@ import Swal from "sweetalert2";
 import { deleteTestData, fetchTest, searchTestData } from "../../features/test/testSlice";
 import AddTest from "./modals/AddTest";
 
+import toast from "react-hot-toast";
+import Loader from "../UI/Loader";
 import UpdateTest from "./modals/UpdateTest";
 
 const TestHome = () => {
@@ -63,11 +65,11 @@ const TestHome = () => {
     try {
       const searchValue = search.current.value;
       if (searchValue.trim()) {
-        // const res = await dispatch(searchTestData(searchValue));
-        // console.log(res);
-        // if (res?.payload?.data?.data?.length <= 0) {
-        //   toast.error("Data Not Found!");
-        // }
+        const res = await dispatch(searchTestData(searchValue));
+        console.log(res);
+        if (res?.payload?.data?.data?.length <= 0) {
+          toast.error("Data Not Found!");
+        }
       }
     } catch (error) {
       console.log(error);
@@ -84,14 +86,15 @@ const TestHome = () => {
     dispatch(fetchTest());
   }, [dispatch]);
 
-  if (status === "loading") return <h2>Loading..</h2>;
+  // loader
+  if (status === "loading") return <Loader />;
 
   return (
     <div>
       <div className="container mb-5">
         <div className="row">
-          {/* also create Actions tr, with edit and delete */}
           <div className="col-12 col-md-11 col-lg-12 col-xl-12 mx-auto">
+            {/* add test modal */}
             <AddTest />
             {/* update test modal */}
             <UpdateTest existingTest={existingTest} />
@@ -115,10 +118,10 @@ const TestHome = () => {
                 <table className="table table-hover table-borderless table-striped table-dark">
                   <thead>
                     <tr>
-                      <th>SL.No</th>
-                      <th>Test Name</th>
-                      <th>Short Description</th>
-                      <th>Actions</th>
+                      <th className="text-nowrap">SL.No.</th>
+                      <th className="text-nowrap">Test Name</th>
+                      <th className="text-nowrap">Short Description</th>
+                      <th className="text-nowrap">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -126,7 +129,7 @@ const TestHome = () => {
                       <tr key={test._id}>
                         <td>{index + 1}</td>
                         <td className="text-nowrap">{test.testName}</td>
-                        <td className="w-75">{test.testDetails}</td>
+                        <td>{test.testDetails}</td>
                         <td className="d-flex gap-3">
                           <button onClick={() => handleUpdateTest(test)} data-bs-toggle="modal" data-bs-target="#updateTest" className="btn  btn-info text-white">
                             Edit
