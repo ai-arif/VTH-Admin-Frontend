@@ -46,6 +46,12 @@ const AppointmentHome = () => {
     }
   };
 
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      getUserByPhone();
+    }
+  };
+
   const onSubmit = async (appointmentData) => {
     try {
       if (oldPatent) {
@@ -84,6 +90,7 @@ const AppointmentHome = () => {
                     onChange={(e) => {
                       setSearchPhone(e.target.value);
                     }}
+                    onKeyDown={handleKeyPress}
                     type="text"
                     className="form-control"
                     placeholder="Recipient's Phone"
@@ -135,6 +142,7 @@ const AppointmentHome = () => {
                       <option value="Fulpur">Fulpur</option>
                       <option value="Haluaghat">Haluaghat</option>
                       <option value="Dhubaura">Dhubaura</option>
+                      <option value="Pagla">Pagla</option>
                     </select>
                     {errors.upazila && <small className="text-danger">Please select any upazilla</small>}
                   </div>

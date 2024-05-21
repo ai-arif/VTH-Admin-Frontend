@@ -12458,7 +12458,6 @@ button.close:focus {
 
 #patient-registration .info-group {
   background-color: var(--vth-primary-dark);
-  padding: 40px 30px;
-  margin: 30px 10px;
+  padding: 10px 30px;
   border-radius: 8px;
 }

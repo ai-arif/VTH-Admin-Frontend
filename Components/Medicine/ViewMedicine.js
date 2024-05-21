@@ -1,5 +1,6 @@
 import Link from "next/link";
 import React, { useEffect, useRef } from "react";
+import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { deleteMedicineData, fetchMedicine, searchMedicineData } from "../../features/medicine/medicineSlice";
@@ -66,11 +67,10 @@ const ViewMedicine = () => {
     try {
       const searchValue = search.current.value;
       if (searchValue.trim()) {
-        // const res = await dispatch(searchMedicineData(searchValue));
-        // console.log(res);
-        // if (res?.payload?.data?.data?.length <= 0) {
-        //   toast.error("Data Not Found!");
-        // }
+        const res = await dispatch(searchMedicineData(searchValue));
+        if (res?.payload?.data?.data?.length <= 0) {
+          toast.error("Data Not Found!");
+        }
       }
     } catch (error) {
       console.log(error);

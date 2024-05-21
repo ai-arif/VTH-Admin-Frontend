@@ -14,8 +14,8 @@ export const fetchAllUserPatient = createAsyncThunk("userPatient/fetchAllUserPat
   return response;
 });
 
-export const searchUserPatientAsync = createAsyncThunk("userPatient/searchUserPatientAsync", async (search) => {
-  const response = await searchUserPatient(search);
+export const searchUserPatientAsync = createAsyncThunk("userPatient/searchUserPatientAsync", async (search, page, limit) => {
+  const response = await searchUserPatient(search, page, limit);
   return response;
 });
 
