@@ -209,14 +209,15 @@ const PatientRegistrationForm = () => {
                       <h6 className="text-center text-decoration-underline py-2">Patient Information</h6>
                       <div className="row">
                         <div className="mb-3 col-md-6">
-                          <label className="form-label">Species</label>
+                          <label className="form-label">Species (Animal Type)</label>
                           <input type="text" {...register("species", { required: true })} className={`form-control ${errors.species && "border-danger"}`} />
                           {errors.species && <small className="text-danger">Please write species</small>}
                         </div>
                         <div className="mb-3 col-md-6">
-                          <label className="form-label">Breed</label>
-                          <input type="text" {...register("breed", { required: true })} className={`form-control ${errors.breed && "border-danger"}`} />
-                          {errors.breed && <small className="text-danger">Please write breed</small>}
+                          <label className="form-label">
+                            Owner Complaints <small>(optional)</small>
+                          </label>
+                          <textarea {...register("ownerComplaints")} className="form-control" />
                         </div>
                       </div>
                       <div className="row">
@@ -284,10 +285,9 @@ const PatientRegistrationForm = () => {
                           <input type="text" {...register("parity")} className="form-control" />
                         </div>
                         <div className="mb-3 col-md-6">
-                          <label className="form-label">
-                            Owner Complaints <small>(optional)</small>
-                          </label>
-                          <textarea {...register("ownerComplaints")} className="form-control" />
+                          <label className="form-label">Breed</label>
+                          <input type="text" {...register("breed", { required: true })} className={`form-control ${errors.breed && "border-danger"}`} />
+                          {errors.breed && <small className="text-danger">Please write breed</small>}
                         </div>
                       </div>
                     </div>
