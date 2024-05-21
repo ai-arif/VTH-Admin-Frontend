@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  fetchTest,
-  fetchParameter,
-  fetchSubParameter,
-} from "../../../features/test/testSlice";
-import axiosInstance from "../../../utils/axiosInstance";
 import toast, { Toaster } from "react-hot-toast";
-import { MdOutlineDeleteForever } from "react-icons/md";
 import { CiEdit } from "react-icons/ci";
 import { IoMdAddCircleOutline } from "react-icons/io";
+import { MdOutlineDeleteForever } from "react-icons/md";
+import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
+import {
+  fetchParameter,
+  fetchSubParameter,
+  fetchTest,
+} from "../../../features/test/testSlice";
+import axiosInstance from "../../../utils/axiosInstance";
 
 
 export default function TestParameter() {
@@ -18,8 +18,31 @@ export default function TestParameter() {
   const [inputValue, setInputValue] = useState("");
   const [type, setType] = useState("");
   const [text, setText] = useState("");
+  const [type2, setType2] = useState("");
+  const [text2, setText2] = useState("");
   const [check, setCheck] = useState("");
   const [parameters, setParameters] = useState([]);
+
+  console.log({ type, type2, text, text2 })
+
+  // additional field
+  const [selectedAdditional, setSelectedAdditional] = useState({
+    fieldName: "",
+    id: "",
+  });
+
+  // console.log(selectedAdditional)
+
+  const [allAdditionalFields, setAdditionalFields] = useState([]);
+  useEffect(() => {
+    if (selectedAdditional.id) {
+      axiosInstance('/test/parameter/all/additional').then(res => {
+        setAdditionalFields(res.data?.data?.data)
+        // console.log(res.data?.data?.data)
+      })
+    }
+  }, [selectedAdditional.id, type2])
+
 
   const [selectedTest, setSelectedTest] = useState({
     testName: "",
@@ -33,6 +56,9 @@ export default function TestParameter() {
   const { tests, status, parameterList, subParameterList } = useSelector(
     (state) => state.test
   );
+
+  // console.log(subParameterList)
+
   useEffect(() => {
     dispatch(fetchTest());
   }, [dispatch]);
@@ -45,7 +71,7 @@ export default function TestParameter() {
     dispatch(fetchSubParameter(selectedParameter.id));
   }, [selectedParameter, type, text, check]);
 
-  
+
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
   };
@@ -90,12 +116,29 @@ export default function TestParameter() {
     //   toast.error("Parameter already exists!");
     //   return;
     // }
-    const response = await axiosInstance.post("/test/parameter/sub", {
-      sub_parameter_type: type,
-      text,
-      check,
-      test_parameter: selectedParameter.id,
-    });
+
+    // const response = await axiosInstance.post("/test/parameter/sub", {
+    //   sub_parameter_type: type,
+    //   text,
+    //   check,
+    //   test_parameter: selectedParameter.id,
+    // });
+
+    const newData = {};
+
+    if (type == "text") {
+      newData.isInputField = true,
+        newData.value = text,
+        newData.test_parameter = selectedParameter.id
+    }
+    else {
+      newData.isInputField = false,
+        newData.value = check,
+        newData.test_parameter = selectedParameter.id
+    }
+
+    const response = await axiosInstance.post("/test/parameter/sub", newData);
+    console.log(response)
 
     if (response.status === 200) {
       toast.success(response.data.message);
@@ -139,6 +182,11 @@ export default function TestParameter() {
   };
 
 
+  const handleAdditionalParams = (id) => {
+    console.log(id)
+  }
+
+
 
 
   return (
@@ -169,15 +217,16 @@ export default function TestParameter() {
       </div>
 
       <div className="row">
-        <div className="col-6">
+        <div className="col-4">
           <ul class="list-group">
-            {selectedTest.testName  &&
+            {selectedTest.testName &&
               parameterList.data?.map((param, index) => (
                 <li class="list-group-item mt-3">
                   <span>{param.name}</span>
                   <div className="d-flex justify-content-between align-items-center mt-4">
                     <div className="d-flex align-items-center gap-4">
                       <MdOutlineDeleteForever
+                        className=""
                         size={23}
                         color="red"
                         onClick={() => handleParameterDelete(param._id)}
@@ -217,7 +266,9 @@ export default function TestParameter() {
             </button>
           </div>
         </div>
-        <div className="col-6">
+
+        {/* sub params  */}
+        <div className="col-4">
           {selectedParameter.parameterName && (
             <div>
               {/* tab */}
@@ -268,10 +319,10 @@ export default function TestParameter() {
                 >
                   <ul class="list-group w-50">
                     {subParameterList.data?.map((param, index) => {
-                      if (param.sub_parameter_type === "text")
+                      if (param.isInputField)
                         return (
                           <li class="list-group-item mt-3 d-flex justify-content-between">
-                            <span>{param.text}</span>
+                            <span>{param.value}</span>
                             <div className="d-flex gap-3 mt-4">
                               <CiEdit size={23} color="gray" />
                               <MdOutlineDeleteForever
@@ -280,15 +331,28 @@ export default function TestParameter() {
                                 onClick={() => handleSubParameterDelete(param._id)}
                               />
                             </div>
+                            <button
+                              className="btn border"
+                              onClick={() => {
+                                setSelectedAdditional({
+                                  id: param._id,
+                                  fieldName: ""
+                                });
+                                // setType("text");
+                                console.log('kj', param._id)
+                              }}
+                            >
+                              <IoMdAddCircleOutline /> additional
+                            </button>
                           </li>
-                        );
+                        )
                     })}
                   </ul>
 
                   <div className="d-flex gap-3 mt-3">
                     <input
                       className="form-control w-75"
-                      placeholder="Enter sub parater name"
+                      placeholder="Enter sub parameter name"
                       value={text}
                       onChange={(e) => setText(e.target.value)}
                     />
@@ -312,10 +376,10 @@ export default function TestParameter() {
                 >
                   <ul class="list-group w-50">
                     {subParameterList.data?.map((param, index) => {
-                      if (param.sub_parameter_type === "check")
+                      if (!param.isInputField)
                         return (
                           <li class="list-group-item mt-3 d-flex justify-content-between">
-                            <span>{param.check}</span>
+                            <span>{param.value}</span>
                             <div className="d-flex gap-3 mt-4">
                               <CiEdit size={23} color="gray" />
                               <MdOutlineDeleteForever
@@ -324,8 +388,21 @@ export default function TestParameter() {
                                 onClick={() => handleSubParameterDelete(param._id)}
                               />
                             </div>
+                            <button
+                              className="btn border"
+                              onClick={() => {
+                                setSelectedAdditional({
+                                  id: param._id,
+                                  fieldName: ""
+                                });
+                                // setType("text");
+                                console.log('kj', param._id)
+                              }}
+                            >
+                              <IoMdAddCircleOutline /> additional
+                            </button>
                           </li>
-                        );
+                        )
                     })}
                   </ul>
 
@@ -341,6 +418,147 @@ export default function TestParameter() {
                       onClick={handleSubParameter}
                     >
                       Add
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* additional fields ******************** */}
+        <div className="col-4">
+          {selectedAdditional.id && (
+            <div>
+              {/* tab */}
+              <nav>
+                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                  <button
+                    class="nav-link active"
+                    id="nav-home-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#nav-home"
+                    type="button"
+                    role="tab"
+                    aria-controls="nav-home"
+                    aria-selected="true"
+                    onClick={() => {
+                      setType2("text");
+                    }}
+                  >
+                    Text
+                  </button>
+                  <button
+                    class="nav-link"
+                    id="nav-profile-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#nav-profile"
+                    type="button"
+                    role="tab"
+                    aria-controls="nav-profile"
+                    aria-selected="false"
+                    onClick={() => {
+                      setType2("check");
+                    }}
+                  >
+                    Check Item
+                  </button>
+                </div>
+              </nav>
+              <div class="tab-content mt-4" id="nav-tabContent">
+                {/* text part */}
+                <div
+                  class="tab-pane fade show active"
+                  id="nav-home"
+                  role="tabpanel"
+                  aria-labelledby="nav-home-tab"
+                  tabindex="0"
+                >
+                  <ul class="list-group w-50">
+                    {allAdditionalFields?.map((param, index) => {
+                      if (param.isAdditionalFieldInput == true)
+                        return (
+                          <li class="list-group-item mt-3 d-flex justify-content-between">
+                            <p>{param.isAdditionalFieldInput}</p>
+                            <span>{param.additionalFieldTitle}</span>
+                            <div className="d-flex gap-3 mt-4">
+                              <CiEdit size={23} color="gray" />
+                              <MdOutlineDeleteForever
+                                size={23}
+                                color="red"
+                              // onClick={() => handleSubParameterDelete(param._id)}
+                              />
+                            </div>
+                          </li>
+                        )
+                    })}
+                  </ul>
+
+                  <div className="d-flex gap-3 mt-3">
+                    <input
+                      className="form-control w-75"
+                      placeholder="Additional parameter"
+                      value={text2}
+                      onChange={(e) => setText2(e.target.value)}
+                    />
+                    <button
+                      className="btn btn-sm btn-primary text-white"
+                      // onClick={handleSubParameter}
+                      onClick={(param) => {
+                        console.log("kk")
+                        handleAdditionalParams(param._id)
+                      }}
+                    >
+                      Add
+                    </button>
+                  </div>
+                </div>
+
+                {/* check part */}
+
+                <div
+                  class="tab-pane fade"
+                  id="nav-profile"
+                  role="tabpanel"
+                  aria-labelledby="nav-profile-tab"
+                  tabindex="0"
+                >
+                  <ul class="list-group w-50">
+                    {allAdditionalFields?.map((param, index) => {
+                      if (param.isAdditionalFieldInput == false)
+                        return (
+                          <li class="list-group-item mt-3 d-flex justify-content-between">
+                            <span>{param.additionalFieldTitle}</span>
+                            <div className="d-flex gap-3 mt-4">
+                              <CiEdit size={23} color="gray" />
+                              <MdOutlineDeleteForever
+                                size={23}
+                                color="red"
+                              // onClick={() => handleSubParameterDelete(param._id)}
+                              />
+                            </div>
+
+                          </li>
+                        )
+                    })}
+                  </ul>
+
+                  <div className="d-flex gap-3 mt-3">
+                    <input
+                      className="form-control w-50"
+                      placeholder="Check item name"
+                      value={check}
+                      onChange={(e) => setCheck(e.target.value)}
+                    />
+                    <button
+                      className="btn btn-sm btn-primary text-white"
+                      // onClick={handleSubParameter}
+                      onClick={(param) => {
+                        console.log("kk")
+                        handleAdditionalParams(param._id)
+                      }}
+                    >
+                      Add fgdf
                     </button>
                   </div>
                 </div>

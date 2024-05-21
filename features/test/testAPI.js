@@ -28,7 +28,7 @@ export const getParameter = async (id) => {
 };
 
 // /test/search?search=a&page=1&limit=10 , take search, page, limit as query params
-export const searchTest= async (search, page, limit) => {
+export const searchTest = async (search, page, limit) => {
   try {
     const response = await axiosInstance.get(`/test/search?search=${search}&page=${page}&limit=${limit}`);
     return response.data;
@@ -81,4 +81,6 @@ export const addParameter = async (data) => {
     return Promise.reject(error);
   }
 };
+
+// additional fields 
 

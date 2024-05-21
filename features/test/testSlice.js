@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { addTest,searchTest, deleteTest, getAllSubParameter, getParameter, getSubParameter, getTest, searchTest, updateTest } from "./testAPI.js";
+import { addTest, deleteTest, getAllSubParameter, getParameter, getSubParameter, getTest, searchTest, updateTest } from "./testAPI.js";
 
 const initialState = {
   test: {},
@@ -46,8 +46,8 @@ export const deleteTestData = createAsyncThunk("test/deleteTestData", async (id)
   return response;
 });
 
-export const searchTestData = createAsyncThunk("test/searchTestData", async (search,page=1,limit=20) => {
-  const response = await searchTest(search,page,limit);
+export const searchTestData = createAsyncThunk("test/searchTestData", async (search, page = 1, limit = 20) => {
+  const response = await searchTest(search, page, limit);
   return response;
 });
 
