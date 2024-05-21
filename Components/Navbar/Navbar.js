@@ -1,12 +1,11 @@
-import Cookies from "js-cookie";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { AiOutlineHome, AiOutlineMedicineBox } from "react-icons/ai";
 import { BsBarChartLine, BsFolder } from "react-icons/bs";
+import { GiCow } from "react-icons/gi";
 import { GrTest } from "react-icons/gr";
 import { HiOutlineUserGroup } from "react-icons/hi2";
-import { IoHomeOutline } from "react-icons/io5";
 import { SlLayers } from "react-icons/sl";
 import { VscOutput } from "react-icons/vsc";
 import { useDispatch, useSelector } from "react-redux";
@@ -266,7 +265,7 @@ const Navbar = () => {
                 <span className="nav-link-text">Departments</span>
               </NavItem>
 
-              <SubmenuNavItem hrefParent="/medicine" hrefOne="/medicine/add" hrefTwo="/medicine/view" hrefNameOne="Add Medicine" hrefNameTwo="View Medicine" submenuNumber="submenu-4">
+              <SubmenuNavItem hrefParent="/medicine" hrefOne="/medicine/add" hrefTwo="/medicine/view" hrefNameOne="Add Medicine" hrefNameTwo="View Medicine" submenuNumber="submenu-3">
                 <span className="nav-icon">
                   <AiOutlineMedicineBox size={23} />
                 </span>
@@ -286,7 +285,7 @@ const Navbar = () => {
                 hrefTwo="/prescription/view"
                 hrefNameOne="Add Prescription"
                 hrefNameTwo="View Prescription"
-                submenuNumber="submenu-3"
+                submenuNumber="submenu-4"
               >
                 <span className="nav-icon">
                   <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-card-list" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -304,6 +303,20 @@ const Navbar = () => {
                   </svg>
                 </span>
                 <span className="nav-link-text">Prescription</span>
+              </SubmenuNavItem>
+
+              <SubmenuNavItem
+                hrefParent="/species-complaints"
+                hrefOne="/species-complaints/species"
+                hrefTwo="/species-complaints/complaints"
+                hrefNameOne="Species"
+                hrefNameTwo="Complaints"
+                submenuNumber="submenu-5"
+              >
+                <span className="nav-icon">
+                  <GiCow size={20} />
+                </span>
+                <span className="nav-link-text">Species & Complaints</span>
               </SubmenuNavItem>
             </ul>
           </nav>
