@@ -6,6 +6,7 @@
   --vth-white: #fff;
 }
 
+/* appointment tab styles */
 #appointment .react-tabs__tab-list {
   display: flex;
   justify-content: center;
@@ -35,10 +36,6 @@
   top: 37px;
   right: 15px;
 }
-
-/* .app-nav .vth-submenu-toggle[aria-expanded="true"][aria-expanded="true"] .submenu-arrow svg {
-  -webkit-transform: rotate(180deg);
-} */
 
 /* Remove increment and decrement arrows from number input */
 input[type="number"]::-webkit-inner-spin-button,

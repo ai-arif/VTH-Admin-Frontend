@@ -46,6 +46,12 @@ const AppointmentHome = () => {
     }
   };
 
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      getUserByPhone();
+    }
+  };
+
   const onSubmit = async (appointmentData) => {
     try {
       if (oldPatent) {
@@ -84,6 +90,7 @@ const AppointmentHome = () => {
                     onChange={(e) => {
                       setSearchPhone(e.target.value);
                     }}
+                    onKeyDown={handleKeyPress}
                     type="text"
                     className="form-control"
                     placeholder="Recipient's Phone"
