@@ -6,6 +6,9 @@ import { MdOutlineDeleteForever } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import {
+  createAdditionalFields,
+  createTestParameter,
+  fetchAllAdditionalFields,
   fetchParameter,
   fetchSubParameter,
   fetchTest,
@@ -18,12 +21,16 @@ export default function TestParameter() {
   const [inputValue, setInputValue] = useState("");
   const [type, setType] = useState("");
   const [text, setText] = useState("");
-  const [type2, setType2] = useState("");
+
   const [text2, setText2] = useState("");
   const [check, setCheck] = useState("");
   const [parameters, setParameters] = useState([]);
 
-  console.log({ type, type2, text, text2 })
+
+  // tabs state
+  const [activeTab, setActiveTab] = useState("additional1")
+
+  // console.log({ type, text, text2 })
 
   // additional field
   const [selectedAdditional, setSelectedAdditional] = useState({
@@ -33,15 +40,16 @@ export default function TestParameter() {
 
   // console.log(selectedAdditional)
 
-  const [allAdditionalFields, setAdditionalFields] = useState([]);
-  useEffect(() => {
-    if (selectedAdditional.id) {
-      axiosInstance('/test/parameter/all/additional').then(res => {
-        setAdditionalFields(res.data?.data?.data)
-        // console.log(res.data?.data?.data)
-      })
-    }
-  }, [selectedAdditional.id, type2])
+  // const [allAdditionalFields2, setAdditionalFields] = useState([]);
+  // useEffect(() => {
+  //   if (selectedAdditional.id) {
+  //     axiosInstance(`/test/parameter/additional/${selectedAdditional.id}`).then(res => {
+  //       setAdditionalFields(res.data?.data?.data)
+  //       console.log(res.data?.data?.data)
+  //     })
+  //   }
+  // }, [selectedAdditional.id])
+
 
 
   const [selectedTest, setSelectedTest] = useState({
@@ -53,9 +61,11 @@ export default function TestParameter() {
     id: "",
   });
 
-  const { tests, status, parameterList, subParameterList } = useSelector(
+  const { tests, status, parameterList, subParameterList, allAdditionalFields } = useSelector(
     (state) => state.test
   );
+
+  console.log(allAdditionalFields)
 
   // console.log(subParameterList)
 
@@ -71,13 +81,20 @@ export default function TestParameter() {
     dispatch(fetchSubParameter(selectedParameter.id));
   }, [selectedParameter, type, text, check]);
 
+  // additional fields 
+  useEffect(() => {
+    if (selectedAdditional.id) {
+      dispatch(fetchAllAdditionalFields(selectedAdditional.id));
+    }
+  }, [selectedAdditional.id, activeTab]);
+
 
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
   };
 
   const handleAddButtonClick = async () => {
-    if (!selectedTest.testName) {
+    if (!selectedTest?.testName) {
       toast.error("Select test at first");
       return;
     }
@@ -90,14 +107,68 @@ export default function TestParameter() {
       toast.error("Parameter already exists!");
       return;
     }
-    const response = await axiosInstance.post("/test/parameter", {
-      name: inputValue,
-      testId: selectedTest.id,
-    });
+    // const response = await axiosInstance.post("/test/parameter", {
+    //   name: inputValue,
+    //   testId: selectedTest.id,
+    // });
 
-    if (response.status === 200) {
-      toast.success(response.data.message);
-      setInputValue("");
+    try {
+      const response = await dispatch(createTestParameter({
+        name: inputValue,
+        testId: selectedTest.id,
+      }))
+
+      if (response.payload.success) {
+        toast.success(response.payload.message);
+        setInputValue("");
+      }
+    }
+    catch (error) {
+      console.log(error)
+      toast.error("Unable to create parameter");
+    }
+  };
+
+  // additional field 
+  const handleAdditionalParams = async (id) => {
+    if (parameters.includes(inputValue)) {
+      toast.error("Parameter already exists!");
+      return;
+    }
+    // const response = await axiosInstance.post("/test/parameter", {
+    //   name: inputValue,
+    //   testId: selectedTest.id,
+    // });
+
+    try {
+
+      const data = {
+        additionalFieldTitle: text2,
+        sub_test_parameter: selectedAdditional.id,
+      };
+
+      if (activeTab == "additional1") {
+        data.isAdditionalFieldInput = true;
+      }
+      else {
+        data.isAdditionalFieldInput = false;
+      }
+
+
+      const response = await dispatch(createAdditionalFields(data))
+
+
+      console.log(response)
+
+      if (response.payload.success) {
+        dispatch(fetchAllAdditionalFields(selectedAdditional.id));
+        toast.success(response.payload.message);
+        setInputValue("");
+      }
+    }
+    catch (error) {
+      console.log(error)
+      toast.error("Unable to create parameter");
     }
   };
 
@@ -182,9 +253,6 @@ export default function TestParameter() {
   };
 
 
-  const handleAdditionalParams = (id) => {
-    console.log(id)
-  }
 
 
 
@@ -428,145 +496,103 @@ export default function TestParameter() {
 
         {/* additional fields ******************** */}
         <div className="col-4">
-          {selectedAdditional.id && (
-            <div>
-              {/* tab */}
-              <nav>
-                <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                  <button
-                    class="nav-link active"
-                    id="nav-home-tab"
-                    data-bs-toggle="tab"
-                    data-bs-target="#nav-home"
-                    type="button"
-                    role="tab"
-                    aria-controls="nav-home"
-                    aria-selected="true"
-                    onClick={() => {
-                      setType2("text");
-                    }}
-                  >
-                    Text
-                  </button>
-                  <button
-                    class="nav-link"
-                    id="nav-profile-tab"
-                    data-bs-toggle="tab"
-                    data-bs-target="#nav-profile"
-                    type="button"
-                    role="tab"
-                    aria-controls="nav-profile"
-                    aria-selected="false"
-                    onClick={() => {
-                      setType2("check");
-                    }}
-                  >
-                    Check Item
-                  </button>
-                </div>
-              </nav>
-              <div class="tab-content mt-4" id="nav-tabContent">
-                {/* text part */}
-                <div
-                  class="tab-pane fade show active"
-                  id="nav-home"
-                  role="tabpanel"
-                  aria-labelledby="nav-home-tab"
-                  tabindex="0"
-                >
-                  <ul class="list-group w-50">
-                    {allAdditionalFields?.map((param, index) => {
-                      if (param.isAdditionalFieldInput == true)
-                        return (
-                          <li class="list-group-item mt-3 d-flex justify-content-between">
-                            <p>{param.isAdditionalFieldInput}</p>
-                            <span>{param.additionalFieldTitle}</span>
-                            <div className="d-flex gap-3 mt-4">
-                              <CiEdit size={23} color="gray" />
-                              <MdOutlineDeleteForever
-                                size={23}
-                                color="red"
-                              // onClick={() => handleSubParameterDelete(param._id)}
-                              />
-                            </div>
-                          </li>
-                        )
-                    })}
-                  </ul>
-
-                  <div className="d-flex gap-3 mt-3">
-                    <input
-                      className="form-control w-75"
-                      placeholder="Additional parameter"
-                      value={text2}
-                      onChange={(e) => setText2(e.target.value)}
-                    />
-                    <button
-                      className="btn btn-sm btn-primary text-white"
-                      // onClick={handleSubParameter}
-                      onClick={(param) => {
-                        console.log("kk")
-                        handleAdditionalParams(param._id)
-                      }}
-                    >
-                      Add
-                    </button>
-                  </div>
-                </div>
-
-                {/* check part */}
-
-                <div
-                  class="tab-pane fade"
-                  id="nav-profile"
-                  role="tabpanel"
-                  aria-labelledby="nav-profile-tab"
-                  tabindex="0"
-                >
-                  <ul class="list-group w-50">
-                    {allAdditionalFields?.map((param, index) => {
-                      if (param.isAdditionalFieldInput == false)
-                        return (
-                          <li class="list-group-item mt-3 d-flex justify-content-between">
-                            <span>{param.additionalFieldTitle}</span>
-                            <div className="d-flex gap-3 mt-4">
-                              <CiEdit size={23} color="gray" />
-                              <MdOutlineDeleteForever
-                                size={23}
-                                color="red"
-                              // onClick={() => handleSubParameterDelete(param._id)}
-                              />
-                            </div>
-
-                          </li>
-                        )
-                    })}
-                  </ul>
-
-                  <div className="d-flex gap-3 mt-3">
-                    <input
-                      className="form-control w-50"
-                      placeholder="Check item name"
-                      value={check}
-                      onChange={(e) => setCheck(e.target.value)}
-                    />
-                    <button
-                      className="btn btn-sm btn-primary text-white"
-                      // onClick={handleSubParameter}
-                      onClick={(param) => {
-                        console.log("kk")
-                        handleAdditionalParams(param._id)
-                      }}
-                    >
-                      Add fgdf
-                    </button>
-                  </div>
-                </div>
-              </div>
+          {/* tabs ********************* */}
+          <div className="d-flex justify-content-center my-3">
+            <div className="btn-group" role="group">
+              <button className={`btn text-white ${activeTab === "additional1" ? "btn-primary" : "btn-outline-primary border"}`} onClick={() => setActiveTab("additional1")}>
+                Text
+              </button>
+              <button className={`btn text-white ${activeTab === "additional2" ? "btn-primary" : "btn-outline-primary border"}`} onClick={() => setActiveTab("additional2")}>
+                Check item
+              </button>
             </div>
-          )}
+          </div>
+          {/* tab content 1 */}
+          {activeTab === "additional1" && <div>
+            <ul class="list-group w-50">
+              {allAdditionalFields?.data?.map((param, index) => {
+                if (param.isAdditionalFieldInput == true)
+                  return (
+                    <li class="list-group-item mt-3 d-flex justify-content-between">
+                      <p>{param.isAdditionalFieldInput}</p>
+                      <span>{param.additionalFieldTitle}</span>
+                      <div className="d-flex gap-3 mt-4">
+                        <CiEdit size={23} color="gray" />
+                        <MdOutlineDeleteForever
+                          size={23}
+                          color="red"
+                        // onClick={() => handleSubParameterDelete(param._id)}
+                        />
+                      </div>
+                    </li>
+                  )
+              })}
+            </ul>
+
+            <div className="d-flex gap-3 mt-3">
+              <input
+                className="form-control w-50"
+                placeholder="Text value"
+                value={text2}
+                onChange={(e) => setText2(e.target.value)}
+              />
+              <button
+                className="btn btn-sm btn-primary text-white"
+                // onClick={handleSubParameter}
+                onClick={(param) => {
+                  console.log("kk")
+                  handleAdditionalParams(param._id)
+                }}
+              >
+                Add
+              </button>
+            </div>
+          </div>}
+          {/* tab content 2 */}
+          {activeTab === "additional2" && <div>
+            <ul class="list-group w-50">
+              {allAdditionalFields?.data?.map((param, index) => {
+                if (param.isAdditionalFieldInput == false)
+                  return (
+                    <li class="list-group-item mt-3 d-flex justify-content-between">
+                      <span>{param.additionalFieldTitle}</span>
+                      <div className="d-flex gap-3 mt-4">
+                        <CiEdit size={23} color="gray" />
+                        <MdOutlineDeleteForever
+                          size={23}
+                          color="red"
+                        // onClick={() => handleSubParameterDelete(param._id)}
+                        />
+                      </div>
+
+                    </li>
+                  )
+              })}
+            </ul>
+
+            <div className="d-flex gap-3 mt-3">
+              <input
+                className="form-control w-50"
+                placeholder="Check item name"
+                value={text2}
+                onChange={(e) => setText2(e.target.value)}
+              />
+              <button
+                className="btn btn-sm btn-primary text-white"
+                // onClick={handleSubParameter}
+                onClick={(param) => {
+                  console.log("kk")
+                  handleAdditionalParams(param._id)
+                }}
+              >
+                Add
+              </button>
+            </div>
+          </div>}
         </div>
       </div>
+
+
     </div>
   );
 }

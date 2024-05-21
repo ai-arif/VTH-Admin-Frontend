@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { addTest, deleteTest, getAllSubParameter, getParameter, getSubParameter, getTest, searchTest, updateTest } from "./testAPI.js";
+import { addAdditionalField, addTest, addTestParameter, deleteTest, getAllAdditionalFields, getAllSubParameter, getParameter, getSubParameter, getTest, searchTest, updateTest } from "./testAPI.js";
 
 const initialState = {
   test: {},
@@ -7,6 +7,7 @@ const initialState = {
   parameterList: [],
   subParameterList: [],
   allSubParameterList: [],
+  allAdditionalFields: [],
   status: "idle",
   error: null,
 };
@@ -48,6 +49,25 @@ export const deleteTestData = createAsyncThunk("test/deleteTestData", async (id)
 
 export const searchTestData = createAsyncThunk("test/searchTestData", async (search, page = 1, limit = 20) => {
   const response = await searchTest(search, page, limit);
+  return response;
+});
+
+
+// add parameters 
+export const createTestParameter = createAsyncThunk("test/createTestParameter", async (test) => {
+  const response = await addTestParameter(test);
+  return response;
+});
+
+//additional fields 
+export const fetchAllAdditionalFields = createAsyncThunk("test/fetchAllAdditionalFields", async (id) => {
+  console.log({ id })
+  const response = await getAllAdditionalFields(id);
+  return response;
+});
+
+export const createAdditionalFields = createAsyncThunk("test/createAdditionalFields", async (test) => {
+  const response = await addAdditionalField(test);
   return response;
 });
 
@@ -122,7 +142,37 @@ export const testSlice = createSlice({
       .addCase(searchTestData.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
-      });
+      })
+
+      // test params 
+      .addCase(createTestParameter.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(createTestParameter.fulfilled, (state, action) => {
+        state.status = "success";
+        state.test = action.payload.data;
+      })
+      .addCase(createTestParameter.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+
+
+
+      //additional fields 
+      .addCase(fetchAllAdditionalFields.fulfilled, (state, action) => {
+        (state.status = "success"), (state.allAdditionalFields = action.payload.data);
+      })
+      .addCase(createAdditionalFields.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(createAdditionalFields.fulfilled, (state, action) => {
+        state.status = "success";
+      })
+      .addCase(createAdditionalFields.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
   },
 });
 

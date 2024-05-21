@@ -73,9 +73,19 @@ export const deleteTest = async (id) => {
   }
 };
 
-export const addParameter = async (data) => {
+//parameter 
+export const addTestParameter = async (data) => {
   try {
-    const response = await axiosInstance.post("/parameter", data);
+    const response = await axiosInstance.post("/test/parameter", data);
+    return response.data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
+export const deleteParameter = async (id) => {
+  try {
+    const response = await axiosInstance.delete(`/parameter/${id}`, data);
     return response.data;
   } catch (error) {
     return Promise.reject(error);
@@ -83,4 +93,20 @@ export const addParameter = async (data) => {
 };
 
 // additional fields 
+export const getAllAdditionalFields = async (id) => {
+  try {
+    const response = await axiosInstance.get(`/test/parameter/additional/${id}`);
+    return response.data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
 
+export const addAdditionalField = async (data) => {
+  try {
+    const response = await axiosInstance.post("/test/parameter/additional", data);
+    return response.data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
