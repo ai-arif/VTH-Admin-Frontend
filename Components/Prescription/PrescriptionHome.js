@@ -69,6 +69,11 @@ const PrescriptionHome = () => {
       console.error(error);
     }
   };
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      getPatentByPhone();
+    }
+  };
 
   const getPatentInfo = (id) => {
     const selectedPatent = patentInfo?.find((patent) => patent._id === id);
@@ -128,6 +133,7 @@ const PrescriptionHome = () => {
                     onChange={(e) => {
                       setSearchPhone(e.target.value);
                     }}
+                    onKeyDown={handleKeyPress}
                     type="text"
                     className="form-control"
                     placeholder="Patent's Phone"

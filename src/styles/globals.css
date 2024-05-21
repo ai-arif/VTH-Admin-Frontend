@@ -6,6 +6,7 @@
   --vth-white: #fff;
 }
 
+/* appointment tab styles */
 #appointment .react-tabs__tab-list {
   display: flex;
   justify-content: center;
@@ -36,8 +37,15 @@
   right: 15px;
 }
 
-/* .app-nav .vth-submenu-toggle[aria-expanded="true"][aria-expanded="true"] .submenu-arrow svg {
-  -webkit-transform: rotate(180deg);
+/* CSS for making the tabs sticky */
+/* .sticky-tabs {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: white;
+  padding: 10px 0;
+  margin: 0 -15px;
 } */
 
 /* Remove increment and decrement arrows from number input */
