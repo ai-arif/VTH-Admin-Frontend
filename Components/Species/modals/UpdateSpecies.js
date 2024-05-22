@@ -10,7 +10,6 @@ const UpdateSpecies = ({ existingData }) => {
   const {
     handleSubmit,
     register,
-    reset,
     formState: { errors },
   } = useForm({ values: existingData });
 
@@ -22,7 +21,6 @@ const UpdateSpecies = ({ existingData }) => {
 
       if (response?.payload?.success) {
         toast.success("Species updated successfully!");
-        reset();
         await dispatch(fetchSpecies());
         document.getElementById("closeModal").click();
       } else {
