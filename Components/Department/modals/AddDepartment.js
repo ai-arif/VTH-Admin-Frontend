@@ -2,7 +2,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
-import { createDepartment } from "../../../features/department/departmentSlice";
+import { createDepartment, fetchDepartment } from "../../../features/department/departmentSlice";
 
 const AddDepartment = () => {
   const dispatch = useDispatch();
@@ -19,6 +19,7 @@ const AddDepartment = () => {
 
       if (response?.payload?.success) {
         toast.success("Department added successfully!");
+        await dispatch(fetchDepartment());
         reset();
         document.getElementById("closeModal").click();
       } else {
