@@ -83,7 +83,7 @@ export const speciesSlice = createSlice({
         state.status = "loading";
       })
       .addCase(searchSpeciesData.fulfilled, (state, action) => {
-        (state.status = "success"), (state.patients = action.payload.data);
+        (state.status = "success"), (state.species = action.payload.data);
       })
       .addCase(searchSpeciesData.rejected, (state, action) => {
         state.status = "failed";
