@@ -1,9 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { addAdditionalField, addTest, addTestParameter, deleteTest, getAllAdditionalFields, getAllSubParameter, getParameter, getSubParameter, getTest, searchTest, updateTest, updateTestAdditionalField, updateTestParameter, updateTestSubParameter } from "./testAPI.js";
+import { addAdditionalField, addTest, addTestParameter, deleteTest, getAllAdditionalFields, getAllSubParameter, getParameter, getSubParameter, getTest, getTestAllFields, searchTest, updateTest, updateTestAdditionalField, updateTestParameter, updateTestSubParameter } from "./testAPI.js";
 
 const initialState = {
   test: {},
   tests: [],
+  testAllInfo: [],
   parameterList: [],
   subParameterList: [],
   allSubParameterList: [],
@@ -84,6 +85,12 @@ export const createAdditionalFields = createAsyncThunk("test/createAdditionalFie
 
 export const updateAdditionalField = createAsyncThunk("test/updateAdditionalField", async (test) => {
   const response = await updateTestAdditionalField(test);
+  return response;
+});
+
+// test all info
+export const fetchAllTestInfo = createAsyncThunk("test/fetchAllTestInfo", async (id) => {
+  const response = await getTestAllFields(id);
   return response;
 });
 
@@ -224,6 +231,18 @@ export const testSlice = createSlice({
         // state.test = action.payload.data;
       })
       .addCase(updateAdditionalField.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+
+      // test all info
+      .addCase(fetchAllTestInfo.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchAllTestInfo.fulfilled, (state, action) => {
+        (state.status = "success"), (state.testAllInfo = action.payload.data);
+      })
+      .addCase(fetchAllTestInfo.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       })

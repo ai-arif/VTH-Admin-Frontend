@@ -22,7 +22,7 @@ const UpdateTestParamsModal = ({ existingTestParamsName, handleSubmit }) => {
                                 <label htmlFor="testName" className="form-label">
                                     Test Parameter Name
                                 </label>
-                                <input value={existingTestParamsName} onChange={(e) => setTestParamsName(e.target.value)} name="testName" className="form-control" id="testName" />
+                                <input defaultValue={existingTestParamsName} onChange={(e) => setTestParamsName(e.target.value)} name="testName" className="form-control" id="testName" />
                             </div>
                         </div>
                         <div className="modal-footer">

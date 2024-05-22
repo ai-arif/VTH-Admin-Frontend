@@ -142,3 +142,15 @@ export const updateTestAdditionalField = async (test) => {
     return Promise.reject(error);
   }
 };
+
+
+// get test all info including sub and additional fields 
+export const getTestAllFields = async (id) => {
+  try {
+    const response = await axiosInstance.get(`/test/full-test/${id}`);
+    // console.log(response)
+    return response.data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};

@@ -329,10 +329,6 @@ export default function TestParameter() {
   };
 
 
-
-
-
-
   return (
     <div className="m-4">
       <div className="d-flex gap-3">
