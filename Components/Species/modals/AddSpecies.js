@@ -2,9 +2,11 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
+import { createSpecies } from "../../../features/specie/speciesSlice";
 
 const AddSpecies = () => {
   const dispatch = useDispatch();
+
   const {
     handleSubmit,
     register,
@@ -14,14 +16,14 @@ const AddSpecies = () => {
 
   const onSubmit = async (species) => {
     try {
-      // const response = await dispatch(createSpecies(species));
-      // if (response?.payload?.success) {
-      //   toast.success("species added successfully!");
-      //   reset();
-      //   document.getElementById("closeModal").click();
-      // } else {
-      //   toast.error("Failed to add species! Please try again later.");
-      // }
+      const response = await dispatch(createSpecies(species));
+      if (response?.payload?.success) {
+        toast.success("species added successfully!");
+        reset();
+        document.getElementById("closeModal").click();
+      } else {
+        toast.error("Failed to add species! Please try again later.");
+      }
     } catch (error) {
       toast.error("An error occurred while adding species. Please try again later.");
       console.error(error);

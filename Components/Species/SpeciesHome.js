@@ -1,8 +1,83 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
+import { RiDeleteBinLine } from "react-icons/ri";
+import { TiEdit } from "react-icons/ti";
+import { useDispatch, useSelector } from "react-redux";
+import Swal from "sweetalert2";
+import { deleteSpeciesData, fetchSpecies } from "../../features/specie/speciesSlice";
+import Loader from "../UI/Loader";
 import AddSpecies from "./modals/AddSpecies";
+import UpdateSpecies from "./modals/UpdateSpecies";
 
 const SpeciesHome = () => {
+  const dispatch = useDispatch();
+  const [existingData, setExistingData] = useState({});
+  const { species, status } = useSelector((state) => state.specie);
+
+  // handle get single species for update
+  const handleGetSpecies = (species) => {
+    setExistingData(species);
+  };
+
+  // handling delete single Species
+  const handleDeleteSpecies = async (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#15a362",
+      cancelButtonColor: "#ef4444",
+      confirmButtonText: "Yes, delete it!",
+      color: "#eaeaea",
+      background: "#161719",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await dispatch(deleteSpeciesData(id));
+
+          if (response?.payload?.success) {
+            dispatch(fetchSpecies());
+
+            Swal.fire({
+              icon: "success",
+              title: "Deleted!",
+              text: "Species has been deleted.",
+              showConfirmButton: false,
+              timer: 1500,
+              color: "#eaeaea",
+              background: "#161719",
+            });
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "Error!",
+              text: "Failed to delete Species. Please try again later.",
+              confirmButtonColor: "#15a362",
+              color: "#eaeaea",
+              background: "#161719",
+            });
+          }
+        } catch (error) {
+          Swal.fire({
+            icon: "error",
+            title: "Something is wrong",
+            text: error,
+            color: "#eaeaea",
+            background: "#161719",
+          });
+        }
+      }
+    });
+  };
+
+  useEffect(() => {
+    dispatch(fetchSpecies());
+  }, [dispatch]);
+
+  // loader
+  if (status === "loading") return <Loader />;
+
   return (
     <div>
       <div className="container">
@@ -10,8 +85,8 @@ const SpeciesHome = () => {
           <div className="col-12 col-md-11 col-lg-12 col-xl-12 mx-auto">
             {/* add species modal */}
             <AddSpecies />
-            {/* update staff modal */}
-            {/* <UpdateStaff /> */}
+            {/* update species modal */}
+            <UpdateSpecies existingData={existingData} />
             <div className="app-card p-5 text-center shadow-sm">
               <h3 className="page-title pb-3">All Species (Animal Type)</h3>
               <div className="d-flex justify-content-between mb-4">
@@ -38,20 +113,16 @@ const SpeciesHome = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {/* {staffs?.users?.map((staff, index) => (
-                        <tr key={staff._id}>
+                      {species?.map((specie, index) => (
+                        <tr key={specie._id}>
                           <td>{index + 1}</td>
-                          <td>{staff.name}</td>
-                          <td className="d-flex gap-3 justify-content-center">
-                            <button onClick={() => handleGetStaff(staff)} data-bs-toggle="modal" data-bs-target="#updateUser" className="btn btn-sm btn-info text-white">
-                              Edit
-                            </button>
-                            <button onClick={() => handleDeleteStaff(staff._id)} className="btn btn-danger text-white">
-                              Delete
-                            </button>
+                          <td className="text-capitalize">{specie.name}</td>
+                          <td className="d-flex gap-3 justify-content-center align-items-center">
+                            <TiEdit type="button" onClick={() => handleGetSpecies(specie)} data-bs-toggle="modal" data-bs-target="#updateSpecies" title="edit" className="edit-icon" />
+                            <RiDeleteBinLine type="button" onClick={() => handleDeleteSpecies(specie._id)} title="delete" className="delete-icon" />
                           </td>
                         </tr>
-                      ))} */}
+                      ))}
                     </tbody>
                   </table>
                 </div>
