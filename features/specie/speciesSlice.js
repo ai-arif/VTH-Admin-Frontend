@@ -58,12 +58,20 @@ export const speciesSlice = createSlice({
       })
       .addCase(createSpecies.fulfilled, (state, action) => {
         state.status = "success";
+        state.specie = action.payload.data;
+      })
+      .addCase(createSpecies.rejected, (state, action) => {
+        state.status = "failed";
       })
       .addCase(updateSpeciesData.pending, (state) => {
         state.status = "loading";
       })
       .addCase(updateSpeciesData.fulfilled, (state, action) => {
         state.status = "success";
+        state.specie = action.payload;
+      })
+      .addCase(updateSpeciesData.rejected, (state, action) => {
+        state.status = "failed";
       })
       .addCase(deleteSpeciesData.pending, (state) => {
         state.status = "loading";
