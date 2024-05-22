@@ -2,7 +2,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
-import { createSpecies } from "../../../features/specie/speciesSlice";
+import { createSpecies, fetchSpecies } from "../../../features/specie/speciesSlice";
 
 const AddSpecies = () => {
   const dispatch = useDispatch();
@@ -19,6 +19,7 @@ const AddSpecies = () => {
       const response = await dispatch(createSpecies(species));
       if (response?.payload?.success) {
         toast.success("species added successfully!");
+        dispatch(fetchSpecies());
         reset();
         document.getElementById("closeModal").click();
       } else {
