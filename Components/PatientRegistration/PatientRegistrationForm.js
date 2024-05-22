@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { fetchAppointmentsByPhone } from "../../features/appointment/appointmentSlice";
+import { getComplaintsBySpecies } from "../../features/complaint/complaintAPI";
 import { createPatient } from "../../features/patient-registration/patientRegistrationSlice";
+import { fetchSpecies } from "../../features/specie/speciesSlice";
+import axiosInstance from "../../utils/axiosInstance";
 import { formatDate } from "../../utils/formatDate";
 
 const PatientRegistrationForm = () => {
@@ -12,11 +15,14 @@ const PatientRegistrationForm = () => {
   const [patientInfo, setPatientInfo] = useState([]);
   const [selectedPatientInfo, setSelectedPatientInfo] = useState({});
   const dispatch = useDispatch();
+  const [speciesByComplaints, setSpeciesByComplaint] = useState([]);
+
+  const { species } = useSelector((state) => state.specie);
 
   const getPatientByPhone = async () => {
     try {
       if (searchPhone === "") return;
-      console.log(searchPhone);
+
       const res = await dispatch(fetchAppointmentsByPhone(searchPhone));
       const existingPatentData = res?.payload?.data;
 
@@ -50,6 +56,7 @@ const PatientRegistrationForm = () => {
     handleSubmit,
     register,
     reset,
+    setValue,
     trigger,
     formState: { errors },
   } = useForm();
@@ -79,9 +86,29 @@ const PatientRegistrationForm = () => {
     if (valid) {
       setActiveTab(tab);
     } else {
-      toast.error("Please fill in all required fields before switching tabs.");
+      toast.error("Please fill in all required fields.");
     }
   };
+
+  const getSpeciesById = async (speciesId) => {
+    try {
+      if (!speciesId) return;
+
+      const response = await axiosInstance.get(`/complaint/species/${speciesId}`);
+      const data = response?.data?.data;
+      if (data.length > 0) {
+        setSpeciesByComplaint(data);
+      } else {
+        setSpeciesByComplaint([]);
+      }
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  };
+
+  useEffect(() => {
+    dispatch(fetchSpecies());
+  }, [dispatch]);
 
   return (
     <>
@@ -210,14 +237,27 @@ const PatientRegistrationForm = () => {
                       <div className="row">
                         <div className="mb-3 col-md-6">
                           <label className="form-label">Species (Animal Type)</label>
-                          <input type="text" {...register("species", { required: true })} className={`form-control ${errors.species && "border-danger"}`} />
-                          {errors.species && <small className="text-danger">Please write species</small>}
+                          <select {...register("species")} onChange={(e) => getSpeciesById(e.target.value)} className="form-select" aria-label="Default select example">
+                            <option value="">Select</option>
+                            {species?.map((specie) => (
+                              <option key={specie._id} value={specie._id}>
+                                {specie.name}
+                              </option>
+                            ))}
+                          </select>
                         </div>
                         <div className="mb-3 col-md-6">
                           <label className="form-label">
                             Owner Complaints <small>(optional)</small>
                           </label>
-                          <textarea {...register("ownerComplaints")} className="form-control" />
+                          <select {...register("complaint")} className="form-select" aria-label="Default select example">
+                            <option value="">Select</option>
+                            {speciesByComplaints?.map((complaint) => (
+                              <option key={complaint._id} value={complaint._id}>
+                                {complaint.complaint}
+                              </option>
+                            ))}
+                          </select>
                         </div>
                       </div>
                       <div className="row">
