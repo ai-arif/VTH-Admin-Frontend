@@ -179,6 +179,7 @@
   --vth-secondary-dark: #2d323f;
   --vth-light: #eaeaea;
   --vth-green: #15a362;
+  --vth-light-green: #18ba70;
 }
 
 *,
@@ -12460,4 +12461,29 @@ button.close:focus {
   background-color: var(--vth-primary-dark);
   padding: 10px 30px;
   border-radius: 8px;
+}
+
+/* update & delete icon styles */
+.edit-icon {
+  border-radius: 2px;
+  background-color: #5b99ea;
+  padding: 6px;
+  font-size: 28px;
+  color: white;
+  transition: background-color 0.2s;
+}
+.edit-icon:hover {
+  background-color: #74a8ed;
+}
+
+.delete-icon {
+  border-radius: 2px;
+  background-color: #d26d69;
+  padding: 6px;
+  font-size: 28px;
+  color: white;
+  transition: background-color 0.2s;
+}
+.delete-icon:hover {
+  background-color: #d98380;
 }

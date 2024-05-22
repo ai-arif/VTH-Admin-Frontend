@@ -1,29 +1,33 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { fetchSpecies, updateSpeciesData } from "../../../features/specie/speciesSlice";
 
 const UpdateSpecies = ({ existingData }) => {
+  const dispatch = useDispatch();
+
   const {
     handleSubmit,
     register,
-    reset,
     formState: { errors },
   } = useForm({ values: existingData });
 
   const onSubmit = async (data) => {
     try {
-      //   data.id = existingData._id;
-      //   const response = await dispatch(updateSpeciesData(data));
-      //   if (response?.payload?.success) {
-      //     toast.success("Species updated successfully!");
-      //     reset();
-      //     await dispatch(fetchStaffs());
-      //     document.getElementById("closeModal").click();
-      //   } else {
-      //     toast.error("Failed to update species! Please try again later.");
-      //   }
+      data.id = existingData._id;
+
+      const response = await dispatch(updateSpeciesData(data));
+
+      if (response?.payload?.success) {
+        toast.success("Species updated successfully!");
+        await dispatch(fetchSpecies());
+        document.getElementById("closeModal").click();
+      } else {
+        toast.error("Failed to update species! Please try again later.");
+      }
     } catch (error) {
-      toast.error("An error occurred while crating species. Please try again later.");
+      toast.error("An error occurred while updating species. Please try again later.");
       console.error(error);
     }
   };
