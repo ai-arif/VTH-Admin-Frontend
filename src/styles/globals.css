@@ -61,7 +61,7 @@ input[type="number"]::-webkit-outer-spin-button {
 /* ***************************** */
 /* Add this CSS to your main CSS file or inline styles */
 
-.parameter-card {
+/* .parameter-card {
   border: 2px solid #007bff;
   border-radius: 10px;
   margin: 10px;
@@ -104,4 +104,4 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .test-result {
   margin-bottom: 20px;
-}
+} */

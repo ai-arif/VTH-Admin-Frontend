@@ -88,7 +88,7 @@ export default function TestPrescription() {
     try {
       const data = {
         testId: selectedTest.id,
-        appointmentId: "test10",
+        appointmentId: "test15",
         phone: "012345454",
         name: selectedTest?.testName,
         data: testData
@@ -177,59 +177,63 @@ export default function TestPrescription() {
       </ul> */}
 
       <form onSubmit={handleSubmit(onSubmit)} className="bg-white text-black p-3 m-1 rounded-1">
-        <h3 className="text-black">{testAllInfo?.testName}</h3>
 
         <div className="">
+          <h3 className="text-black bg-dark-subtle m-0 border border-black border-bottom-0 p-1 ">{testAllInfo?.testName}</h3>
           {
-            testAllInfo?.testParams?.map((param, index) => <div className=" row border border-black p-1 bg-primary m-2 rounded">
-              <h4 className="text-white">{param?.name}</h4>
-              {
-                testAllInfo?.testParams?.[index]?.subTestParams.map((sub, idx) => <div className="col-6 border border-black p-1 bg-dark-subtle">
-                  {/* <h4 className="text-info">{sub?.title}</h4> */}
-                  {
-                    sub?.isInputField ? <div className="">
-                      <label class="me-2" for={`sub-text-${idx}`}>
-                        {sub?.title}
-                      </label>
-                      <input {...register(`${param?.name}#${sub?.title}`)} className="rounded border-0 p-1" type="text" id={`sub-text-${idx}`} placeholder={sub?.title} />
-                    </div>
-                      :
-                      <div class="form-check">
-                        <input {...register(`${param?.name}#${sub?.title}`)} class="form-check-input" type="checkbox" value="" id={`sub-check-${idx}-${sub?.title}`} />
-                        <label class="form-check-label" for={`sub-check-${idx}-${sub?.title}`}>
-                          {sub?.title}
+            testAllInfo?.testParams?.map((param, index) => <div className={`m-0 row border border-black ${index !== testAllInfo?.testParams?.length - 1 ? "border-bottom-0" : ""}`}>
+              <div className="col-2 p-2 border-end border-black">
+                <h6 className="text-black">{param?.name}</h6>
+              </div>
+              <div className="col-10 p-2 d-flex align-items-center flex-wrap">
+                {
+                  testAllInfo?.testParams?.[index]?.subTestParams.map((sub, idx) => <div className="d-flex align-items-center px-2">
+                    {/* <h4 className="text-info">{sub?.title}</h4> */}
+                    {
+                      sub?.isInputField ? <div className="d-flex align-items-center gap-2">
+                        <label class="block" for={`sub-text-${idx}`}>
+                          {sub?.title} :
                         </label>
+                        <input {...register(`${param?.name}#${sub?.title}`)} className="block rounded bg-secondary-subtle rounded border-1 border-primary p-1 bg-secondary" type="text" id={`sub-text-${idx}`} placeholder={sub?.title} />
                       </div>
-                  }
-                  {
-                    testAllInfo?.testParams?.[index]?.subTestParams?.[idx]?.additionalFields?.length > 0 &&
+                        :
+                        <div class="form-check d-flex align-items-center gap-2">
+                          <input {...register(`${param?.name}#${sub?.title}`)} class="form-check-input" type="checkbox" value="" id={`sub-check-${idx}-${sub?.title}`} />
+                          <label class="form-check-label" for={`sub-check-${idx}-${sub?.title}`}>
+                            {sub?.title}
+                          </label>
+                        </div>
+                    }
+                    {
+                      testAllInfo?.testParams?.[index]?.subTestParams?.[idx]?.additionalFields?.length > 0 &&
 
-                    <div className="border p-2 bg-secondary rounded text-white">
-                      <p>If <span className="text-lowercase">{sub?.title}</span></p>
+                      <div className="d-flex align-items-center p-2  rounded ">
+                        <p className="mt-3">; If <span className="text-lowercase">{sub?.title} ,</span></p>
 
-                      {
-                        testAllInfo?.testParams?.[index]?.subTestParams?.[idx]?.additionalFields?.map((additional, idx2) => <div >
-                          {/* <h4 className="text-warning">{additional?.additionalFieldTitle}</h4> */}
-                          {
-                            additional?.isAdditionalFieldInput ? <div>
-                              <label class="me-2" for={`additional-text-${idx2}`}>
-                                {additional?.additionalFieldTitle}
-                              </label>
-                              <input {...register(`${param?.name}#${sub?.title}&${additional?.additionalFieldTitle}`)} className="rounded border-0 p-1" type="text" id={`additional-text-${idx2}`} placeholder={additional?.additionalFieldTitle} />
-                            </div>
-                              :
-                              <div class="form-check">
-                                <input {...register(`${param?.name}#${sub?.title}&${additional?.additionalFieldTitle}`)} class="form-check-input" type="checkbox" value="" id={`additional-check-${idx2}`} />
-                                <label class="form-check-label" for={`additional-check-${idx2}`}>
-                                  {additional?.additionalFieldTitle}
+                        {
+                          testAllInfo?.testParams?.[index]?.subTestParams?.[idx]?.additionalFields?.map((additional, idx2) => <div >
+                            {/* <h4 className="text-warning">{additional?.additionalFieldTitle}</h4> */}
+                            {
+                              additional?.isAdditionalFieldInput ? <div className="mx-2 d-flex gap-2 align-items-center">
+                                <label class="me-2" for={`additional-text-${idx2}`}>
+                                  {additional?.additionalFieldTitle} :
                                 </label>
+                                <input {...register(`${param?.name}#${sub?.title}&${additional?.additionalFieldTitle}`)} className="bg-secondary-subtle rounded border-1 border-primary p-1" type="text" id={`additional-text-${idx2}`} placeholder={additional?.additionalFieldTitle} />
                               </div>
-                          }
-                        </div>)
-                      }
-                    </div>}
-                </div>)
-              }
+                                :
+                                <div class="form-check d-flex gap-2 align-items-center mx-2">
+                                  <input {...register(`${param?.name}#${sub?.title}&${additional?.additionalFieldTitle}`)} class="form-check-input" type="checkbox" value="" id={`additional-check-${idx2}`} />
+                                  <label class="form-check-label" for={`additional-check-${idx2}`}>
+                                    {additional?.additionalFieldTitle}
+                                  </label>
+                                </div>
+                            }
+                          </div>)
+                        }
+                      </div>}
+                  </div>)
+                }
+              </div>
             </div>)
           }
         </div>

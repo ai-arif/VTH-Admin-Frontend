@@ -58,26 +58,33 @@ const Index = () => {
   }
 
   useEffect(() => {
-    axios.get(`http://localhost:5000/api/v1/test/test-result/test10`).then(res => {
+    axios.get(`http://localhost:5000/api/v1/test/test-result/test15`).then(res => {
       let result = res.data?.data?.data;
       setTestResults(result);
-      console.log(result);
+      // console.log(result[0]?.data);
+      // console.log(transformInput(result[0]?.data));
     });
   }, []);
 
   return (
     <div>
       <TestResultHome />
-      <div className="test-results">
-        {testResults?.map(test => (
-          <div key={test?._id} className="test-result">
-            <h2>{test?.name}</h2>
-            <div className="parameters">
-              {Object.entries(transformInput(test?.data)).map(([key, value], idx) => (
-                <TestParameterCard key={idx} name={key} data={value} />
-              ))}
+      <div className="text-black m-5 bg-white p-3">
+        {testResults?.map((test, index) => (
+          <div key={test?._id} >
+            <div className="row m-0 bg-dark-subtle border border-black border-bottom-0">
+              <div className="col-2 m-0 p-0"><h4 className="text-black  m-0 p-1 ">{test?.name}</h4></div>
+              <div className="col-10 m-0 p-0"><h4 className="text-black border-start border-black border-bottom-0 m-0 ms-2 p-1">Result</h4></div>
             </div>
+
+
+            {Object.entries(transformInput(test?.data)).map(([key, value], idx) => (
+              <div key={idx} className={`m-0 row border border-black`}>
+                <TestParameterCard name={key} data={value} />
+              </div>
+            ))}
           </div>
+
         ))}
       </div>
     </div>
