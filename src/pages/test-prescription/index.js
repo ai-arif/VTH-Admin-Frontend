@@ -88,8 +88,9 @@ export default function TestPrescription() {
     try {
       const data = {
         testId: selectedTest.id,
-        appointmentId: "test..",
+        appointmentId: "test10",
         phone: "012345454",
+        name: selectedTest?.testName,
         data: testData
       }
       console.log({ data })
@@ -214,11 +215,11 @@ export default function TestPrescription() {
                               <label class="me-2" for={`additional-text-${idx2}`}>
                                 {additional?.additionalFieldTitle}
                               </label>
-                              <input {...register(`${param?.name}#${additional?.additionalFieldTitle}`)} className="rounded border-0 p-1" type="text" id={`additional-text-${idx2}`} placeholder={additional?.additionalFieldTitle} />
+                              <input {...register(`${param?.name}#${sub?.title}&${additional?.additionalFieldTitle}`)} className="rounded border-0 p-1" type="text" id={`additional-text-${idx2}`} placeholder={additional?.additionalFieldTitle} />
                             </div>
                               :
                               <div class="form-check">
-                                <input {...register(`${param?.name}#${additional?.additionalFieldTitle}`)} class="form-check-input" type="checkbox" value="" id={`additional-check-${idx2}`} />
+                                <input {...register(`${param?.name}#${sub?.title}&${additional?.additionalFieldTitle}`)} class="form-check-input" type="checkbox" value="" id={`additional-check-${idx2}`} />
                                 <label class="form-check-label" for={`additional-check-${idx2}`}>
                                   {additional?.additionalFieldTitle}
                                 </label>
