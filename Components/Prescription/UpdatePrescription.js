@@ -66,7 +66,7 @@ const UpdatePrescription = () => {
   // convert date string to a Date object and Format the date
   const nextVisitDate = prescription?.data?.nextVisit ? new Date(prescription.data.nextVisit).toISOString().split("T")[0] : "";
 
-  const { handleSubmit, register, control } = useForm({ values: { ...prescription?.data, medicines: matchingMedicines, tests: matchingTests, nextVisit: nextVisitDate } });
+  const { handleSubmit, register, reset, control } = useForm({ values: { ...prescription?.data, medicines: matchingMedicines, tests: matchingTests, nextVisit: nextVisitDate } });
 
   const onSubmit = async (prescriptionData) => {
     try {
@@ -90,10 +90,12 @@ const UpdatePrescription = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchSinglePrescription(id));
+    if (id) {
+      dispatch(fetchSinglePrescription(id));
+    }
     dispatch(fetchMedicine());
     dispatch(fetchTest());
-  }, [dispatch]);
+  }, [dispatch, id]);
 
   //   loader
   if (status === "loading") return <Loader />;
