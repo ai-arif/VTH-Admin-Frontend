@@ -7,6 +7,8 @@ import { deleteTestData, fetchTest, searchTestData } from "../../features/test/t
 import AddTest from "./modals/AddTest";
 
 import toast from "react-hot-toast";
+import { RiDeleteBinLine } from "react-icons/ri";
+import { TiEdit } from "react-icons/ti";
 import Loader from "../UI/Loader";
 import UpdateTest from "./modals/UpdateTest";
 
@@ -131,12 +133,8 @@ const TestHome = () => {
                         <td className="text-nowrap">{test.testName}</td>
                         <td>{test.testDetails}</td>
                         <td className="d-flex gap-3">
-                          <button onClick={() => handleUpdateTest(test)} data-bs-toggle="modal" data-bs-target="#updateTest" className="btn  btn-info text-white">
-                            Edit
-                          </button>
-                          <button onClick={() => handleDeleteTest(test._id)} className="btn btn-danger text-white">
-                            Delete
-                          </button>
+                          <TiEdit type="button" onClick={() => handleUpdateTest(test)} data-bs-toggle="modal" data-bs-target="#updateTest" title="edit" className="edit-icon" />
+                          <RiDeleteBinLine type="button" onClick={() => handleDeleteTest(test._id)} title="delete" className="delete-icon" />
                         </td>
                       </tr>
                     ))}

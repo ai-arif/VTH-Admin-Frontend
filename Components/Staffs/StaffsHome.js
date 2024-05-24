@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
+import { RiDeleteBinLine } from "react-icons/ri";
+import { TiEdit } from "react-icons/ti";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { deleteStaffData, fetchStaffs, searchStaffData } from "../../features/staff/staffSlice";
@@ -140,12 +142,8 @@ const StaffsHome = () => {
                           <td>{staff.phone}</td>
                           <td className="text-capitalize">{staff.role}</td>
                           <td className="d-flex gap-3 justify-content-center">
-                            <button onClick={() => handleGetStaff(staff)} data-bs-toggle="modal" data-bs-target="#updateUser" className="btn btn-sm btn-info text-white">
-                              Edit
-                            </button>
-                            <button onClick={() => handleDeleteStaff(staff._id)} className="btn btn-danger text-white">
-                              Delete
-                            </button>
+                            <TiEdit type="button" onClick={() => handleGetStaff(staff)} data-bs-toggle="modal" data-bs-target="#updateUser" title="edit" className="edit-icon" />
+                            <RiDeleteBinLine type="button" onClick={() => handleDeleteStaff(staff._id)} title="delete" className="delete-icon" />
                           </td>
                         </tr>
                       ))}
