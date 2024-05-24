@@ -3,7 +3,6 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAppointmentsByPhone } from "../../features/appointment/appointmentSlice";
-import { getComplaintsBySpecies } from "../../features/complaint/complaintAPI";
 import { createPatient } from "../../features/patient-registration/patientRegistrationSlice";
 import { fetchSpecies } from "../../features/specie/speciesSlice";
 import axiosInstance from "../../utils/axiosInstance";
@@ -56,7 +55,6 @@ const PatientRegistrationForm = () => {
     handleSubmit,
     register,
     reset,
-    setValue,
     trigger,
     formState: { errors },
   } = useForm();
@@ -112,7 +110,7 @@ const PatientRegistrationForm = () => {
   return (
     <>
       {/* tabs */}
-      <div className="d-flex justify-content-center my-3">
+      <div className="d-flex justify-content-center my-3 sticky-tabs">
         <div className="btn-group" role="group">
           <button className={`btn text-white ${activeTab === "ownerInfo" ? "btn-primary" : "btn-outline-primary border"}`} onClick={() => handleTabSwitch("ownerInfo")}>
             Owner Information

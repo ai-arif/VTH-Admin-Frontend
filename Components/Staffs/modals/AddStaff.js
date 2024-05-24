@@ -55,8 +55,10 @@ const AddStaff = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchDepartment());
-  }, [dispatch]);
+    if (isDoctor) {
+      dispatch(fetchDepartment());
+    }
+  }, [dispatch, isDoctor]);
 
   return (
     <div>
