@@ -38,8 +38,10 @@ const UpdateMedicine = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchSingleMedicine(id));
-  }, [dispatch]);
+    if (id) {
+      dispatch(fetchSingleMedicine(id));
+    }
+  }, [dispatch, id]);
 
   //   loader
   if (status === "loading") return <Loader />;

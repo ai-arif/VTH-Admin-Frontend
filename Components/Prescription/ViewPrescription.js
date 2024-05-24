@@ -1,5 +1,7 @@
 import Link from "next/link";
 import React, { useEffect, useRef } from "react";
+import { RiDeleteBinLine } from "react-icons/ri";
+import { TiEdit } from "react-icons/ti";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { deletePrescriptionData, fetchPrescription, searchPrescriptionData } from "../../features/prescription/prescriptionSlice";
@@ -67,7 +69,7 @@ const ViewPrescription = () => {
     try {
       const searchValue = search.current.value;
       if (searchValue.trim()) {
-        const res = await dispatch(searchPrescriptionData(searchValue));
+        // const res = await dispatch(searchPrescriptionData(searchValue));
         // console.log(res);
         // if (res?.payload?.data?.data?.length <= 0) {
         //   toast.error("Data Not Found!");
@@ -124,11 +126,9 @@ const ViewPrescription = () => {
                     <td className="">{formatDate(prescription?.appointment?.date)}</td>
                     <td className="d-flex gap-3 justify-content-center">
                       <Link href={`/prescription/${prescription._id}`}>
-                        <button className="btn btn-info text-white">Edit</button>
+                        <TiEdit type="button" title="edit" className="edit-icon" />
                       </Link>
-                      <button onClick={() => handleDeletePrescription(prescription._id)} className="btn btn-danger text-white">
-                        Delete
-                      </button>
+                      <RiDeleteBinLine type="button" onClick={() => handleDeletePrescription(prescription._id)} title="delete" className="delete-icon" />
                     </td>
                   </tr>
                 ))}

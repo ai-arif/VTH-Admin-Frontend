@@ -60,7 +60,15 @@ const UpdateStaff = ({ existingData }) => {
     if (isDoctor) {
       dispatch(fetchDepartment());
     }
-  }, [dispatch]);
+  }, [dispatch, isDoctor]);
+
+  useEffect(() => {
+    if (existingData?.role === "doctor") {
+      setIsDoctor(true);
+    } else {
+      setIsDoctor(false);
+    }
+  }, [existingData]);
 
   return (
     <div className="modal fade" id="updateUser" tabIndex="-1" aria-labelledby="updateUserLabel" aria-hidden="true">
