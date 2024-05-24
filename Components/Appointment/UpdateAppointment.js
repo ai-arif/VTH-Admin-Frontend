@@ -58,9 +58,11 @@ const UpdateAppointment = () => {
   }, [appointment]);
 
   useEffect(() => {
-    dispatch(fetchAppointmentById(id));
+    if (id) {
+      dispatch(fetchAppointmentById(id));
+    }
     dispatch(fetchDepartment());
-  }, [dispatch]);
+  }, [dispatch, id]);
 
   //   loader
   if (status === "loading") return <Loader />;

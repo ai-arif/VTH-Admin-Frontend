@@ -1,5 +1,7 @@
 import Link from "next/link";
 import React, { useEffect, useRef } from "react";
+import { RiDeleteBinLine } from "react-icons/ri";
+import { TiEdit } from "react-icons/ti";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { deleteExistingAppointment, fetchPendingAppointments } from "../../features/appointment/appointmentSlice";
@@ -125,11 +127,9 @@ const PendingAppointment = () => {
                     <td>{formatDate(appointment.date)}</td>
                     <td className="d-flex gap-3 justify-content-center">
                       <Link href={`/appointment/${appointment.caseNo}`}>
-                        <button className="btn btn-info text-white">Edit</button>
+                        <TiEdit type="button" title="edit" className="edit-icon" />
                       </Link>
-                      <button onClick={() => handleDeleteAppointment(appointment.caseNo)} className="btn btn-danger text-white">
-                        Delete
-                      </button>
+                      <RiDeleteBinLine type="button" onClick={() => handleDeleteAppointment(appointment.caseNo)} title="delete" className="delete-icon" />
                     </td>
                   </tr>
                 ))}
