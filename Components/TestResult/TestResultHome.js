@@ -1,6 +1,9 @@
 import React from "react";
 
 const TestResultHome = () => {
+
+
+
   return (
     <div className="container-fluid">
       <div className="row">
@@ -80,51 +83,7 @@ const TestResultHome = () => {
                       <hr />
                     </div>
                   </div>
-                  <div className="row">
-                    <div className="col-md-12">
-                      {/* create a table of clinical test results */}
-                      <table className="table table-bordered table-dark">
-                        <thead>
-                          <tr>
-                            <th scope="col">Test Name</th>
-                            <th scope="col">Result</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td>Uterine lumen</td>
-                            <td>
-                              {/* checkbox of labels Visbile, Non-visible */}
-                              <div className="form-check form-check-inline">
-                                <input checked className="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1" />
-                                <label className="form-check-label" htmlFor="inlineCheckbox1">
-                                  Visible
-                                </label>
-                              </div>
-                              <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2" />
-                                <label className="form-check-label" htmlFor="inlineCheckbox2">
-                                  Non-visible
-                                </label>
-                              </div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>Test 1</td>
-                            <td>Positive</td>
-                          </tr>
-                          <tr>
-                            <td>Test 2</td>
-                            <td>Negative</td>
-                          </tr>
-                          <tr>
-                            <td>Test 3</td>
-                            <td>Positive</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
+
                 </div>
               </form>
             </div>

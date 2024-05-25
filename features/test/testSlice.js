@@ -1,9 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { addAdditionalField, addTest, addTestParameter, deleteTest, getAllAdditionalFields, getAllSubParameter, getParameter, getSubParameter, getTest, searchTest, updateTest } from "./testAPI.js";
+import { addAdditionalField, addTest, addTestParameter, deleteTest, getAllAdditionalFields, getAllSubParameter, getParameter, getSubParameter, getTest, getTestAllFields, searchTest, updateTest, updateTestAdditionalField, updateTestParameter, updateTestSubParameter } from "./testAPI.js";
 
 const initialState = {
   test: {},
   tests: [],
+  testAllInfo: [],
   parameterList: [],
   subParameterList: [],
   allSubParameterList: [],
@@ -53,21 +54,43 @@ export const searchTestData = createAsyncThunk("test/searchTestData", async (sea
 });
 
 
-// add parameters 
+// parameters 
 export const createTestParameter = createAsyncThunk("test/createTestParameter", async (test) => {
   const response = await addTestParameter(test);
   return response;
 });
+export const updateTestParameterData = createAsyncThunk("test/updateTestParameterData", async (test) => {
+  const response = await updateTestParameter(test);
+  return response;
+});
+
+// sub params 
+export const updateTestSubParameterData = createAsyncThunk("test/updateTestSubParameterData", async (test) => {
+  const response = await updateTestSubParameter(test);
+  return response;
+});
+
+
 
 //additional fields 
 export const fetchAllAdditionalFields = createAsyncThunk("test/fetchAllAdditionalFields", async (id) => {
-  console.log({ id })
   const response = await getAllAdditionalFields(id);
   return response;
 });
 
 export const createAdditionalFields = createAsyncThunk("test/createAdditionalFields", async (test) => {
   const response = await addAdditionalField(test);
+  return response;
+});
+
+export const updateAdditionalField = createAsyncThunk("test/updateAdditionalField", async (test) => {
+  const response = await updateTestAdditionalField(test);
+  return response;
+});
+
+// test all info
+export const fetchAllTestInfo = createAsyncThunk("test/fetchAllTestInfo", async (id) => {
+  const response = await getTestAllFields(id);
   return response;
 });
 
@@ -156,6 +179,32 @@ export const testSlice = createSlice({
         state.status = "failed";
         state.error = action.error.message;
       })
+      .addCase(updateTestParameterData.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(updateTestParameterData.fulfilled, (state, action) => {
+        state.status = "success";
+        // state.test = action.payload.data;
+      })
+      .addCase(updateTestParameterData.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      // sub params 
+      .addCase(updateTestSubParameterData.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(updateTestSubParameterData.fulfilled, (state, action) => {
+        state.status = "success";
+        // state.test = action.payload.data;
+      })
+      .addCase(updateTestSubParameterData.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+
+
+
 
 
 
@@ -170,6 +219,30 @@ export const testSlice = createSlice({
         state.status = "success";
       })
       .addCase(createAdditionalFields.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+
+      .addCase(updateAdditionalField.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(updateAdditionalField.fulfilled, (state, action) => {
+        state.status = "success";
+        // state.test = action.payload.data;
+      })
+      .addCase(updateAdditionalField.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+
+      // test all info
+      .addCase(fetchAllTestInfo.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchAllTestInfo.fulfilled, (state, action) => {
+        (state.status = "success"), (state.testAllInfo = action.payload.data);
+      })
+      .addCase(fetchAllTestInfo.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       })
