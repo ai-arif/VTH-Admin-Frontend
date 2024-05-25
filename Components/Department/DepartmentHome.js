@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
+import { RiDeleteBinLine } from "react-icons/ri";
+import { TiEdit } from "react-icons/ti";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { deleteDepartmentData, fetchDepartment, searchDepartmentData } from "../../features/department/departmentSlice";
@@ -138,12 +140,8 @@ const DepartmentHome = () => {
                         <td>{index + 1}</td>
                         <td>{department.name}</td>
                         <td className="d-flex gap-3 justify-content-center">
-                          <button onClick={() => handleGetDepartment(department)} data-bs-toggle="modal" data-bs-target="#updateDepartment" className="btn btn-info text-white">
-                            Edit
-                          </button>
-                          <button onClick={() => handleDeleteDepartment(department._id)} className="btn btn-danger text-white">
-                            Delete
-                          </button>
+                          <TiEdit type="button" onClick={() => handleGetDepartment(department)} data-bs-toggle="modal" data-bs-target="#updateDepartment" title="edit" className="edit-icon" />
+                          <RiDeleteBinLine type="button" onClick={() => handleDeleteDepartment(department._id)} title="delete" className="delete-icon" />
                         </td>
                       </tr>
                     ))}

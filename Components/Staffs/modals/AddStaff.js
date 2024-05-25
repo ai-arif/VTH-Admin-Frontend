@@ -43,6 +43,7 @@ const AddStaff = () => {
       if (response?.payload?.success) {
         toast.success("Account created successfully!");
         reset();
+        await dispatch(fetchStaffs());
         document.getElementById("closeModal").click();
       } else {
         toast.error("Failed to create account! Please try again later.");
@@ -54,8 +55,10 @@ const AddStaff = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchDepartment());
-  }, [dispatch]);
+    if (isDoctor) {
+      dispatch(fetchDepartment());
+    }
+  }, [dispatch, isDoctor]);
 
   return (
     <div>

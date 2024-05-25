@@ -1,6 +1,8 @@
 import Link from "next/link";
 import React, { useEffect, useRef } from "react";
 import toast from "react-hot-toast";
+import { RiDeleteBinLine } from "react-icons/ri";
+import { TiEdit } from "react-icons/ti";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { deleteMedicineData, fetchMedicine, searchMedicineData } from "../../features/medicine/medicineSlice";
@@ -123,11 +125,9 @@ const ViewMedicine = () => {
                     <td className="">{medicine.withdrawalPeriod}</td>
                     <td className="d-flex gap-3 justify-content-center">
                       <Link href={`/medicine/${medicine._id}`}>
-                        <button className="btn btn-info text-white">Edit</button>
+                        <TiEdit type="button" title="edit" className="edit-icon" />
                       </Link>
-                      <button onClick={() => handleDeleteMedicine(medicine._id)} className="btn btn-danger text-white">
-                        Delete
-                      </button>
+                      <RiDeleteBinLine type="button" onClick={() => handleDeleteMedicine(medicine._id)} title="delete" className="delete-icon" />
                     </td>
                   </tr>
                 ))}
