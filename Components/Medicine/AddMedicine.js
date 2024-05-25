@@ -82,12 +82,36 @@ const AddMedicine = () => {
                 <div className="row">
                   <div className="mb-3 col-md-6">
                     <label className="form-label">Price</label>
-                    <input type="number" {...register("price", { required: true, valueAsNumber: true, min: 1 })} className={`form-control ${errors.price && "border-danger"}`} id="price" />
+                    <input
+                      type="number"
+                      {...register("price", {
+                        required: true,
+                        valueAsNumber: true,
+                        min: 1,
+                        pattern: {
+                          value: /^(0|[1-9]\d*)(\.\d+)?$/,
+                        },
+                      })}
+                      className={`form-control ${errors.price && "border-danger"}`}
+                      id="price"
+                    />
                     {errors.price && <small className="text-danger">Please write price</small>}
                   </div>
                   <div className="mb-3 col-md-6">
                     <label className="form-label">Unit Price</label>
-                    <input type="number" {...register("unitPrice", { required: true, valueAsNumber: true, min: 1 })} className={`form-control ${errors.unitPrice && "border-danger"}`} id="unitPrice" />
+                    <input
+                      type="number"
+                      {...register("unitPrice", {
+                        required: true,
+                        valueAsNumber: true,
+                        min: 1,
+                        pattern: {
+                          value: /^(0|[1-9]\d*)(\.\d+)?$/,
+                        },
+                      })}
+                      className={`form-control ${errors.unitPrice && "border-danger"}`}
+                      id="unitPrice"
+                    />
                     {errors.unitPrice && <small className="text-danger">Please write unit price</small>}
                   </div>
                 </div>
