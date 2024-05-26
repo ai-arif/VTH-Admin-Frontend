@@ -1,22 +1,34 @@
 import axios from 'axios';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { RiDeleteBinLine } from 'react-icons/ri';
 import { TiEdit } from 'react-icons/ti';
 
 const IncomingTestHome = () => {
 
     const [prescriptions, setPrescriptions] = useState([]);
+    const [refetch, setRefetch] = useState(0);
 
 
     useEffect(() => {
         axios.get(`http://localhost:5000/api/v1/prescription/lab/test`).then(res => {
             let result = res.data?.data?.data;
             setPrescriptions(result);
-            console.log(result);
-            // console.log(transformInput(result[0]?.data));
         });
-    }, []);
+    }, [refetch]);
+
+    const handleStatus = (status, id) => {
+        console.log({ status, id })
+        axios.patch(`http://localhost:5000/api/v1/prescription/lab/test/${id}`, { status }).then(res => {
+            let result = res.data;
+            setRefetch(result);
+
+            if (result.success) {
+                toast.success("Status updated successfully!")
+            }
+        });
+    }
 
     return (
         <div>
@@ -40,7 +52,13 @@ const IncomingTestHome = () => {
                                     <td>{sp?.appointment?.caseNo}</td>
                                     <td>{sp?.appointment?.ownerName}</td>
                                     <td className="text-nowrap">{new Date(sp?.appointment?.createdAt).toDateString()}</td>
-                                    <td className="text-nowrap">test status..</td>
+                                    {/* <td className="text-nowrap">{sp?.testStatue ? "Success" : "Pending"}</td> */}
+                                    <td className="text-nowrap">
+                                        <select defaultValue={sp?.testStatue} onChange={(e) => handleStatus(e.target.value, sp._id)} className="form-select" aria-label="Default select example">
+                                            <option value={true}>Success</option>
+                                            <option value={false}>Pending</option>
+                                        </select>
+                                    </td>
                                     <td className="d-flex gap-3">
                                         <Link href={`/incomming-test/${sp._id}`}><TiEdit type="button" title="edit" className="edit-icon" /></Link>
                                         <RiDeleteBinLine type="button" onClick={() => { }} title="delete" className="delete-icon" />
