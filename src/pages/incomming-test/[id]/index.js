@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
+import Swal from 'sweetalert2';
 import { fetchAllTestInfo } from '../../../../features/test/testSlice';
 import axiosInstance from '../../../../utils/axiosInstance';
 
@@ -16,9 +17,15 @@ const index = () => {
 
     const [prescriptions, setPrescriptions] = useState({});
     const [results, setResults] = useState([]);
+    const [testAllResults, setTestAllResults] = useState({});
     const [activeTab, setActiveTab] = useState(null);
     const [refetch, setRefetch] = useState(0);
+    const [refetchPrescription, setRefetchPrescription] = useState(0);
 
+    useEffect(() => {
+        if (activeTab)
+            dispatch(fetchAllTestInfo(activeTab));
+    }, [activeTab, dispatch])
 
     useEffect(() => {
         if (router.query?.id) {
@@ -28,7 +35,7 @@ const index = () => {
                 setActiveTab(res.data?.data?.data?.tests?.[0]?._id);
             });
         }
-    }, [router?.query?.id]);
+    }, [router?.query?.id, refetchPrescription]);
 
 
     useEffect(() => {
@@ -39,15 +46,64 @@ const index = () => {
                     if (r.status == true)
                         arr.push(r?.testId)
                 })
+                // setTestAllResults(response.data?.data?.data);
                 setResults(arr);
+
+                setTestAllResults(response.data?.data?.data?.find(tr => tr?.testId === testAllInfo?._id))
             })
-    }, [activeTab, router?.query?.id, prescriptions, refetch])
+    }, [activeTab, router?.query?.id, prescriptions, refetch, testAllInfo])
 
-    useEffect(() => {
-        if (activeTab)
-            dispatch(fetchAllTestInfo(activeTab));
-    }, [activeTab, dispatch])
 
+
+    const handleDeleteTestResult = () => {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+
+                axiosInstance.delete(`/test/test-result/${testAllResults?._id}`).then(res => {
+                    console.log({ res: res.data })
+                    if (res.data?.success) {
+                        dispatch(fetchAllTestInfo(activeTab));
+                        setRefetchPrescription(refetch + 1)
+                        // setRefetch(refetch + 1)
+                        toast.success("Deleted successfully");
+                        reset();
+                    }
+                })
+
+            }
+        });
+    }
+
+
+    const {
+        handleSubmit: handleUpdate,
+        register: register2,
+        formState: { errorsUpdate },
+    } = useForm();
+    const onUpdate = async (updatedData) => {
+        try {
+            axiosInstance.put(`/test/test-result/${testAllResults?._id}`, updatedData).then(res => {
+                console.log({ res: res.data })
+                if (res.data?.success) {
+                    setRefetch(refetch + 1)
+                    toast.success("Test result updated successfully");
+                    reset();
+                }
+            })
+
+        }
+        catch (error) {
+            console.log(error);
+        }
+    };
 
     const {
         handleSubmit,
@@ -81,8 +137,6 @@ const index = () => {
         }
     };
 
-    // console.log({ activeTab })
-
     return (
         <div>
             <div className="">
@@ -98,15 +152,99 @@ const index = () => {
                     </div>
                 </div>
 
-                <div>
-                    <form onSubmit={handleSubmit(onSubmit)} className="bg-white text-black p-3 m-1 rounded-1">
+                <div className='p-3'>
+                    <div className="m-0">
 
-                        <div className="">
-                            <h3 className="text-black bg-dark-subtle m-0 border border-black border-bottom-0 p-1 ">{prescriptions?.appointment?.ownerName}</h3>
-                            <p>status:{results?.includes(testAllInfo?._id) ? "Added" : "To be add"}</p>
 
-                            {
-                                testAllInfo?.testParams?.map((param, index) => <div className={`m-0 row border border-black ${index !== testAllInfo?.testParams?.length - 1 ? "border-bottom-0" : ""}`}>
+
+                        {results?.includes(testAllInfo?._id) ?
+                            <div className='bg-white text-black p-3'>
+                                <div className="d-flex justify-content-between align-items-center bg-dark-subtle m-0 border border-black border-bottom-0 p-1">
+                                    <h3 className="text-black  ">Owner: {prescriptions?.appointment?.ownerName}</h3>
+                                    <div className="d-flex align-items-center gap-2">
+                                        <p>Case No: {prescriptions?.appointment?.caseNo}</p>
+                                        <p>|</p>
+                                        <p>Date: {new Date(prescriptions?.appointment?.createdAt).toDateString()}</p>
+                                        <p>|</p>
+                                        <p>Status: {results?.includes(testAllInfo?._id) ? "Added" : "To be add"}</p>
+                                    </div>
+                                </div>
+                                <form onSubmit={handleUpdate(onUpdate)} className="">
+                                    {testAllInfo?.testParams?.map((param, index) => <div className={`m-0 row border border-black ${index !== testAllInfo?.testParams?.length - 1 ? "border-bottom-0" : ""}`}>
+                                        <div className="col-2 p-2 border-end border-black">
+                                            <h6 className="text-black">{param?.name}</h6>
+                                        </div>
+                                        <div className="col-10 p-2 d-flex justify-content-start align-items-center flex-wrap">
+                                            {
+                                                testAllInfo?.testParams?.[index]?.subTestParams.map((sub, idx) => <div className="d-flex justify-content-start align-items-center flex-wrap px-2">
+                                                    {/* <h4 className="text-info">{sub?.title}</h4> */}
+                                                    {
+                                                        sub?.isInputField ? <div className="d-flex justify-content-start align-items-center gap-2 ">
+                                                            <label className="block" for={`sub-text-${idx}`}>
+                                                                {sub?.title} :
+                                                            </label>
+                                                            <input {...register2(`${param?.name}#${sub?.title}`)} defaultValue={testAllResults?.data?.[`${param?.name}#${sub?.title}`]} className="block rounded bg-secondary-subtle rounded border-1 border-primary p-1 bg-secondary w-25" type="text" id={`sub-text-${idx}`} placeholder={sub?.title} />
+                                                        </div>
+                                                            :
+                                                            <div className="form-check d-flex justify-content-start align-items-center gap-2 ">
+                                                                <input {...register2(`${param?.name}#${sub?.title}`)} defaultChecked={testAllResults?.data?.[`${param?.name}#${sub?.title}`]} className="form-check-input" type="checkbox" value="" id={`sub-check-${idx}-${sub?.title}`} />
+                                                                <label className="form-check-label" for={`sub-check-${idx}-${sub?.title}`}>
+                                                                    {sub?.title}
+                                                                </label>
+                                                            </div>
+                                                    }
+                                                    {
+                                                        testAllInfo?.testParams?.[index]?.subTestParams?.[idx]?.additionalFields?.length > 0 &&
+
+                                                        <div className="d-flex justify-content-start align-items-center p-2  rounded flex-wrap ">
+                                                            <p className="mt-3">; If <span className="text-lowercase">{sub?.title} ,</span></p>
+
+                                                            {
+                                                                testAllInfo?.testParams?.[index]?.subTestParams?.[idx]?.additionalFields?.map((additional, idx2) => <div >
+                                                                    {/* <h4 className="text-warning">{additional?.additionalFieldTitle}</h4> */}
+                                                                    {
+                                                                        additional?.isAdditionalFieldInput ? <div className="mx-2 d-flex justify-content-start gap-2 align-items-center flex-wrap">
+                                                                            <label className="me-2" for={`additional-text-${idx2}`}>
+                                                                                {additional?.additionalFieldTitle} :
+                                                                            </label>
+                                                                            <input {...register2(`${param?.name}#${sub?.title}&${additional?.additionalFieldTitle}`)} defaultValue={testAllResults?.data?.[`${param?.name}#${sub?.title}&${additional?.additionalFieldTitle}`]} className="bg-secondary-subtle rounded border-1 border-primary p-1" type="text" id={`additional-text-${idx2}`} placeholder={additional?.additionalFieldTitle} />
+                                                                        </div>
+                                                                            :
+                                                                            <div className="form-check d-flex justify-content-start gap-2 align-items-center mx-2 flex-wrap">
+                                                                                <input {...register2(`${param?.name}#${sub?.title}&${additional?.additionalFieldTitle}`)} defaultChecked={testAllResults?.data?.[`${param?.name}#${sub?.title}&${additional?.additionalFieldTitle}`]} className="form-check-input" type="checkbox" value="" id={`additional-check-${idx2}`} />
+                                                                                <label className="form-check-label" for={`additional-check-${idx2}`}>
+                                                                                    {additional?.additionalFieldTitle}
+                                                                                </label>
+                                                                            </div>
+                                                                    }
+                                                                </div>)
+                                                            }
+                                                        </div>}
+                                                </div>)
+                                            }
+                                        </div>
+                                    </div>)}
+                                    <div className="d-flex justify-content-start justify-content-end">
+                                        <button type="submit" className="app-btn-primary btn mt-3 ">Update</button>
+                                    </div>
+
+
+                                </form>
+                                <button type="button" onClick={handleDeleteTestResult} className="app-btn-primary btn m-0 ">Delete</button>
+                            </div>
+                            :
+                            <form onSubmit={handleSubmit(onSubmit)} className="bg-white text-black p-3">
+                                <div className="d-flex justify-content-between align-items-center bg-dark-subtle m-0 border border-black border-bottom-0 p-1">
+                                    <h3 className="text-black  ">Owner: {prescriptions?.appointment?.ownerName}</h3>
+                                    <div className="d-flex align-items-center gap-2">
+                                        <p>Case No: {prescriptions?.appointment?.caseNo}</p>
+                                        <p>|</p>
+                                        <p>Date: {new Date(prescriptions?.appointment?.createdAt).toDateString()}</p>
+                                        <p>|</p>
+                                        <p>Status: {results?.includes(testAllInfo?._id) ? "Added" : "To be add"}</p>
+                                    </div>
+                                </div>
+                                <>{testAllInfo?.testParams?.map((param, index) => <div className={`m-0 row border border-black ${index !== testAllInfo?.testParams?.length - 1 ? "border-bottom-0" : ""}`}>
                                     <div className="col-2 p-2 border-end border-black">
                                         <h6 className="text-black">{param?.name}</h6>
                                     </div>
@@ -159,13 +297,14 @@ const index = () => {
                                             </div>)
                                         }
                                     </div>
-                                </div>)
-                            }
-                        </div>
-                        <div className="d-flex justify-content-start justify-content-end">
-                            <button type="submit" className="app-btn-primary btn mt-3 ">Submit</button>
-                        </div>
-                    </form>
+                                </div>)}
+                                    <div className="d-flex justify-content-start justify-content-end">
+                                        <button type="submit" className="app-btn-primary btn mt-3 ">Submit</button>
+                                    </div>
+                                </>
+                            </form>
+                        }
+                    </div>
                 </div>
             </div>
         </div>
