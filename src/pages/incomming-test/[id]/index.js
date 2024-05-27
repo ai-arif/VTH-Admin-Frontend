@@ -82,16 +82,16 @@ const index = () => {
         });
     }
 
-
     const {
         handleSubmit: handleUpdate,
         register: register2,
         formState: { errorsUpdate },
-    } = useForm();
+    } = useForm({ values: testAllResults?.data });
     const onUpdate = async (updatedData) => {
+
         try {
             axiosInstance.put(`/test/test-result/${testAllResults?._id}`, updatedData).then(res => {
-                console.log({ res: res.data })
+                // console.log({ res: res.data })
                 if (res.data?.success) {
                     setRefetch(refetch + 1)
                     toast.success("Test result updated successfully");
@@ -183,11 +183,15 @@ const index = () => {
                                                             <label className="block" for={`sub-text-${idx}`}>
                                                                 {sub?.title} :
                                                             </label>
-                                                            <input {...register2(`${param?.name}#${sub?.title}`)} defaultValue={testAllResults?.data?.[`${param?.name}#${sub?.title}`]} className="block rounded bg-secondary-subtle rounded border-1 border-primary p-1 bg-secondary w-25" type="text" id={`sub-text-${idx}`} placeholder={sub?.title} />
+                                                            <input {...register2(`${param?.name}#${sub?.title}`)}
+                                                                // defaultValue={testAllResults?.data?.[`${param?.name}#${sub?.title}`]} 
+                                                                className="block rounded bg-secondary-subtle rounded border-1 border-primary p-1 bg-secondary w-25" type="text" id={`sub-text-${idx}`} placeholder={sub?.title} />
                                                         </div>
                                                             :
                                                             <div className="form-check d-flex justify-content-start align-items-center gap-2 ">
-                                                                <input {...register2(`${param?.name}#${sub?.title}`)} defaultChecked={testAllResults?.data?.[`${param?.name}#${sub?.title}`]} className="form-check-input" type="checkbox" value="" id={`sub-check-${idx}-${sub?.title}`} />
+                                                                <input {...register2(`${param?.name}#${sub?.title}`)}
+                                                                    // defaultChecked={testAllResults?.data?.[`${param?.name}#${sub?.title}`]} 
+                                                                    className="form-check-input" type="checkbox" value="" id={`sub-check-${idx}-${sub?.title}`} />
                                                                 <label className="form-check-label" for={`sub-check-${idx}-${sub?.title}`}>
                                                                     {sub?.title}
                                                                 </label>
@@ -207,11 +211,15 @@ const index = () => {
                                                                             <label className="me-2" for={`additional-text-${idx2}`}>
                                                                                 {additional?.additionalFieldTitle} :
                                                                             </label>
-                                                                            <input {...register2(`${param?.name}#${sub?.title}&${additional?.additionalFieldTitle}`)} defaultValue={testAllResults?.data?.[`${param?.name}#${sub?.title}&${additional?.additionalFieldTitle}`]} className="bg-secondary-subtle rounded border-1 border-primary p-1" type="text" id={`additional-text-${idx2}`} placeholder={additional?.additionalFieldTitle} />
+                                                                            <input {...register2(`${param?.name}#${sub?.title}&${additional?.additionalFieldTitle}`)}
+                                                                                // defaultValue={testAllResults?.data?.[`${param?.name}#${sub?.title}&${additional?.additionalFieldTitle}`]} 
+                                                                                className="bg-secondary-subtle rounded border-1 border-primary p-1" type="text" id={`additional-text-${idx2}`} placeholder={additional?.additionalFieldTitle} />
                                                                         </div>
                                                                             :
                                                                             <div className="form-check d-flex justify-content-start gap-2 align-items-center mx-2 flex-wrap">
-                                                                                <input {...register2(`${param?.name}#${sub?.title}&${additional?.additionalFieldTitle}`)} defaultChecked={testAllResults?.data?.[`${param?.name}#${sub?.title}&${additional?.additionalFieldTitle}`]} className="form-check-input" type="checkbox" value="" id={`additional-check-${idx2}`} />
+                                                                                <input {...register2(`${param?.name}#${sub?.title}&${additional?.additionalFieldTitle}`)}
+                                                                                    // defaultChecked={testAllResults?.data?.[`${param?.name}#${sub?.title}&${additional?.additionalFieldTitle}`]}
+                                                                                    className="form-check-input" type="checkbox" value="" id={`additional-check-${idx2}`} />
                                                                                 <label className="form-check-label" for={`additional-check-${idx2}`}>
                                                                                     {additional?.additionalFieldTitle}
                                                                                 </label>
