@@ -103,7 +103,7 @@ const FinalSubmission = ({ medicineOptions, id, pharmacyMedicines, setPharmacyMe
             </form>
             <div className="pb-3 d-flex justify-content-end">
               <button disabled={!isPrint} onClick={() => handleDownloadMedicine(medicineOrderInfo)} className="btn btn-info text-white">
-                <MdPrint /> Print
+                <MdPrint size={18} /> Print
               </button>
             </div>
           </div>
