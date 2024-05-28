@@ -1,8 +1,8 @@
 import axiosInstance from "../../utils/axiosInstance";
 
-export const getPharmacy = async () => {
+export const getPharmacyPrescription = async () => {
   try {
-    const response = await axiosInstance.get("/pharmacy");
+    const response = await axiosInstance.get("/pharmacy/prescriptions?page=1&limit=10");
     return response.data;
   } catch (error) {
     return Promise.reject(error);
@@ -11,7 +11,7 @@ export const getPharmacy = async () => {
 
 export const getSinglePharmacy = async (id) => {
   try {
-    const response = await axiosInstance.get(`/pharmacy/${id}`);
+    const response = await axiosInstance.get(`/prescription/${id}`);
     return response.data;
   } catch (error) {
     return Promise.reject(error);
@@ -27,18 +27,18 @@ export const addPharmacy = async (pharmacy) => {
   }
 };
 
-export const updatePharmacy = async (pharmacy) => {
-  try {
-    const response = await axiosInstance.put(`/pharmacy/${pharmacy.id}`, pharmacy);
-    return response.data;
-  } catch (error) {
-    return Promise.reject(error);
-  }
-};
+// export const updatePharmacy = async (pharmacy) => {
+//   try {
+//     const response = await axiosInstance.put(`/pharmacy/${pharmacy.id}`, pharmacy);
+//     return response.data;
+//   } catch (error) {
+//     return Promise.reject(error);
+//   }
+// };
 
 export const deletePharmacy = async (id) => {
   try {
-    const response = await axiosInstance.delete(`/pharmacy/${id}`);
+    const response = await axiosInstance.patch(`/pharmacy/${id}`);
     return response.data;
   } catch (error) {
     return Promise.reject(error);

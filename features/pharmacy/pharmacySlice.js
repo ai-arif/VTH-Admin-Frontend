@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { addPharmacy, deletePharmacy, getPharmacy, getSinglePharmacy, searchPharmacy, updatePharmacy } from "./pharmacyAPI";
+import { addPharmacy, deletePharmacy, getPharmacyPrescription, getSinglePharmacy, searchPharmacy, updatePharmacy } from "./pharmacyAPI";
 
 const initialState = {
   pharmacy: {},
@@ -9,7 +9,7 @@ const initialState = {
 };
 
 export const fetchPharmacy = createAsyncThunk("pharmacy/fetchPharmacy", async () => {
-  const response = await getPharmacy();
+  const response = await getPharmacyPrescription();
   return response;
 });
 

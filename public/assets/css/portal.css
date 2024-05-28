@@ -12487,3 +12487,15 @@ button.close:focus {
 .delete-icon:hover {
   background-color: #d98380;
 }
+
+.download-icon {
+  border-radius: 2px;
+  background-color: #15a362;
+  padding: 6px;
+  font-size: 28px;
+  color: white;
+  transition: background-color 0.2s;
+}
+.download-icon:hover {
+  background-color: #18ba70;
+}
