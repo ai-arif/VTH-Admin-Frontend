@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import TestResultHome from '../../../Components/TestResult/TestResultHome';
 import TestParameterCard from './TestParameterCard';
 
@@ -57,14 +58,15 @@ const Index = () => {
     return output;
   }
 
-  useEffect(() => {
-    axios.get(`http://localhost:5000/api/v1/test/test-result/test15`).then(res => {
-      let result = res.data?.data?.data;
-      setTestResults(result);
-      // console.log(result[0]?.data);
-      // console.log(transformInput(result[0]?.data));
-    });
-  }, []);
+  // useEffect(() => {
+  //   axios.get(`http://localhost:5000/api/v1/test/test-result/test15`).then(res => {
+  //     let result = res.data?.data?.data;
+  //     setTestResults(result);
+  //     // console.log(result[0]?.data);
+  //     // console.log(transformInput(result[0]?.data));
+  //   });
+  // }, []);
+
 
   return (
     <div>

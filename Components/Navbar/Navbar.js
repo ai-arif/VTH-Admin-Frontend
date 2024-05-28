@@ -15,11 +15,15 @@ import SubmenuNavItem from "./SubmenuNavItem";
 // import {  } from "../../features/staff/staffSlice";
 
 // import notificationImg = from '../../public/assets/images/info.png'
+import Cookies from 'js-cookie';
+import { jwtDecode } from "jwt-decode";
+import { setLoggedInUserData } from "../../features/loggedInUser/loggedInUserAPI";
 
 const Navbar = () => {
   const dispatch = useDispatch();
   const router = useRouter();
-  // const { user } = useSelector((state) => state.user);
+  const { data } = useSelector((state) => state.loggedInUser);
+  console.log({ data })
   // useEffect(() => {
   //   dispatch(fetchUser());
   // }, [dispatch]);
@@ -32,7 +36,15 @@ const Navbar = () => {
   const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
-    axiosInstance.get('/notification/specific?department=664743d903d8df02b08acc31&type=admin').then(res => {
+
+    const token = Cookies.get('token');
+    const decoded = jwtDecode(token);
+    // console.log({ token, decoded }) // decoded.role
+
+
+    dispatch(setLoggedInUserData(decoded));
+
+    axiosInstance.get('/notification').then(res => {
       const result = res.data.data;
       // console.log(result)
       setNotifications(result.data);
@@ -99,7 +111,7 @@ const Navbar = () => {
                         d="M8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z"
                       />
                     </svg>
-                    <span className="icon-badge">{notifications?.length}</span>
+                    <span className="icon-badge">{notifications?.length > 10 ? "10+" : (notifications?.length > 5 ? "5+" : notifications.length)}</span>
                   </a>
 
                   <div className="dropdown-menu p-0" aria-labelledby="notifications-dropdown-toggle">
@@ -109,8 +121,8 @@ const Navbar = () => {
                     {/* notifications showing here */}
                     <div className="dropdown-menu-content">
                       {
-                        notifications?.map(notification => <div key={notification?._id} className="item p-3">
-                          <div className="row gx-2 justify-content-between align-items-center">
+                        notifications?.slice(0, 4).map(notification => <div key={notification?._id} className="item p-3">
+                          <div className="row gx-2 justify-content-between align-items-start">
                             <div className="col-auto">
                               <img className="profile-image" src="/assets/images/info.png" alt="" />
                             </div>
