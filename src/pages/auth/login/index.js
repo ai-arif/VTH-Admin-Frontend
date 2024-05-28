@@ -37,9 +37,6 @@ const index = () => {
             // const response = await axiosInstance.post('/login', userObj)
             const response = await axiosInstance.post('/staffs/login', userObj)
             if (response.data.success) {
-
-                console.log("res ", response.data?.data)
-
                 Cookies.set('token', response.data?.data?.token)
                 toast.success(response.data.message)
                 router.push('/')
