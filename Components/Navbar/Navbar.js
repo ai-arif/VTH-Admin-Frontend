@@ -22,8 +22,8 @@ import { setLoggedInUserData } from "../../features/loggedInUser/loggedInUserAPI
 const Navbar = () => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { data } = useSelector((state) => state.loggedInUser);
-  console.log({ data })
+  // const { data } = useSelector((state) => state.loggedInUser);
+  // console.log({ data })
   // useEffect(() => {
   //   dispatch(fetchUser());
   // }, [dispatch]);
