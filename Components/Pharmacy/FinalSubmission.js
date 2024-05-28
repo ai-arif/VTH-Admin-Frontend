@@ -1,10 +1,13 @@
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { MdPrint } from "react-icons/md";
 import { useDispatch } from "react-redux";
 import CreatableSelect from "react-select/creatable";
-import { createPharmacy, fetchPharmacy } from "../../features/pharmacy/pharmacySlice";
+import { createPharmacy } from "../../features/pharmacy/pharmacySlice";
+import axiosInstance from "../../utils/axiosInstance";
+import { handleDownloadMedicine } from "./MedicinePdf";
 
 const customMultiStyles = {
   control: (provided, state) => ({
@@ -34,14 +37,15 @@ const customMultiStyles = {
   }),
 };
 
-const FinalSubmission = ({ id, pharmacyMedicines, totalPrice, totalQuantity }) => {
+const FinalSubmission = ({ medicineOptions, id, pharmacyMedicines, setPharmacyMedicines, totalPrice, totalQuantity }) => {
+  const [medicineOrderInfo, setMedicineOrderInfo] = useState([]);
+  const [isPrint, setIsPrint] = useState(false);
   const dispatch = useDispatch();
-  const router = useRouter();
 
-  const { handleSubmit, control, reset } = useForm();
+  const { handleSubmit, control } = useForm();
 
   const onSubmit = async (data) => {
-    data.unavailableMedicines = data.unavailableMedicines?.map((medicine) => medicine.value);
+    data.unavailableMedicines = data.unavailableMedicines?.map((medicine) => medicine.label);
     data.availableMedicines = pharmacyMedicines;
     data.totalQuantity = Number(totalQuantity);
     data.totalPrice = Number(totalPrice);
@@ -52,8 +56,11 @@ const FinalSubmission = ({ id, pharmacyMedicines, totalPrice, totalQuantity }) =
 
       if (response?.payload?.success) {
         toast.success("Medicine added successfully!");
-        reset();
-        router.push("/pharmacy");
+
+        // fetch order by prescription
+        const response = await axiosInstance.get(`/pharmacy/prescriptions/${id}`);
+        setMedicineOrderInfo(response.data?.data);
+        setIsPrint(true);
       } else {
         toast.error("Failed to submit! Please try again later.");
       }
@@ -80,16 +87,25 @@ const FinalSubmission = ({ id, pharmacyMedicines, totalPrice, totalQuantity }) =
               <div className="row">
                 <div className="mb-3">
                   <label className="form-label">Unavailable Medicines:</label>
-                  <Controller name="unavailableMedicines" control={control} render={({ field }) => <CreatableSelect isMulti isClearable {...field} styles={customMultiStyles} />} />
+                  <Controller
+                    name="unavailableMedicines"
+                    control={control}
+                    defaultValue={[]}
+                    render={({ field }) => <CreatableSelect options={medicineOptions} isMulti isClearable {...field} styles={customMultiStyles} />}
+                  />
                 </div>
               </div>
               <div className="my-3 d-flex gap-3 justify-content-center">
                 <button type="submit" className="btn app-btn-primary">
                   Submit
                 </button>
-                <button className="btn app-btn-primary">Download</button>
               </div>
             </form>
+            <div className="pb-3 d-flex justify-content-end">
+              <button disabled={!isPrint} onClick={() => handleDownloadMedicine(medicineOrderInfo)} className="btn btn-info text-white">
+                <MdPrint /> Print
+              </button>
+            </div>
           </div>
         </div>
       </div>
