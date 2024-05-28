@@ -47,6 +47,8 @@ const UpdatePrescription = () => {
   const { tests } = useSelector((state) => state.test);
   const { medicines } = useSelector((state) => state.medicine);
 
+  console.log(prescription);
+
   // transforming tests and medicines data
   const medicineOptions = medicines?.data?.map((medicine) => ({
     value: medicine._id,

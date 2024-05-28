@@ -14,7 +14,12 @@
     "bootstrap": "^5.3.3",
     "dotenv": "^16.4.5",
     "js-cookie": "^3.0.5",
+<<<<<<< HEAD
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.8.2",
+=======
     "jwt-decode": "^4.0.0",
+>>>>>>> 6f50180aad97e24db41f55111e22ded14e2e85ed
     "next": "14.1.4",
     "react": "^18",
     "react-dom": "^18",

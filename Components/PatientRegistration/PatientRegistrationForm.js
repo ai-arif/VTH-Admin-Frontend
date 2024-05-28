@@ -1,12 +1,43 @@
 import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
+import Select from "react-select";
 import { fetchAppointmentsByPhone } from "../../features/appointment/appointmentSlice";
 import { createPatient } from "../../features/patient-registration/patientRegistrationSlice";
 import { fetchSpecies } from "../../features/specie/speciesSlice";
+import { fetchTest } from "../../features/test/testSlice";
 import axiosInstance from "../../utils/axiosInstance";
 import { formatDate } from "../../utils/formatDate";
+
+// Define custom styles
+const customStyles = {
+  control: (provided, state) => ({
+    ...provided,
+    backgroundColor: "#2d323f",
+    borderColor: state.isFocused ? "#15a362" : "white",
+    "&:hover": {
+      borderColor: state.isFocused ? "#15a362" : "white",
+    },
+  }),
+  option: (provided, state) => ({
+    ...provided,
+    color: "#fff",
+    backgroundColor: state.isSelected ? "#15a362" : "#2d323f",
+  }),
+  input: (provided) => ({
+    ...provided,
+    color: "#fff",
+  }),
+  multiValue: (provided) => ({
+    ...provided,
+    backgroundColor: "#15a362",
+  }),
+  multiValueLabel: (provided) => ({
+    ...provided,
+    color: "#fff",
+  }),
+};
 
 const PatientRegistrationForm = () => {
   const [activeTab, setActiveTab] = useState("ownerInfo");
@@ -17,6 +48,7 @@ const PatientRegistrationForm = () => {
   const [speciesByComplaints, setSpeciesByComplaint] = useState([]);
 
   const { species } = useSelector((state) => state.specie);
+  const { tests } = useSelector((state) => state.test);
 
   const getPatientByPhone = async () => {
     try {
@@ -56,11 +88,14 @@ const PatientRegistrationForm = () => {
     register,
     reset,
     trigger,
+    control,
     formState: { errors },
   } = useForm();
 
   const onSubmit = async (patientData) => {
     try {
+      patientData.tests = patientData?.tests?.map((test) => test.value);
+
       const response = await dispatch(createPatient(patientData));
 
       if (response?.payload?.success) {
@@ -103,8 +138,15 @@ const PatientRegistrationForm = () => {
     }
   };
 
+  // Transforming tests and medicines data
+  const testOptions = tests?.data?.map((test) => ({
+    value: test._id,
+    label: test.testName,
+  }));
+
   useEffect(() => {
     dispatch(fetchSpecies());
+    dispatch(fetchTest());
   }, [dispatch]);
 
   return (
@@ -120,6 +162,9 @@ const PatientRegistrationForm = () => {
           </button>
           <button className={`btn text-white ${activeTab === "clinicalSigns" ? "btn-primary" : "btn-outline-primary border"}`} onClick={() => handleTabSwitch("clinicalSigns")}>
             Clinical Signs
+          </button>
+          <button className={`btn text-white ${activeTab === "tests" ? "btn-primary" : "btn-outline-primary border"}`} onClick={() => handleTabSwitch("tests")}>
+            Tests
           </button>
         </div>
       </div>
@@ -427,120 +472,128 @@ const PatientRegistrationForm = () => {
 
                   {/* Clinical (presenting & physical) signs */}
                   {activeTab === "clinicalSigns" && (
+                    <div className="info-group">
+                      <h5 className="text-center bg-opacity-25 rounded-2 bg-secondary py-1 text-white mb-3">Clinical Signs</h5>
+                      <h6 className="text-center text-decoration-underline pb-2">Presenting signs</h6>
+                      <div className="row">
+                        <div className="mb-3 col-md-6">
+                          <label className="form-label">
+                            Appetite <small>(optional)</small>
+                          </label>
+                          <input type="text" {...register("appetite")} className="form-control" />
+                        </div>
+                        <div className="mb-3 col-md-6">
+                          <label className="form-label">
+                            Demeanour <small>(optional)</small>
+                          </label>
+                          <select {...register("demeanour")} className="form-select" aria-label="Default select example">
+                            <option value="">Select</option>
+                            <option value="dull">Dull</option>
+                            <option value="bright">Bright</option>
+                            <option value="excited">Excited</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="mb-3 col-md-6">
+                          <label className="form-label">
+                            Physical Condition <small>(optional)</small>
+                          </label>
+                          <select {...register("physicalCondition")} className="form-select" aria-label="Default select example">
+                            <option value="">Select</option>
+                            <option value="thin">Thin</option>
+                            <option value="normal">Normal</option>
+                            <option value="obese">Obese</option>
+                          </select>
+                        </div>
+                        <div className="mb-3 col-md-6">
+                          <label className="form-label">
+                            Rumination: P/A <small>(optional)</small>
+                          </label>
+                          <input type="text" {...register("rumination")} className="form-control" />
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="mb-3 col-md-6">
+                          <label className="form-label">
+                            Salvation: P/A <small>(optional)</small>
+                          </label>
+                          <input type="text" {...register("salvation")} className="form-control" />
+                        </div>
+                        <div className="mb-3 col-md-6">
+                          <label className="form-label">
+                            Lacrimation: P/A <small>(optional)</small>
+                          </label>
+                          <input type="text" {...register("lacrimation")} className="form-control" />
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="mb-3 col-md-6">
+                          <label className="form-label">
+                            Nasal Discharge: P/A <small>(optional)</small>
+                          </label>
+                          <input type="text" {...register("nasalDischarge")} className="form-control" />
+                        </div>
+                      </div>
+                      <h6 className="text-center text-decoration-underline py-2">Physical signs</h6>
+                      <div className="row">
+                        <div className="mb-3 col-md-6">
+                          <label className="form-label">
+                            Dehydration <small>(optional)</small>
+                          </label>
+                          <input type="text" {...register("dehydration")} className="form-control" />
+                        </div>
+                        <div className="mb-3 col-md-6">
+                          <label className="form-label">
+                            MM <small>(optional)</small>
+                          </label>
+                          <input type="text" {...register("mm")} className="form-control" />
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="mb-3 col-md-6">
+                          <label className="form-label">
+                            Resp. Rate/Minute <small>(optional)</small>
+                          </label>
+                          <input type="text" {...register("respRate")} className="form-control" />
+                        </div>
+                        <div className="mb-3 col-md-6">
+                          <label className="form-label">
+                            Pulse Rate/Minute <small>(optional)</small>
+                          </label>
+                          <input type="text" {...register("pulseRate")} className="form-control" />
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="mb-3 col-md-6">
+                          <label className="form-label">
+                            Temp (°F) <small>(optional)</small>
+                          </label>
+                          <input type="text" {...register("temp")} className="form-control" />
+                        </div>
+                        <div className="mb-3 col-md-6">
+                          <label className="form-label">
+                            Rumen, Motility <small>(optional)</small>
+                          </label>
+                          <input type="text" {...register("rumenMotility")} className="form-control" />
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="mb-3 ">
+                          <label className="form-label">
+                            Others <small>(optional)</small>
+                          </label>
+                          <textarea {...register("others")} className="form-control" />
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  {activeTab === "tests" && (
                     <>
-                      <div className="info-group">
-                        <h5 className="text-center bg-opacity-25 rounded-2 bg-secondary py-1 text-white mb-3">Clinical Signs</h5>
-                        <h6 className="text-center text-decoration-underline pb-2">Presenting signs</h6>
-                        <div className="row">
-                          <div className="mb-3 col-md-6">
-                            <label className="form-label">
-                              Appetite <small>(optional)</small>
-                            </label>
-                            <input type="text" {...register("appetite")} className="form-control" />
-                          </div>
-                          <div className="mb-3 col-md-6">
-                            <label className="form-label">
-                              Demeanour <small>(optional)</small>
-                            </label>
-                            <select {...register("demeanour")} className="form-select" aria-label="Default select example">
-                              <option value="">Select</option>
-                              <option value="dull">Dull</option>
-                              <option value="bright">Bright</option>
-                              <option value="excited">Excited</option>
-                            </select>
-                          </div>
-                        </div>
-                        <div className="row">
-                          <div className="mb-3 col-md-6">
-                            <label className="form-label">
-                              Physical Condition <small>(optional)</small>
-                            </label>
-                            <select {...register("physicalCondition")} className="form-select" aria-label="Default select example">
-                              <option value="">Select</option>
-                              <option value="thin">Thin</option>
-                              <option value="normal">Normal</option>
-                              <option value="obese">Obese</option>
-                            </select>
-                          </div>
-                          <div className="mb-3 col-md-6">
-                            <label className="form-label">
-                              Rumination: P/A <small>(optional)</small>
-                            </label>
-                            <input type="text" {...register("rumination")} className="form-control" />
-                          </div>
-                        </div>
-                        <div className="row">
-                          <div className="mb-3 col-md-6">
-                            <label className="form-label">
-                              Salvation: P/A <small>(optional)</small>
-                            </label>
-                            <input type="text" {...register("salvation")} className="form-control" />
-                          </div>
-                          <div className="mb-3 col-md-6">
-                            <label className="form-label">
-                              Lacrimation: P/A <small>(optional)</small>
-                            </label>
-                            <input type="text" {...register("lacrimation")} className="form-control" />
-                          </div>
-                        </div>
-                        <div className="row">
-                          <div className="mb-3 col-md-6">
-                            <label className="form-label">
-                              Nasal Discharge: P/A <small>(optional)</small>
-                            </label>
-                            <input type="text" {...register("nasalDischarge")} className="form-control" />
-                          </div>
-                        </div>
-                        <h6 className="text-center text-decoration-underline py-2">Physical signs</h6>
-                        <div className="row">
-                          <div className="mb-3 col-md-6">
-                            <label className="form-label">
-                              Dehydration <small>(optional)</small>
-                            </label>
-                            <input type="text" {...register("dehydration")} className="form-control" />
-                          </div>
-                          <div className="mb-3 col-md-6">
-                            <label className="form-label">
-                              MM <small>(optional)</small>
-                            </label>
-                            <input type="text" {...register("mm")} className="form-control" />
-                          </div>
-                        </div>
-                        <div className="row">
-                          <div className="mb-3 col-md-6">
-                            <label className="form-label">
-                              Resp. Rate/Minute <small>(optional)</small>
-                            </label>
-                            <input type="text" {...register("respRate")} className="form-control" />
-                          </div>
-                          <div className="mb-3 col-md-6">
-                            <label className="form-label">
-                              Pulse Rate/Minute <small>(optional)</small>
-                            </label>
-                            <input type="text" {...register("pulseRate")} className="form-control" />
-                          </div>
-                        </div>
-                        <div className="row">
-                          <div className="mb-3 col-md-6">
-                            <label className="form-label">
-                              Temp (°F) <small>(optional)</small>
-                            </label>
-                            <input type="text" {...register("temp")} className="form-control" />
-                          </div>
-                          <div className="mb-3 col-md-6">
-                            <label className="form-label">
-                              Rumen, Motility <small>(optional)</small>
-                            </label>
-                            <input type="text" {...register("rumenMotility")} className="form-control" />
-                          </div>
-                        </div>
-                        <div className="row">
-                          <div className="mb-3 ">
-                            <label className="form-label">
-                              Others <small>(optional)</small>
-                            </label>
-                            <textarea {...register("others")} className="form-control" />
-                          </div>
+                      <div className="row info-group">
+                        <div className="mb-3">
+                          <label className="form-label">Tests</label>
+                          <Controller name="tests" control={control} defaultValue={[]} render={({ field }) => <Select options={testOptions} isMulti {...field} styles={customStyles} />} />
                         </div>
                       </div>
                       <div className="d-flex justify-content-center my-3">

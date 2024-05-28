@@ -11,8 +11,6 @@ const PharmacyHome = () => {
   const dispatch = useDispatch();
   const { pharmacies, status } = useSelector((state) => state.pharmacy);
 
-  // console.log(pharmacies);
-
   // handling delete single prescription
   const handleDeletePharmacy = async (id) => {
     Swal.fire({
@@ -107,7 +105,7 @@ const PharmacyHome = () => {
                     <td className={`${pharmacy?.takesMedicinesBefore ? "text-success" : "text-danger"}`}>{`${pharmacy?.takesMedicinesBefore ? "Success" : "Pending"}`}</td>
                     <td className="d-flex gap-3 justify-content-center">
                       <Link href={`/pharmacy/${pharmacy._id}`}>
-                        <FaPlusSquare type="button" title="edit" className="edit-icon" />
+                        <FaPlusSquare type="button" title="medicine" className="edit-icon" />
                       </Link>
                       <RiDeleteBinLine type="button" onClick={() => handleDeletePharmacy(pharmacy._id)} title="delete" className="delete-icon" />
                     </td>

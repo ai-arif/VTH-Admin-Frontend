@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import CreatableSelect from "react-select/creatable";
 import { fetchMedicine } from "../../features/medicine/medicineSlice";
 import { fetchSinglePharmacy } from "../../features/pharmacy/pharmacySlice";
-import Loader from "../UI/Loader";
 import FinalSubmission from "./FinalSubmission";
 
 // Define custom styles
@@ -38,18 +37,17 @@ const ProvideMedicine = () => {
   const router = useRouter();
   const { id } = router.query;
   const dispatch = useDispatch();
+
   const { pharmacy, status } = useSelector((state) => state.pharmacy);
   const { medicines } = useSelector((state) => state.medicine);
 
   const { handleSubmit, register, control, reset } = useForm();
-
   const onSubmit = async (data) => {
     const medicineData = {
       ...data,
       quantity: parseFloat(data.quantity),
       unitPrice: parseFloat(data.unitPrice),
       medicineName: data?.medicineName?.label,
-      _id: data?.medicineName?.value,
     };
 
     setPharmacyMedicines([...pharmacyMedicines, medicineData]);
@@ -70,8 +68,8 @@ const ProvideMedicine = () => {
     label: medicine.name,
   }));
 
-  const handleRemoveCartItem = (id) => {
-    const restCart = pharmacyMedicines.filter((item) => item._id !== id);
+  const handleRemoveCartItem = (index) => {
+    const restCart = pharmacyMedicines.filter((item, idx) => idx !== index);
     setPharmacyMedicines(restCart);
   };
 
@@ -79,14 +77,8 @@ const ProvideMedicine = () => {
     if (id) {
       dispatch(fetchSinglePharmacy(id));
     }
-  }, [dispatch, id]);
-
-  useEffect(() => {
     dispatch(fetchMedicine());
-  }, [dispatch]);
-
-  //   loader
-  if (status === "loading") return <Loader />;
+  }, [dispatch, id]);
 
   return (
     <div className="container-fluid">
@@ -111,13 +103,13 @@ const ProvideMedicine = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {pharmacyMedicines?.map((medicine, idx) => (
-                        <tr key={idx}>
+                      {pharmacyMedicines?.map((medicine, index) => (
+                        <tr key={index}>
                           <td className="text-capitalize">{medicine.medicineName}</td>
                           <td>{medicine.quantity}</td>
                           <td>{medicine.unitPrice}</td>
                           <td>{(medicine.quantity * medicine.unitPrice).toFixed(2)}</td>
-                          <td style={{ cursor: "pointer" }} onClick={() => handleRemoveCartItem(medicine._id)} className="bg-danger text-center">
+                          <td style={{ cursor: "pointer" }} onClick={() => handleRemoveCartItem(index)} className="bg-danger text-center">
                             X
                           </td>
                         </tr>
@@ -145,7 +137,12 @@ const ProvideMedicine = () => {
                     <div className="row">
                       <div className="mb-3">
                         <label className="form-label">Medicine</label>
-                        <Controller name="medicineName" control={control} render={({ field }) => <CreatableSelect isClearable required {...field} options={medicineOptions} styles={customStyles} />} />
+                        <Controller
+                          name="medicineName"
+                          control={control}
+                          defaultValue={[]}
+                          render={({ field }) => <CreatableSelect required isClearable options={medicineOptions} {...field} styles={customStyles} />}
+                        />
                       </div>
                     </div>
                   </div>
@@ -169,7 +166,14 @@ const ProvideMedicine = () => {
             </div>
           </div>
         </div>
-        <FinalSubmission id={id} pharmacyMedicines={pharmacyMedicines} totalPrice={totalPrice} totalQuantity={totalQuantity} />
+        <FinalSubmission
+          id={id}
+          medicineOptions={medicineOptions}
+          pharmacyMedicines={pharmacyMedicines}
+          setPharmacyMedicines={setPharmacyMedicines}
+          totalPrice={totalPrice}
+          totalQuantity={totalQuantity}
+        />
       </div>
     </div>
   );
