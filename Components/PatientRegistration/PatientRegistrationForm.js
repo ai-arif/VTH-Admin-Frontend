@@ -94,6 +94,8 @@ const PatientRegistrationForm = () => {
 
   const onSubmit = async (patientData) => {
     try {
+      patientData.tests = patientData?.tests?.map((test) => test.value);
+
       const response = await dispatch(createPatient(patientData));
 
       if (response?.payload?.success) {

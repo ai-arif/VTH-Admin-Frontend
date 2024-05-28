@@ -22,7 +22,7 @@ export const handleDownloadMedicine = async (medicineOrderInfo) => {
   // Owner Name and Case No
   doc.setFontSize(12);
   doc.text(`Owner Name: ${ownerName}`, 14, 30);
-  doc.text(`Case No: ${phone}`, 14, 36);
+  doc.text(`Phone No: ${phone}`, 14, 36);
   doc.text(`Case No: ${caseNo}`, 14, 42);
 
   // Available Medicines Table

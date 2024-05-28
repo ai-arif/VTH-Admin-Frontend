@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { MdPrint } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 import { fetchAppointmentsByPhone } from "../../features/appointment/appointmentSlice";
@@ -41,10 +42,15 @@ const customStyles = {
 const PrescriptionHome = () => {
   const [searchPhone, setSearchPhone] = useState("");
   const [patentInfo, setPatentInfo] = useState([]);
+  const [singlePrescription, setSinglePrescription] = useState({});
   const [selectedPatentInfo, setSelectedPatentInfo] = useState({});
+  const [isPrint, setIsPrint] = useState(false);
   const dispatch = useDispatch();
+
   const { tests } = useSelector((state) => state.test);
   const { medicines } = useSelector((state) => state.medicine);
+  // const { prescription } = useSelector((state) => state.prescription);
+  // console.log(prescription);
 
   const { handleSubmit, register, control, reset } = useForm();
 
@@ -86,8 +92,14 @@ const PrescriptionHome = () => {
       prescriptionData.tests = prescriptionData?.tests?.map((test) => test.value);
 
       const response = await dispatch(createPrescription(prescriptionData));
+      console.log(response);
 
       if (response?.payload?.success) {
+        // const id = response?.payload?.data?.data?._id;
+        setSinglePrescription(response?.payload?.data?.data);
+        // if(id) {
+        //   dispatch(fetchSinglePrescription(id))
+        // }
         toast.success("Prescription added successfully!");
         setSearchPhone("");
         setSelectedPatentInfo({});
@@ -112,6 +124,8 @@ const PrescriptionHome = () => {
     value: medicine._id,
     label: medicine.name,
   }));
+
+  console.log(singlePrescription);
 
   useEffect(() => {
     dispatch(fetchMedicine());
@@ -240,6 +254,11 @@ const PrescriptionHome = () => {
                   </button>
                 </div>
               </form>
+              <div className="pb-3 d-flex justify-content-end">
+                <button disabled={!isPrint} className="btn btn-info text-white">
+                  <MdPrint size={18} /> Print
+                </button>
+              </div>
             </div>
           </div>
         </div>
