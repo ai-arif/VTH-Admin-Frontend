@@ -3,9 +3,11 @@ import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { AiOutlineHome, AiOutlineMedicineBox } from "react-icons/ai";
 import { BsBarChartLine, BsFolder } from "react-icons/bs";
+import { CiMedicalClipboard } from "react-icons/ci";
 import { GiCow } from "react-icons/gi";
 import { GrTest } from "react-icons/gr";
 import { HiOutlineUserGroup } from "react-icons/hi2";
+import { MdOutlineLocalPharmacy } from "react-icons/md";
 import { SlLayers } from "react-icons/sl";
 import { VscOutput } from "react-icons/vsc";
 import { useDispatch, useSelector } from "react-redux";
@@ -304,6 +306,13 @@ const Navbar = () => {
                 </span>
                 <span className="nav-link-text">Prescription</span>
               </SubmenuNavItem>
+
+              <NavItem href="/pharmacy">
+                <span className="nav-icon">
+                  <MdOutlineLocalPharmacy size={22} />
+                </span>
+                <span className="nav-link-text">Pharmacy</span>
+              </NavItem>
 
               <SubmenuNavItem
                 hrefParent="/species-complaints"

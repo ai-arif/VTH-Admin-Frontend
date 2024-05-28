@@ -4,6 +4,7 @@ import complaintSlice from "../features/complaint/complaintSlice";
 import departmentSlice from "../features/department/departmentSlice";
 import medicineSlice from "../features/medicine/medicineSlice";
 import patientRegistrationSlice from "../features/patient-registration/patientRegistrationSlice";
+import pharmacySlice from "../features/pharmacy/pharmacySlice";
 import prescriptionSlice from "../features/prescription/prescriptionSlice";
 import speciesSlice from "../features/specie/speciesSlice";
 import staffSlice from "../features/staff/staffSlice";
@@ -22,6 +23,7 @@ const store = configureStore({
     userPatient: userPatientSlice,
     specie: speciesSlice,
     complaint: complaintSlice,
+    pharmacy: pharmacySlice,
   },
 });
 

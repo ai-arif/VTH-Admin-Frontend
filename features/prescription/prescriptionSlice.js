@@ -101,7 +101,7 @@ export const prescriptionSlice = createSlice({
         state.status = "loading";
       })
       .addCase(searchPrescriptionData.fulfilled, (state, action) => {
-        (state.status = "success"), (state.patients = action.payload.data);
+        (state.status = "success"), (state.prescriptions = action.payload.data);
       })
       .addCase(searchPrescriptionData.rejected, (state, action) => {
         state.status = "failed";
