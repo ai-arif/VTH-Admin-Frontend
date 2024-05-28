@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import appointmentSlice from "../features/appointment/appointmentSlice";
 import complaintSlice from "../features/complaint/complaintSlice";
 import departmentSlice from "../features/department/departmentSlice";
+import loggedInUserDataReducer from "../features/loggedInUser/loggedInUserSlice";
 import medicineSlice from "../features/medicine/medicineSlice";
 import patientRegistrationSlice from "../features/patient-registration/patientRegistrationSlice";
 import pharmacySlice from "../features/pharmacy/pharmacySlice";
@@ -24,6 +25,7 @@ const store = configureStore({
     specie: speciesSlice,
     complaint: complaintSlice,
     pharmacy: pharmacySlice,
+    loggedInUser: loggedInUserDataReducer
   },
 });
 
