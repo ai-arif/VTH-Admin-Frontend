@@ -1,32 +1,32 @@
-import React, { useState } from 'react'
-import axiosInstance from '../../../../utils/axiosInstance'
 import Cookies from 'js-cookie'
-import { useRouter } from 'next/router'
-import toast from 'react-hot-toast'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
+import React, { useState } from 'react'
+import toast from 'react-hot-toast'
+import axiosInstance from '../../../../utils/axiosInstance'
 
 export const getServerSideProps = async (context) => {
     const token = context.req.cookies.token
-    
-    if (token && token!='undefined') {
-      return {
-        redirect: {
-          destination: '/',
-          permanent: false,
-        },
-      }
+
+    if (token && token != 'undefined') {
+        return {
+            redirect: {
+                destination: '/',
+                permanent: false,
+            },
+        }
     }
-    
+
     return {
-      props: {  },
+        props: {},
     }
-    
-  }
+
+}
 
 const index = () => {
     const [userObj, setUserObj] = useState({ phone: '', password: '' })
     const [loading, setLoading] = useState(false)
-    const router=useRouter()
+    const router = useRouter()
     const handleChange = (e) => {
         setUserObj({ ...userObj, [e.target.name]: e.target.value })
     }
@@ -34,8 +34,12 @@ const index = () => {
         e.preventDefault()
         setLoading(true)
         try {
-            const response = await axiosInstance.post('/login', userObj)
+            // const response = await axiosInstance.post('/login', userObj)
+            const response = await axiosInstance.post('/staffs/login', userObj)
             if (response.data.success) {
+
+                console.log("res ", response.data?.data)
+
                 Cookies.set('token', response.data?.data?.token)
                 toast.success(response.data.message)
                 router.push('/')
@@ -81,9 +85,9 @@ const index = () => {
                                     </div>
                                     <div className="text-center">
                                         {
-                                            loading ? 
-                                            <button type="submit" className="btn app-btn-primary w-100 theme-btn mx-auto">Loading...</button>
-                                             : <button onClick={handleSubmit} type="submit" className="btn app-btn-primary w-100 theme-btn mx-auto">Log In</button>
+                                            loading ?
+                                                <button type="submit" className="btn app-btn-primary w-100 theme-btn mx-auto">Loading...</button>
+                                                : <button onClick={handleSubmit} type="submit" className="btn app-btn-primary w-100 theme-btn mx-auto">Log In</button>
                                         }
                                     </div>
                                 </form>
@@ -109,7 +113,7 @@ const index = () => {
                     <div className="auth-background-overlay p-3 p-lg-5">
                         <div className="d-flex flex-column align-content-end h-100">
                             {/* <div className="h-100"> */}
-                                <img width={"100%"} src="https://cdn.pixabay.com/photo/2023/12/25/03/01/person-8467959_1280.jpg" alt="" />
+                            <img width={"100%"} src="https://cdn.pixabay.com/photo/2023/12/25/03/01/person-8467959_1280.jpg" alt="" />
                             {/* </div> */}
                             <div className="overlay-content p-3 p-lg-4 rounded">
                                 <h5 className="mb-3 overlay-title">Veterinary Doctor Login Portal</h5>
