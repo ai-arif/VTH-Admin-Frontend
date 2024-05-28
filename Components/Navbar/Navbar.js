@@ -1,19 +1,20 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { AiOutlineHome, AiOutlineMedicineBox } from "react-icons/ai";
 import { BsBarChartLine, BsFolder } from "react-icons/bs";
-import { CiMedicalClipboard } from "react-icons/ci";
 import { GiCow } from "react-icons/gi";
 import { GrTest } from "react-icons/gr";
 import { HiOutlineUserGroup } from "react-icons/hi2";
-import { MdOutlineLocalPharmacy } from "react-icons/md";
 import { SlLayers } from "react-icons/sl";
 import { VscOutput } from "react-icons/vsc";
 import { useDispatch, useSelector } from "react-redux";
+import axiosInstance from "../../utils/axiosInstance";
 import NavItem from "./NavItem";
 import SubmenuNavItem from "./SubmenuNavItem";
 // import {  } from "../../features/staff/staffSlice";
+
+// import notificationImg = from '../../public/assets/images/info.png'
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -26,6 +27,42 @@ const Navbar = () => {
   //   Cookies.remove("token");
   //   router.push("/auth/login");
   // };
+
+
+  const [notifications, setNotifications] = useState([]);
+
+  useEffect(() => {
+    axiosInstance.get('/notification/specific?department=664743d903d8df02b08acc31&type=admin').then(res => {
+      const result = res.data.data;
+      // console.log(result)
+      setNotifications(result.data);
+    })
+  }, [])
+
+  function timeAgo(dateString) {
+    const now = new Date();
+    const createdDate = new Date(dateString);
+    const diffInSeconds = Math.floor((now - createdDate) / 1000);
+
+    const units = [
+      { name: "year", seconds: 31536000 },
+      { name: "month", seconds: 2592000 },
+      { name: "week", seconds: 604800 },
+      { name: "day", seconds: 86400 },
+      { name: "hour", seconds: 3600 },
+      { name: "minute", seconds: 60 },
+      { name: "second", seconds: 1 }
+    ];
+
+    for (let unit of units) {
+      const interval = Math.floor(diffInSeconds / unit.seconds);
+      if (interval >= 1) {
+        return `${interval} ${unit.name}${interval !== 1 ? 's' : ''} ago`;
+      }
+    }
+    return "just now";
+  }
+
   return (
     <header className="app-header fixed-top">
       <div className="app-header-inner">
@@ -62,15 +99,33 @@ const Navbar = () => {
                         d="M8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z"
                       />
                     </svg>
-                    <span className="icon-badge">3</span>
+                    <span className="icon-badge">{notifications?.length}</span>
                   </a>
 
                   <div className="dropdown-menu p-0" aria-labelledby="notifications-dropdown-toggle">
                     <div className="dropdown-menu-header p-3">
                       <h5 className="dropdown-menu-title mb-0">Notifications</h5>
                     </div>
+                    {/* notifications showing here */}
                     <div className="dropdown-menu-content">
-                      <div className="item p-3">
+                      {
+                        notifications?.map(notification => <div key={notification?._id} className="item p-3">
+                          <div className="row gx-2 justify-content-between align-items-center">
+                            <div className="col-auto">
+                              <img className="profile-image" src="/assets/images/info.png" alt="" />
+                            </div>
+                            <div className="col">
+                              <div className="info">
+                                <h6 className="">{notification?.title}</h6>
+                                <div className="desc text-white">{notification?.description}</div>
+                                <div className="meta">{timeAgo(notification?.createdAt)}</div>
+                              </div>
+                            </div>
+                          </div>
+                          <a className="link-mask" href="notifications.html"></a>
+                        </div>)
+                      }
+                      {/* <div className="item p-3">
                         <div className="row gx-2 justify-content-between align-items-center">
                           <div className="col-auto">
                             <img className="profile-image" src="/assets/images/profiles/profile-1.png" alt="" />
@@ -78,7 +133,7 @@ const Navbar = () => {
                           <div className="col">
                             <div className="info">
                               <div className="desc">Amy shared a file with you. Lorem ipsum dolor sit amet, consectetur adipiscing elit. </div>
-                              <div className="meta"> 2 hrs ago</div>
+                              <div className="meta"> 2v hrs ago</div>
                             </div>
                           </div>
                         </div>
@@ -143,7 +198,7 @@ const Navbar = () => {
                           </div>
                         </div>
                         <a className="link-mask" href="notifications.html"></a>
-                      </div>
+                      </div> */}
                     </div>
 
                     <div className="dropdown-menu-footer p-2 text-center">
@@ -306,13 +361,6 @@ const Navbar = () => {
                 </span>
                 <span className="nav-link-text">Prescription</span>
               </SubmenuNavItem>
-
-              <NavItem href="/pharmacy">
-                <span className="nav-icon">
-                  <MdOutlineLocalPharmacy size={22} />
-                </span>
-                <span className="nav-link-text">Pharmacy</span>
-              </NavItem>
 
               <SubmenuNavItem
                 hrefParent="/species-complaints"
