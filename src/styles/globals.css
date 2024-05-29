@@ -37,6 +37,11 @@
   top: 37px;
   right: 15px;
 }
+#auth-eye {
+  top: 34px;
+  right: 15px;
+  color: gray;
+}
 
 /* CSS for making the tabs sticky */
 .sticky-tabs {
@@ -54,7 +59,10 @@ input[type="number"]::-webkit-outer-spin-button {
   margin: 0;
 }
 
-
+/* / For IE and Edge (Legacy) */
+.vth-scrollbar {
+  -ms-overflow-style: -ms-autohiding-scrollbar;
+}
 
 /* ***************************** */
 /* Add this CSS to your main CSS file or inline styles */

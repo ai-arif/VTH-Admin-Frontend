@@ -76,6 +76,7 @@ const UpdatePatientRegistration = () => {
   const onSubmit = async (patientData) => {
     try {
       patientData.id = id;
+      patientData.tests = patientData?.tests?.map((test) => test.value);
 
       const response = await dispatch(updatePatientData(patientData));
 
