@@ -113,6 +113,7 @@ const AddStaff = () => {
                     <option value="doctor">Doctor</option>
                     <option value="lab">Lab</option>
                     <option value="pharmacy">Pharmacy</option>
+                    <option value="receptionist">Receptionist</option>
                   </select>
                   {errors.role && <small className="text-danger">Please select any role</small>}
                 </div>
