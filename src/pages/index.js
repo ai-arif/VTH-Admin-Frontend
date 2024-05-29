@@ -1,5 +1,5 @@
 import React from "react";
-import StaffsHome from "../../Components/Staffs/StaffsHome";
+import HomeOverview from "../../Components/Home/HomeOverview";
 
 // export const getServerSideProps = async (context) => {
 //   const token = context.req.cookies.token
@@ -21,7 +21,7 @@ import StaffsHome from "../../Components/Staffs/StaffsHome";
 const index = () => {
   return (
     <div>
-      <StaffsHome />
+      <HomeOverview />
     </div>
   );
 };
