@@ -34,6 +34,7 @@ const customStyles = {
 
 const ProvideMedicine = () => {
   const [pharmacyMedicines, setPharmacyMedicines] = useState([]);
+  const [medicineList, setMedicineList] = useState([]);
   const router = useRouter();
   const { id } = router.query;
   const dispatch = useDispatch();
@@ -56,7 +57,10 @@ const ProvideMedicine = () => {
 
   // all prescription medicines
   const selectedMedicines = pharmacy?.data?.medicines;
-  const medicineList = medicines?.data?.filter((medicine) => selectedMedicines?.includes(medicine._id));
+  const showMedicineList = () => {
+    const prescriptionMedicines = medicines?.data?.filter((medicine) => selectedMedicines?.includes(medicine._id));
+    setMedicineList(prescriptionMedicines);
+  };
 
   // Calculate total quantity and total price
   const totalQuantity = pharmacyMedicines.reduce((total, medicine) => total + medicine.quantity, 0);
@@ -79,6 +83,10 @@ const ProvideMedicine = () => {
     }
     dispatch(fetchMedicine());
   }, [dispatch, id]);
+
+  useEffect(() => {
+    showMedicineList();
+  }, []);
 
   return (
     <div className="container-fluid">
