@@ -1,39 +1,100 @@
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 
-export const handleDownloadPrescription = async (prescription) => {
+export const handleDownloadPrescription = async (prescription, medicines, tests) => {
   const doc = new jsPDF();
 
-  console.log(prescription);
-  // Extract data from prescription
-  // extract owner information from appointment
+  // Extract owner information from appointment
   const ownerName = prescription?.appointment?.ownerName || "N/A";
   const caseNo = prescription?.appointment?.caseNo || "N/A";
   const phone = prescription?.appointment?.phone || "N/A";
-  const district = prescription?.appointment?.district || "N/A";
+  // const district = prescription?.appointment?.district || "N/A";
   const upazila = prescription?.appointment?.upazila || "N/A";
   const address = prescription?.appointment?.address || "N/A";
 
-  //   const availableMedicines = medicineOrderInfo?.data?.[0].availableMedicines || [];
-  //   const unavailableMedicines = medicineOrderInfo?.data?.[0].unavailableMedicines || [];
-  //   const ownerName = medicineOrderInfo?.data[0]?.prescriptionDetails?.appointmentDetails?.ownerName || "N/A";
-  //   const phone = medicineOrderInfo?.data[0]?.prescriptionDetails?.appointmentDetails?.phone || "N/A";
-  //   const caseNo = medicineOrderInfo?.data[0]?.prescriptionDetails?.appointmentDetails?.caseNo || "N/A";
+  const formatDate = (date) => {
+    if (!date) return "N/A";
+    const d = new Date(date);
+    const day = String(d.getDate()).padStart(2, "0");
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const year = d.getFullYear();
+    return `${day}-${month}-${year}`;
+  };
 
-  // Calculate total quantity and total price
-  //   const totalQuantity = availableMedicines.reduce((total, medicine) => total + medicine.quantity, 0);
-  //   const totalPrice = availableMedicines.reduce((total, medicine) => total + medicine.quantity * medicine.unitPrice, 0).toFixed(2);
+  const prescriptionWritingDate = formatDate(prescription?.date);
+  const nextVisitDate = formatDate(prescription?.nextVisit);
 
-  //   // Title
-  //   doc.setFontSize(18);
-  //   doc.text("Medicine Order", 14, 22);
+  // Extract patient prescription data from prescription
+  const matchingMedicines = medicines?.filter((data) => prescription?.medicines?.includes(data._id)) || [];
+  const matchingTests = tests?.filter((data) => prescription?.tests?.includes(data._id)) || [];
+  const therapeutics = prescription?.therapeutics || "N/A";
+  const diagnosis = prescription?.diagnosis || "N/A";
+  const prognosis = prescription?.prognosis || "N/A";
+  const advice = prescription?.advice || "N/A";
 
-  //   // Owner Name and Case No
-  //   doc.setFontSize(12);
-  //   doc.text(`Owner Name: ${ownerName}`, 14, 30);
-  //   doc.text(`Case No: ${phone}`, 14, 36);
-  //   doc.text(`Case No: ${caseNo}`, 14, 42);
+  // Add titles and border
+  doc.setFontSize(16);
+  doc.setFont("helvetica", "bold");
+  doc.text("VETERINARY TEACHING HOSPITAL", doc.internal.pageSize.getWidth() / 2, 20, { align: "center" });
+  doc.setFontSize(14);
+  doc.setFont("helvetica", "normal");
+  doc.text("Bangladesh Agriculture University, Mymensingh-2202", doc.internal.pageSize.getWidth() / 2, 30, { align: "center" });
+  doc.setLineWidth(0.5);
+  doc.line(10, 35, doc.internal.pageSize.getWidth() - 10, 35);
+  doc.setFontSize(12);
+  doc.setFont("helvetica", "normal");
+  doc.text("Prescription", doc.internal.pageSize.getWidth() / 2, 45, { align: "center" });
+
+  // Add owner and patient information justified between left and right sides
+  doc.setFontSize(10);
+  const leftColumnX = 10;
+  const rightColumnX = doc.internal.pageSize.getWidth() / 2 + 40;
+  const startY = 60;
+  const lineSpacing = 10;
+  const infoLineSpacing = 7;
+
+  // Add owner information
+  doc.text(`Case No: ${caseNo}`, leftColumnX, startY);
+  doc.text(`Date: ${prescriptionWritingDate}`, rightColumnX, startY);
+
+  doc.text(`Owner Name: ${ownerName}`, leftColumnX, startY + infoLineSpacing);
+  doc.text(`Upazila: ${upazila}`, rightColumnX, startY + infoLineSpacing);
+
+  doc.text(`Phone: ${phone}`, leftColumnX, startY + 2 * infoLineSpacing);
+  doc.text(`Address: ${address}`, rightColumnX, startY + 2 * infoLineSpacing);
+
+  // Add prescription details
+  doc.text("Diagnosis: ", leftColumnX, startY + 3 * lineSpacing);
+  doc.text(diagnosis, leftColumnX + 22, startY + 3 * lineSpacing);
+
+  doc.text("Therapeutics: ", leftColumnX, startY + 4 * lineSpacing);
+  doc.text(therapeutics, leftColumnX + 22, startY + 4 * lineSpacing);
+
+  doc.text("Prognosis: ", leftColumnX, startY + 5 * lineSpacing);
+  doc.text(prognosis, leftColumnX + 22, startY + 5 * lineSpacing);
+
+  doc.text("Advice: ", leftColumnX, startY + 6 * lineSpacing);
+  doc.text(advice, leftColumnX + 22, startY + 6 * lineSpacing);
+
+  doc.text("Next Visit: ", leftColumnX, startY + 7 * lineSpacing);
+  doc.text(nextVisitDate, leftColumnX + 22, startY + 7 * lineSpacing);
+
+  // Add medicines table
+  doc.autoTable({
+    startY: startY + 8 * lineSpacing,
+    head: [["Medicine Name", "Dosage", "Frequency"]],
+    body: matchingMedicines.map((med) => [med.name, med.dose || "N/A", med.frequency || "N/A"]),
+    theme: "grid",
+  });
+
+  // Add tests table
+  doc.autoTable({
+    startY: doc.autoTable.previous.finalY + 9,
+    head: [["Test Name", "Description"]],
+    body: matchingTests.map((test) => [test.testName, test.description || "N/A"]),
+    theme: "grid",
+  });
 
   // Save the PDF
-  //   doc.save(`prescription-${caseNo}.pdf`);
+  doc.save(`prescription-${caseNo}.pdf`);
 };

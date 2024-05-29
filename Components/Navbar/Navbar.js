@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { AiOutlineHome, AiOutlineMedicineBox } from "react-icons/ai";
 import { BsBarChartLine, BsFolder } from "react-icons/bs";
 import { GiCow } from "react-icons/gi";
-import { GrTest } from "react-icons/gr";
+import { GrTest, GrTestDesktop } from "react-icons/gr";
 import { HiOutlineUserGroup } from "react-icons/hi2";
 import { SlLayers } from "react-icons/sl";
 import { VscOutput } from "react-icons/vsc";
@@ -41,12 +41,11 @@ const Navbar = () => {
     if (token) {
       const decoded = jwtDecode(token);
       if (decoded?.id) {
-        axiosInstance.get(`/staffs/${decoded?.id}`).then(res => {
+        axiosInstance.get(`/staffs/${decoded?.id}`).then((res) => {
           // console.log({ res: res.data?.data })
           dispatch(setLoggedInUserData(res.data?.data));
-        })
-      }
-      else {
+        });
+      } else {
         dispatch(setLoggedInUserData(decoded));
       }
     }
@@ -289,7 +288,7 @@ const Navbar = () => {
 
               <NavItem href="/staffs">
                 <span className="nav-icon">
-                  <FaHospitalUser size={22} />
+                  <FaHospitalUser size={20} />
                 </span>
                 <span className="nav-link-text">Staffs</span>
               </NavItem>
@@ -353,13 +352,6 @@ const Navbar = () => {
                 <span className="nav-link-text">Prescription</span>
               </SubmenuNavItem>
 
-              <NavItem href="/tests">
-                <span className="nav-icon">
-                  <GrTest size={18} />
-                </span>
-                <span className="nav-link-text">Tests</span>
-              </NavItem>
-
               <NavItem href="/test-parameter">
                 <span className="nav-icon">
                   <BsBarChartLine size={18} />
@@ -367,11 +359,11 @@ const Navbar = () => {
                 <span className="nav-link-text">Test Parameter</span>
               </NavItem>
 
-              <NavItem href="/departments">
+              <NavItem href="/incomming-test">
                 <span className="nav-icon">
-                  <SlLayers size={20} />
+                  <GrTestDesktop size={16} />
                 </span>
-                <span className="nav-link-text">Departments</span>
+                <span className="nav-link-text">Incoming Test</span>
               </NavItem>
 
               <NavItem href="/test-result">
@@ -379,6 +371,20 @@ const Navbar = () => {
                   <VscOutput size={18} />
                 </span>
                 <span className="nav-link-text">Test Result</span>
+              </NavItem>
+
+              <NavItem href="/tests">
+                <span className="nav-icon">
+                  <GrTest size={18} />
+                </span>
+                <span className="nav-link-text">Tests</span>
+              </NavItem>
+
+              <NavItem href="/departments">
+                <span className="nav-icon">
+                  <SlLayers size={20} />
+                </span>
+                <span className="nav-link-text">Departments</span>
               </NavItem>
 
               <SubmenuNavItem hrefParent="/medicine" hrefOne="/medicine/add" hrefTwo="/medicine/view" hrefNameOne="Add Medicine" hrefNameTwo="View Medicine" submenuNumber="submenu-4">

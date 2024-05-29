@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { BsCardChecklist, BsShop } from "react-icons/bs";
 import { FaFilePrescription } from "react-icons/fa";
 import { FcDepartment } from "react-icons/fc";
-import { GiGoat, GiMedicines } from "react-icons/gi";
+import { GiCow, GiMedicines } from "react-icons/gi";
 import { GrUserWorker } from "react-icons/gr";
 import { ImLab } from "react-icons/im";
 import { MdOutlineDateRange, MdOutlineSick } from "react-icons/md";
@@ -11,6 +11,8 @@ import { RiFileList3Line } from "react-icons/ri";
 import { useSelector } from "react-redux";
 import axiosInstance from "../../utils/axiosInstance";
 import HomeDiagrams from "./HomeDiagrams";
+
+
 
 
 
@@ -116,7 +118,7 @@ const HomeOverview = () => {
             </div>
           </div>
           <div className="col bg-primary text-white rounded p-2 d-flex justify-content-start gap-2 align-items-center">
-            <GiGoat className="display-2" />
+            <GiCow className="display-2" />
             <div className="">
               <h1 className="m-0">{species}</h1>
               <p>Serving species</p>

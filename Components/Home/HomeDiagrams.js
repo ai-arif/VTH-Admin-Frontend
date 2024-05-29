@@ -44,7 +44,7 @@ const HomeDiagrams = ({ diagramData }) => {
                         fill="#8884d8"
                         dataKey="value"
                     >
-                        {appointmentData.map((entry, index) => (
+                        {appointmentData?.map((entry, index) => (
                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
                     </Pie>
@@ -65,14 +65,14 @@ const HomeDiagrams = ({ diagramData }) => {
                         fill="#8884d8"
                         dataKey="value"
                     >
-                        {speciesData.map((entry, index) => (
+                        {speciesData?.map((entry, index) => (
                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
                     </Pie>
                     <Tooltip />
                     <Legend />
                 </PieChart>
-                <h6 className='text-center mt-1'>Appointment Overview</h6>
+                <h6 className='text-center mt-1'>Complaints species</h6>
             </div>
             <div>
                 <PieChart width={400} height={400}>
@@ -86,14 +86,14 @@ const HomeDiagrams = ({ diagramData }) => {
                         fill="#8884d8"
                         dataKey="value"
                     >
-                        {staffData.map((entry, index) => (
+                        {staffData?.map((entry, index) => (
                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
                     </Pie>
                     <Tooltip />
                     <Legend />
                 </PieChart>
-                <h6 className='text-center mt-1'>Appointment Overview</h6>
+                <h6 className='text-center mt-1'>Staffs ratio</h6>
             </div>
         </div>
     );
