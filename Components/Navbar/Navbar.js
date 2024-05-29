@@ -24,8 +24,8 @@ import { setLoggedInUserData } from "../../features/loggedInUser/loggedInUserAPI
 const Navbar = () => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { data } = useSelector((state) => state.loggedInUser);
-  console.log({ data });
+  // const { data } = useSelector((state) => state.loggedInUser);
+  // console.log({ data });
   // useEffect(() => {
   //   dispatch(fetchUser());
   // }, [dispatch]);
@@ -40,9 +40,16 @@ const Navbar = () => {
     const token = Cookies.get("token");
     if (token) {
       const decoded = jwtDecode(token);
-      dispatch(setLoggedInUserData(decoded));
+      if (decoded?.id) {
+        axiosInstance.get(`/staffs/${decoded?.id}`).then(res => {
+          // console.log({ res: res.data?.data })
+          dispatch(setLoggedInUserData(res.data?.data));
+        })
+      }
+      else {
+        dispatch(setLoggedInUserData(decoded));
+      }
     }
-    // console.log({ token, decoded }) // decoded.role
 
     axiosInstance.get("/notification").then((res) => {
       const result = res.data.data;
