@@ -9,6 +9,7 @@ import { fetchMedicine } from "../../features/medicine/medicineSlice";
 import { createPrescription } from "../../features/prescription/prescriptionSlice";
 import { fetchTest } from "../../features/test/testSlice";
 import { formatDate } from "../../utils/formatDate";
+import { handleDownloadPrescription } from "./PrescriptionPdf";
 
 // Define custom styles
 const customStyles = {
@@ -49,8 +50,9 @@ const PrescriptionHome = () => {
 
   const { tests } = useSelector((state) => state.test);
   const { medicines } = useSelector((state) => state.medicine);
-  // const { prescription } = useSelector((state) => state.prescription);
-  // console.log(prescription);
+
+  // console.log(medicines?.data);
+  // console.log(tests?.data);
 
   const { handleSubmit, register, control, reset } = useForm();
 
@@ -92,15 +94,12 @@ const PrescriptionHome = () => {
       prescriptionData.tests = prescriptionData?.tests?.map((test) => test.value);
 
       const response = await dispatch(createPrescription(prescriptionData));
-      console.log(response);
 
       if (response?.payload?.success) {
-        // const id = response?.payload?.data?.data?._id;
-        setSinglePrescription(response?.payload?.data?.data);
-        // if(id) {
-        //   dispatch(fetchSinglePrescription(id))
-        // }
         toast.success("Prescription added successfully!");
+        // single prescription data
+        setSinglePrescription(response?.payload?.data?.data);
+        setIsPrint(true);
         setSearchPhone("");
         setSelectedPatentInfo({});
         setPatentInfo([]);
@@ -124,8 +123,6 @@ const PrescriptionHome = () => {
     value: medicine._id,
     label: medicine.name,
   }));
-
-  console.log(singlePrescription);
 
   useEffect(() => {
     dispatch(fetchMedicine());
@@ -255,7 +252,7 @@ const PrescriptionHome = () => {
                 </div>
               </form>
               <div className="pb-3 d-flex justify-content-end">
-                <button disabled={!isPrint} className="btn btn-info text-white">
+                <button disabled={!isPrint} onClick={() => handleDownloadPrescription(singlePrescription, medicines?.data, tests?.data)} className="btn btn-info text-white">
                   <MdPrint size={18} /> Print
                 </button>
               </div>
