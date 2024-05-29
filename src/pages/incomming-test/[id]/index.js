@@ -153,7 +153,12 @@ const index = () => {
                     <p>|</p>
                     <p>Date: {new Date(prescriptions?.appointment?.createdAt).toDateString()}</p>
                     <p>|</p>
-                    <p>Status: {results?.includes(testAllInfo?._id) ? "Added" : "To be add"}</p>
+                    <p>
+                      Status:{" "}
+                      <span className={`${results?.includes(testAllInfo?._id) ? "text-success fw-medium" : "text-danger fw-medium"}`}>
+                        {results?.includes(testAllInfo?._id) ? "Added" : "To be add"}
+                      </span>
+                    </p>
                   </div>
                 </div>
                 <form onSubmit={handleUpdate(onUpdate)} className="">
@@ -259,7 +264,12 @@ const index = () => {
                     <p>|</p>
                     <p>Date: {new Date(prescriptions?.appointment?.createdAt).toDateString()}</p>
                     <p>|</p>
-                    <p>Status: {results?.includes(testAllInfo?._id) ? "Added" : "To be add"}</p>
+                    <p>
+                      Status:{" "}
+                      <span className={`${results?.includes(testAllInfo?._id) ? "text-success fw-medium" : "text-danger fw-medium"}`}>
+                        {results?.includes(testAllInfo?._id) ? "Added" : "To be add"}
+                      </span>
+                    </p>
                   </div>
                 </div>
                 <>
