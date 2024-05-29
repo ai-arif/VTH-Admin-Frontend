@@ -65,19 +65,19 @@ export const handleDownloadPrescription = async (prescription, medicines, tests)
 
   // Add prescription details
   doc.text("Diagnosis: ", leftColumnX, startY + 3 * lineSpacing);
-  doc.text(diagnosis, leftColumnX + 20, startY + 3 * lineSpacing);
+  doc.text(diagnosis, leftColumnX + 22, startY + 3 * lineSpacing);
 
   doc.text("Therapeutics: ", leftColumnX, startY + 4 * lineSpacing);
   doc.text(therapeutics, leftColumnX + 22, startY + 4 * lineSpacing);
 
   doc.text("Prognosis: ", leftColumnX, startY + 5 * lineSpacing);
-  doc.text(prognosis, leftColumnX + 20, startY + 5 * lineSpacing);
+  doc.text(prognosis, leftColumnX + 22, startY + 5 * lineSpacing);
 
   doc.text("Advice: ", leftColumnX, startY + 6 * lineSpacing);
-  doc.text(advice, leftColumnX + 20, startY + 6 * lineSpacing);
+  doc.text(advice, leftColumnX + 22, startY + 6 * lineSpacing);
 
   doc.text("Next Visit: ", leftColumnX, startY + 7 * lineSpacing);
-  doc.text(nextVisitDate, leftColumnX + 20, startY + 7 * lineSpacing);
+  doc.text(nextVisitDate, leftColumnX + 22, startY + 7 * lineSpacing);
 
   // Add medicines table
   doc.autoTable({

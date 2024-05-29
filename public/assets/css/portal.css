@@ -2861,7 +2861,7 @@ textarea.form-control.is-invalid {
   --bs-btn-font-size: 1rem;
   --bs-btn-font-weight: 400;
   --bs-btn-line-height: 1.5;
-  --bs-btn-color: var(--bs-body-color);
+  --bs-btn-color: var(--vth-light);
   --bs-btn-bg: transparent;
   --bs-btn-border-width: var(--bs-border-width);
   --bs-btn-border-color: transparent;
@@ -4809,9 +4809,9 @@ fieldset:disabled .btn {
   position: relative;
   display: block;
   padding: var(--bs-list-group-item-padding-y) var(--bs-list-group-item-padding-x);
-  color: var(--bs-list-group-color);
+  color: var(--vth-light);
   text-decoration: none;
-  background-color: var(--bs-list-group-bg);
+  background-color: var(--vth-secondary-dark);
   border: var(--bs-list-group-border-width) solid var(--bs-list-group-border-color);
 }
 .list-group-item:first-child {
@@ -11339,7 +11339,8 @@ hr {
   border-color: #e7e9ed;
 }
 .table-striped tbody tr:nth-of-type(odd) {
-  background-color: #f5f5f5;
+  /* background-color: #f5f5f5; */
+  background-color: transparent;
 }
 .table-dark th,
 .table-dark td,
@@ -11347,7 +11348,8 @@ hr {
   border-color: #515a6a;
 }
 .table-hover > tbody > tr:hover {
-  background-color: #fff;
+  /* background-color: #fff; */
+  background-color: transparent;
 }
 .popover {
   border-color: #dee1fc;
@@ -11478,7 +11480,7 @@ button.close:focus {
 }
 .app-header {
   box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.1);
-  border-bottom: 1px solid #e7e9ed;
+  border-bottom: 1px solid #64748b;
   height: 56px;
   background: var(--vth-primary-dark);
 }
@@ -11692,7 +11694,7 @@ button.close:focus {
   left: 0;
   top: 0;
   font-size: 0.875rem;
-  border-right: 1px solid #e7e9ed;
+  border-right: 1px solid #64748b;
 }
 .app-sidepanel .panel-drop {
   display: none;
@@ -11722,16 +11724,18 @@ button.close:focus {
 }
 .app-sidepanel .app-nav-main {
   overflow-y: auto;
-  scrollbar-color: rgba(0, 0, 0, 0.1) #e7e9ed;
-  scrollbar-width: thin;
 }
 .app-sidepanel .app-nav-main::-webkit-scrollbar {
   width: 6px;
-  background-color: #e7e9ed;
+  background-color: var(--vth-primary-dark);
 }
 .app-sidepanel .app-nav-main::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.1);
-  border-radius: 0.5rem;
+  background-color: var(--vth-secondary-dark);
+  border-radius: 20px;
+}
+.vth-scrollbar::-webkit-scrollbar-track {
+  background: var(--vth-primary-dark);
+  border-radius: 20px;
 }
 .app-branding {
   height: 60px;
@@ -11857,7 +11861,7 @@ button.close:focus {
   width: 100%;
   bottom: 0;
   left: 0;
-  border-top: 1px solid #e7e9ed;
+  border-top: 1px solid #64748b;
   background: #f5f6fe;
 }
 .app-sidepanel-footer .app-nav-footer {
@@ -12392,7 +12396,7 @@ button.close:focus {
   width: 100%;
 }
 .app-auth-wrapper {
-  background: #fff;
+  background: var(--vth-secondary-dark);
   height: 100vh;
 }
 .app-auth-wrapper .app-auth-body {
