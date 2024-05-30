@@ -32,7 +32,7 @@ const HomeOverview = () => {
 
   const { totalRoles, staffs, totalStuffs, users, departments, clinicalTests,
     species, speciesComplaints, totalComplaints, medicines, allAppointments, totalAppointment,
-    prescriptions, pharmacyOrders, testResults, totalPatientRegister } = allData;
+    prescriptions, pharmacyOrders, testResults, totalPatientRegister, monthlyOrders, dailyOrders } = allData;
 
   // console.log({ allData })
 
@@ -159,7 +159,7 @@ const HomeOverview = () => {
       </div>
 
       {/* diagram */}
-      <HomeDiagrams diagramData={{ allAppointments, speciesComplaints, staffs }} />
+      <HomeDiagrams diagramData={{ allAppointments, speciesComplaints, staffs, monthlyOrders, dailyOrders }} />
     </div>
   );
 };
