@@ -9,8 +9,8 @@ const initialState = {
   error: null,
 };
 
-export const fetchAllUserPatient = createAsyncThunk("userPatient/fetchAllUserPatient", async () => {
-  const response = await getAllUserPatient();
+export const fetchAllUserPatient = createAsyncThunk("userPatient/fetchAllUserPatient", async (parameter) => {
+  const response = await getAllUserPatient(parameter?.page, parameter?.limit);
   return response;
 });
 
