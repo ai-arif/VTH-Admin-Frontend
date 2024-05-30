@@ -1,8 +1,8 @@
 import axiosInstance from "../../utils/axiosInstance";
 // /admin-user
-export const getAllUserPatient = async () => {
+export const getAllUserPatient = async (page = 1, limit = 20) => {
   try {
-    const response = await axiosInstance.get("/admin-user");
+    const response = await axiosInstance.get(`/admin-user?page=${page}&limit=${limit}`);
     return response.data;
   } catch (error) {
     return Promise.reject(error);
