@@ -37,20 +37,18 @@ const index = () => {
   };
 
   const handleSubmit = async (e) => {
+    if (userObj.phone === "" || userObj.password === "") return;
     e.preventDefault();
     setLoading(true);
     try {
-      if (userObj.phone == "" || userObj.password) return;
-      // const response = await axiosInstance.post('/login', userObj)
       const response = await axiosInstance.post("/staffs/login", userObj);
       if (response.data.success) {
-        console.log("res ", response.data?.data);
-
         Cookies.set("token", response.data?.data?.token);
         toast.success(response.data.message);
         router.push("/");
       }
     } catch (error) {
+      toast.error(error.response.data.message || "Invalid credentials");
       console.log(error);
       setLoading(false);
     }
@@ -79,7 +77,7 @@ const index = () => {
                       onChange={handleChange}
                       id="signin-phone"
                       name="phone"
-                      type="phone"
+                      type="text"
                       className="form-control signin-phone"
                       placeholder="Phone number"
                       required="required"
@@ -124,7 +122,7 @@ const index = () => {
                         Loading...
                       </button>
                     ) : (
-                      <button onClick={handleSubmit} type="submit" className="btn app-btn-primary w-100 theme-btn mx-auto">
+                      <button type="submit" onClick={handleSubmit} className="btn app-btn-primary w-100 theme-btn mx-auto">
                         Log In
                       </button>
                     )}

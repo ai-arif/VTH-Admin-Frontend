@@ -26,9 +26,11 @@ const Navbar = () => {
   const router = useRouter();
   // const { data } = useSelector((state) => state.loggedInUser);
   // console.log({ data });
+
   // useEffect(() => {
-  //   dispatch(fetchUser());
+  // dispatch(fetchUser());
   // }, [dispatch]);
+
   // const handleLogout = () => {
   //   Cookies.remove("token");
   //   router.push("/auth/login");
