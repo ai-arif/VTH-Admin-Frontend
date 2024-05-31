@@ -1,10 +1,12 @@
 import Link from "next/link";
 import React, { useEffect, useRef } from "react";
+import toast from "react-hot-toast";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { TiEdit } from "react-icons/ti";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { deleteExistingAppointment, fetchPendingAppointments } from "../../features/appointment/appointmentSlice";
+import axiosInstance from "../../utils/axiosInstance";
 import { formatDate } from "../../utils/formatDate";
 import Loader from "../UI/Loader";
 
@@ -64,6 +66,17 @@ const PendingAppointment = () => {
     });
   };
 
+  const handlePaymentAndStatus = (amount, id) => {
+    axiosInstance.patch(`/appointment/${id}`, { payment: "paid", amount: amount }).then((res) => {
+      let result = res.data;
+
+      if (result.success) {
+        dispatch(fetchPendingAppointments());
+        toast.success("Payment and status updated successfully!");
+      }
+    });
+  };
+
   const handleSearch = async () => {
     try {
       const searchValue = search.current.value;
@@ -114,6 +127,7 @@ const PendingAppointment = () => {
                   <th className="text-nowrap">Owner Name</th>
                   <th className="text-nowrap">Phone No.</th>
                   <th className="text-nowrap">Date & Time</th>
+                  <th className="text-nowrap">Payment</th>
                   <th className="text-nowrap">Actions</th>
                 </tr>
               </thead>
@@ -125,6 +139,10 @@ const PendingAppointment = () => {
                     <td>{appointment.ownerName}</td>
                     <td>{appointment.phone}</td>
                     <td>{formatDate(appointment.date)}</td>
+                    <td>
+                      {appointment?.amount ? appointment?.amount :
+                        <button onClick={() => handlePaymentAndStatus(700, appointment?._id)}>Pay</button>
+                      }</td>
                     <td className="d-flex gap-3 justify-content-center">
                       <Link href={`/appointment/${appointment.caseNo}`}>
                         <TiEdit type="button" title="edit" className="edit-icon" />
