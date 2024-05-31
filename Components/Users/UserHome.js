@@ -8,9 +8,8 @@ const UserHome = () => {
   const search = useRef("");
   const dispatch = useDispatch();
   const { userPatients, status } = useSelector((state) => state.userPatient);
-  const [page, setPage] = useState([])
+  const [page, setPage] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [limit, setLimit] = useState(5);
 
   const handleSearch = async () => {
     try {
@@ -32,16 +31,9 @@ const UserHome = () => {
     }
   };
 
-  // const handlePage = (pageNumber)=> {
-  //   if(pageNumber>page?.length){
-  //     setCurrentPage(1)
-  //   }
-  // }
-
   useEffect(() => {
-    dispatch(fetchAllUserPatient({ page: currentPage, limit }));
-  }, [dispatch, limit, currentPage]);
-
+    dispatch(fetchAllUserPatient({ page: currentPage }));
+  }, [dispatch, currentPage]);
 
   useEffect(() => {
     const pageArray = [];
@@ -49,13 +41,8 @@ const UserHome = () => {
     for (let i = 0; i < userPatients?.totalPages; i++) {
       pageArray.push(i + 1);
     }
-    setPage(pageArray)
-  }, [userPatients?.totalPages])
-
-  const handleLimit = (e) => {
-    setLimit(e.target.value);
-    setCurrentPage(1);
-  }
+    setPage(pageArray);
+  }, [userPatients?.totalPages]);
 
   // loader
   // if (status === "loading") return <Loader />;
@@ -100,17 +87,7 @@ const UserHome = () => {
                 </div>
               </div>
               {/* footer part pagination */}
-              <div className="d-flex justify-content-between align-items-center">
-                <div className="d-flex gap-2">
-                  <span className="text-nowrap">Items per page</span>
-                  <select defaultValue={limit} onChange={handleLimit} className="form-select form-select-sm">
-                    <option value="5">5</option>
-                    <option value="10">10</option>
-                    <option value="20">20</option>
-                    <option value="50">50</option>
-                    <option value="100">100</option>
-                  </select>
-                </div>
+              <div className="d-flex justify-content-end align-items-center">
                 {/* pagination  */}
                 <nav aria-label="Page navigation example">
                   <ul className="pagination">
@@ -119,56 +96,67 @@ const UserHome = () => {
                         Previous
                       </button>
                     </li>
-                    {
-                      page?.length > 5 ?
-                        <>
-                          {page?.slice(0, 2)?.map((p, index) => <li key={index} className="page-item">
+                    {page?.length > 5 ? (
+                      <>
+                        {page?.slice(0, 2)?.map((p, index) => (
+                          <li key={index} className="page-item">
                             <button onClick={() => setCurrentPage(p)} className={`page-link ${currentPage == p ? "bg-primary" : ""}`} href="#">
                               {p}
-                            </button>
-                          </li>)}
-                          {currentPage == 3 && <li className="page-item">
-                            <button className="page-link bg-primary" href="#">
-                              {currentPage}
-                            </button>
-                          </li>}
-                          <li className="page-item">
-                            <button className="page-link" href="#">
-                              ...
                             </button>
                           </li>
-                          {
-                            currentPage > 3 && currentPage < page?.length - 2 && <>
-                              <li className="page-item">
-                                <button className="page-link bg-primary" href="#">
-                                  {currentPage}
-                                </button>
-                              </li>
-                              <li className="page-item">
-                                <button className="page-link" href="#">
-                                  ...
-                                </button>
-                              </li></>
-                          }
-                          {currentPage == page?.length - 2 && <li className="page-item">
+                        ))}
+                        {currentPage == 3 && (
+                          <li className="page-item">
                             <button className="page-link bg-primary" href="#">
                               {currentPage}
                             </button>
-                          </li>}
-                          {page?.slice(page?.length - 2, page?.length)?.map((p, index) => <li key={index} className="page-item">
+                          </li>
+                        )}
+                        <li className="page-item">
+                          <button className="page-link" href="#">
+                            ...
+                          </button>
+                        </li>
+                        {currentPage > 3 && currentPage < page?.length - 2 && (
+                          <>
+                            <li className="page-item">
+                              <button className="page-link bg-primary" href="#">
+                                {currentPage}
+                              </button>
+                            </li>
+                            <li className="page-item">
+                              <button className="page-link" href="#">
+                                ...
+                              </button>
+                            </li>
+                          </>
+                        )}
+                        {currentPage == page?.length - 2 && (
+                          <li className="page-item">
+                            <button className="page-link bg-primary" href="#">
+                              {currentPage}
+                            </button>
+                          </li>
+                        )}
+                        {page?.slice(page?.length - 2, page?.length)?.map((p, index) => (
+                          <li key={index} className="page-item">
                             <button onClick={() => setCurrentPage(p)} className={`page-link ${currentPage == p ? "bg-primary" : ""}`} href="#">
                               {p}
                             </button>
-                          </li>)}
-                        </>
-                        :
-                        <>{page?.map((p, index) => <li key={index} className="page-item">
-                          <button onClick={() => setCurrentPage(p + 1)} className={`page-link ${currentPage == p + 1 ? "bg-primary" : ""}`} href="#">
-                            {p}
-                          </button>
-                        </li>)}
-                        </>
-                    }
+                          </li>
+                        ))}
+                      </>
+                    ) : (
+                      <>
+                        {page?.map((p, index) => (
+                          <li key={index} className="page-item">
+                            <button onClick={() => setCurrentPage(p + 1)} className={`page-link ${currentPage == p + 1 ? "bg-primary" : ""}`} href="#">
+                              {p}
+                            </button>
+                          </li>
+                        ))}
+                      </>
+                    )}
                     <li className="page-item">
                       <button disabled={currentPage == page?.length} onClick={() => setCurrentPage(currentPage + 1)} className="page-link" href="#">
                         Next
