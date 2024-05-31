@@ -91,7 +91,7 @@ export const handleDownloadPrescription = async (prescription, medicines, tests)
   doc.autoTable({
     startY: doc.autoTable.previous.finalY + 9,
     head: [["Test Name", "Description"]],
-    body: matchingTests.map((test) => [test.testName, test.description || "N/A"]),
+    body: matchingTests.map((test) => [test.testName, test.testDetails || "N/A"]),
     theme: "grid",
   });
 
