@@ -9,8 +9,7 @@ const NotificationPage = () => {
     useEffect(() => {
         axiosInstance.get("/notification?limit=1000").then((res) => {
             const result = res.data.data;
-            // console.log(result)
-            setNotifications(result.data);
+            setNotifications(result);
         });
     }, [reFetch])
 
@@ -48,7 +47,8 @@ const NotificationPage = () => {
     return (
         <div className="d-flex align-items-center justify-content-center">
             <div className='w'>
-                {notifications?.map((notification) => (
+                <p className='text-end'>Total unseen notifications: {notifications?.count}</p>
+                {notifications?.data?.map((notification) => (
                     <Link onClick={() => handleSeenNotification(notification?._id)} href={notification?.destinationUrl || "/"} key={notification?._id}>
                         <div className="item p-3 border">
                             <div className="row gx-2 justify-content-between align-items-start">

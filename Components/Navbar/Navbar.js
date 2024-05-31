@@ -166,7 +166,7 @@ const Navbar = () => {
                     </div>
 
                     <div className="dropdown-menu-footer p-2 text-center">
-                      <a href="notifications.html">View all</a>
+                      <Link href="/notifications">View all</Link>
                     </div>
                   </div>
                 </div>

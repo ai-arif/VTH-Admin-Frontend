@@ -53,7 +53,8 @@ const UserHome = () => {
   }, [userPatients?.totalPages])
 
   const handleLimit = (e) => {
-    setLimit(e.target.value); setCurrentPage(1);
+    setLimit(e.target.value);
+    setCurrentPage(1);
   }
 
   // loader
