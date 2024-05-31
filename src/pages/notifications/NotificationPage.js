@@ -1,16 +1,18 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../../../utils/axiosInstance';
 
 const NotificationPage = () => {
     const [notifications, setNotifications] = useState([]);
+    const [reFetch, setRefetch] = useState(0);
     useEffect(() => {
         axiosInstance.get("/notification?limit=1000").then((res) => {
             const result = res.data.data;
             // console.log(result)
             setNotifications(result.data);
         });
-    }, [])
+    }, [reFetch])
 
     function timeAgo(dateString) {
         const now = new Date();
@@ -35,26 +37,40 @@ const NotificationPage = () => {
         }
         return "just now";
     }
+
+    const handleSeenNotification = (id) => {
+        axiosInstance.patch(`/notification/${id}`).then((res) => {
+            const result = res.data.data;
+            setRefetch(reFetch + 1);
+        });
+    }
+
     return (
         <div className="d-flex align-items-center justify-content-center">
             <div className='w'>
                 {notifications?.map((notification) => (
-                    <div key={notification?._id} className="item p-3 border">
-                        <div className="row gx-2 justify-content-between align-items-start">
-                            <div className="col-auto">
-                                <Image src="/assets/images/info.png" alt="" height={60} width={60} style={{ height: "auto", maxWidth: "100%" }} />
-                                {/* <img className="profile-image" src="/assets/images/info.png" alt="" /> */}
-                            </div>
-                            <div className="col">
-                                <div className="info">
-                                    <h6 className="">{notification?.title}</h6>
-                                    <div className="desc text-white">{notification?.description}</div>
-                                    <div className="meta">{timeAgo(notification?.createdAt)}</div>
+                    <Link onClick={() => handleSeenNotification(notification?._id)} href={notification?.destinationUrl || "/"} key={notification?._id}>
+                        <div className="item p-3 border">
+                            <div className="row gx-2 justify-content-between align-items-start">
+                                <div className="col-auto">
+                                    <Image src="/assets/images/info.png" alt="" height={60} width={60} style={{ height: "auto", maxWidth: "100%" }} />
+                                    {/* <img className="profile-image" src="/assets/images/info.png" alt="" /> */}
+                                </div>
+                                <div className="col">
+                                    <div className="info">
+                                        <h6 className="">{notification?.title}</h6>
+                                        <div className="desc text-white">{notification?.description}</div>
+                                        <div className="meta">
+                                            <p className="m-0 text-end">{timeAgo(notification?.createdAt)}</p>
+                                            <p className="m-0 text-end">{notification?.isViewed ? "Seen" : "Unseen"}
+                                            </p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+                            <a className="link-mask" href="notifications.html"></a>
                         </div>
-                        <a className="link-mask" href="notifications.html"></a>
-                    </div>
+                    </Link>
                 ))}
             </div>
         </div>

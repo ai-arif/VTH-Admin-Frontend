@@ -103,6 +103,7 @@ const index = () => {
     try {
       const data = {
         testId: activeTab,
+        prescriptionId: prescriptions?._id,
         appointmentId: prescriptions?.appointment?._id,
         phone: prescriptions?.appointment?.phone,
         name: testAllInfo?.testName,
