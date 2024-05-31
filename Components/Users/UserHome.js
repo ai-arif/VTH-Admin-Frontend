@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllUserPatient, searchUserPatientAsync } from "../../features/userPatient/userPatientSlice";
@@ -8,6 +8,9 @@ const UserHome = () => {
   const search = useRef("");
   const dispatch = useDispatch();
   const { userPatients, status } = useSelector((state) => state.userPatient);
+  const [page, setPage] = useState([])
+  const [currentPage, setCurrentPage] = useState(1);
+  const [limit, setLimit] = useState(5);
 
   const handleSearch = async () => {
     try {
@@ -29,12 +32,32 @@ const UserHome = () => {
     }
   };
 
+  // const handlePage = (pageNumber)=> {
+  //   if(pageNumber>page?.length){
+  //     setCurrentPage(1)
+  //   }
+  // }
+
   useEffect(() => {
-    dispatch(fetchAllUserPatient());
-  }, [dispatch]);
+    dispatch(fetchAllUserPatient({ page: currentPage, limit }));
+  }, [dispatch, limit, currentPage]);
+
+
+  useEffect(() => {
+    const pageArray = [];
+
+    for (let i = 0; i < userPatients?.totalPages; i++) {
+      pageArray.push(i + 1);
+    }
+    setPage(pageArray)
+  }, [userPatients?.totalPages])
+
+  const handleLimit = (e) => {
+    setLimit(e.target.value); setCurrentPage(1);
+  }
 
   // loader
-  if (status === "loading") return <Loader />;
+  // if (status === "loading") return <Loader />;
 
   return (
     <div>
@@ -79,39 +102,76 @@ const UserHome = () => {
               <div className="d-flex justify-content-between align-items-center">
                 <div className="d-flex gap-2">
                   <span className="text-nowrap">Items per page</span>
-                  <select className="form-select form-select-sm">
-                    <option value="1">10</option>
-                    <option value="2">20</option>
-                    <option value="3">50</option>
-                    <option value="4">100</option>
+                  <select defaultValue={limit} onChange={handleLimit} className="form-select form-select-sm">
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
                   </select>
                 </div>
+                {/* pagination  */}
                 <nav aria-label="Page navigation example">
                   <ul className="pagination">
                     <li className="page-item">
-                      <a className="page-link" href="#">
+                      <button disabled={currentPage == 1} onClick={() => setCurrentPage(currentPage - 1)} className="page-link" href="#">
                         Previous
-                      </a>
+                      </button>
                     </li>
+                    {
+                      page?.length > 5 ?
+                        <>
+                          {page?.slice(0, 2)?.map((p, index) => <li key={index} className="page-item">
+                            <button onClick={() => setCurrentPage(p)} className={`page-link ${currentPage == p ? "bg-primary" : ""}`} href="#">
+                              {p}
+                            </button>
+                          </li>)}
+                          {currentPage == 3 && <li className="page-item">
+                            <button className="page-link bg-primary" href="#">
+                              {currentPage}
+                            </button>
+                          </li>}
+                          <li className="page-item">
+                            <button className="page-link" href="#">
+                              ...
+                            </button>
+                          </li>
+                          {
+                            currentPage > 3 && currentPage < page?.length - 2 && <>
+                              <li className="page-item">
+                                <button className="page-link bg-primary" href="#">
+                                  {currentPage}
+                                </button>
+                              </li>
+                              <li className="page-item">
+                                <button className="page-link" href="#">
+                                  ...
+                                </button>
+                              </li></>
+                          }
+                          {currentPage == page?.length - 2 && <li className="page-item">
+                            <button className="page-link bg-primary" href="#">
+                              {currentPage}
+                            </button>
+                          </li>}
+                          {page?.slice(page?.length - 2, page?.length)?.map((p, index) => <li key={index} className="page-item">
+                            <button onClick={() => setCurrentPage(p)} className={`page-link ${currentPage == p ? "bg-primary" : ""}`} href="#">
+                              {p}
+                            </button>
+                          </li>)}
+                        </>
+                        :
+                        <>{page?.map((p, index) => <li key={index} className="page-item">
+                          <button onClick={() => setCurrentPage(p + 1)} className={`page-link ${currentPage == p + 1 ? "bg-primary" : ""}`} href="#">
+                            {p}
+                          </button>
+                        </li>)}
+                        </>
+                    }
                     <li className="page-item">
-                      <a className="page-link" href="#">
-                        1
-                      </a>
-                    </li>
-                    <li className="page-item">
-                      <a className="page-link" href="#">
-                        2
-                      </a>
-                    </li>
-                    <li className="page-item">
-                      <a className="page-link" href="#">
-                        3
-                      </a>
-                    </li>
-                    <li className="page-item">
-                      <a className="page-link" href="#">
+                      <button disabled={currentPage == page?.length} onClick={() => setCurrentPage(currentPage + 1)} className="page-link" href="#">
                         Next
-                      </a>
+                      </button>
                     </li>
                   </ul>
                 </nav>

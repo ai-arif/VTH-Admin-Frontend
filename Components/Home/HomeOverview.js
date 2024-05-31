@@ -13,15 +13,11 @@ import axiosInstance from "../../utils/axiosInstance";
 import HomeDiagrams from "./HomeDiagrams";
 
 
-
-
-
-
 const HomeOverview = () => {
   const { data } = useSelector((state) => state.loggedInUser);
 
   const [allData, setAllData] = useState({});
-  const [days, setDays] = useState(7);
+  const [days, setDays] = useState(1);
 
   useEffect(() => {
     axiosInstance.get(`/overview?daysBefore=${days}`).then(res => {
@@ -32,7 +28,7 @@ const HomeOverview = () => {
 
   const { totalRoles, staffs, totalStuffs, users, departments, clinicalTests,
     species, speciesComplaints, totalComplaints, medicines, allAppointments, totalAppointment,
-    prescriptions, pharmacyOrders, testResults, totalPatientRegister } = allData;
+    prescriptions, pharmacyOrders, testResults, totalPatientRegister, monthlyOrders, dailyOrders } = allData;
 
   // console.log({ allData })
 
@@ -45,13 +41,14 @@ const HomeOverview = () => {
           <p>Have a nice day at great work</p>
         </div>
         <div style={{ width: "fit-content" }}>
-          <p>Showing data of last {days == 365 && "1 year"}{days == 180 && "6 months"}{days == 30 && "1 month"}{days == 15 && "15 days"}{days == 7 && "7 days"}</p>
+          <p>Showing data of last {days == 365 && "1 year"}{days == 180 && "6 months"}{days == 30 && "1 month"}{days == 15 && "15 days"}{days == 7 && "7 days"}{days == 1 && "24 hours"}</p>
           <div style={{ width: "fit-content" }} className="d-flex gap-2 align-items-center">
             <label style={{ width: "fit-content", whiteSpace: "nowrap" }} >
               Filter overviews
             </label>
             {/* select drop down for district */}
             <select defaultValue={days} onChange={(e) => setDays(e.target.value)} className="form-select" aria-label="Default select example">
+              <option value="1">1 days</option>
               <option value="7">7 days</option>
               <option value="15">15 days</option>
               <option value="30">1 month</option>
@@ -159,7 +156,7 @@ const HomeOverview = () => {
       </div>
 
       {/* diagram */}
-      <HomeDiagrams diagramData={{ allAppointments, speciesComplaints, staffs }} />
+      <HomeDiagrams diagramData={{ allAppointments, speciesComplaints, staffs, monthlyOrders, dailyOrders }} />
     </div>
   );
 };

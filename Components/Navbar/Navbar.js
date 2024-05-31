@@ -37,6 +37,7 @@ const Navbar = () => {
   // };
 
   const [notifications, setNotifications] = useState([]);
+  const [reFetch, setRefetch] = useState(0);
 
   useEffect(() => {
     const token = Cookies.get("token");
@@ -51,13 +52,15 @@ const Navbar = () => {
         dispatch(setLoggedInUserData(decoded));
       }
     }
+  }, []);
 
+  useEffect(() => {
     axiosInstance.get("/notification").then((res) => {
       const result = res.data.data;
       // console.log(result)
       setNotifications(result.data);
     });
-  }, []);
+  }, [reFetch])
 
   function timeAgo(dateString) {
     const now = new Date();
@@ -81,6 +84,13 @@ const Navbar = () => {
       }
     }
     return "just now";
+  }
+
+  const handleSeenNotification = (id) => {
+    axiosInstance.patch(`/notification/${id}`).then((res) => {
+      const result = res.data.data;
+      setRefetch(reFetch + 1);
+    });
   }
 
   return (
@@ -111,7 +121,7 @@ const Navbar = () => {
 
               <div className="app-utilities col-auto">
                 <div className="app-utility-item app-notifications-dropdown dropdown">
-                  <a className="dropdown-toggle no-toggle-arrow" id="notifications-dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false" title="Notifications">
+                  <a onClick={() => setRefetch(reFetch + 1)} className="dropdown-toggle no-toggle-arrow" id="notifications-dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false" title="Notifications">
                     <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-bell icon" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                       <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2z" />
                       <path
@@ -129,96 +139,30 @@ const Navbar = () => {
                     {/* notifications showing here */}
                     <div className="dropdown-menu-content">
                       {notifications?.slice(0, 4).map((notification) => (
-                        <div key={notification?._id} className="item p-3">
-                          <div className="row gx-2 justify-content-between align-items-start">
-                            <div className="col-auto">
-                              <img className="profile-image" src="/assets/images/info.png" alt="" />
-                            </div>
-                            <div className="col">
-                              <div className="info">
-                                <h6 className="">{notification?.title}</h6>
-                                <div className="desc text-white">{notification?.description}</div>
-                                <div className="meta">{timeAgo(notification?.createdAt)}</div>
+                        <Link onClick={() => handleSeenNotification(notification?._id)} href={notification?.destinationUrl || "/"} key={notification?._id}>
+                          <div className="item p-3 border">
+                            <div className="row gx-2 justify-content-between align-items-start">
+                              <div className="col-auto">
+                                <img className="profile-image" src="/assets/images/info.png" alt="" />
+                              </div>
+                              <div className="col">
+                                <div className="info">
+                                  <h6 className="">{notification?.title}</h6>
+                                  <div className="desc text-white">{notification?.description}</div>
+                                  <div className="meta">
+                                    <p className="m-0 text-end">{timeAgo(notification?.createdAt)}</p>
+                                    <p className="m-0 text-end">{notification?.isViewed ? "Seen" : "Unseen"}
+                                    </p>
+                                  </div>
+
+                                </div>
                               </div>
                             </div>
+                            <a className="link-mask" href="notifications.html"></a>
                           </div>
-                          <a className="link-mask" href="notifications.html"></a>
-                        </div>
+                        </Link>
                       ))}
-                      {/* <div className="item p-3">
-                        <div className="row gx-2 justify-content-between align-items-center">
-                          <div className="col-auto">
-                            <img className="profile-image" src="/assets/images/profiles/profile-1.png" alt="" />
-                          </div>
-                          <div className="col">
-                            <div className="info">
-                              <div className="desc">Amy shared a file with you. Lorem ipsum dolor sit amet, consectetur adipiscing elit. </div>
-                              <div className="meta"> 2v hrs ago</div>
-                            </div>
-                          </div>
-                        </div>
-                        <a className="link-mask" href="notifications.html"></a>
-                      </div>
-                      <div className="item p-3">
-                        <div className="row gx-2 justify-content-between align-items-center">
-                          <div className="col-auto">
-                            <div className="app-icon-holder">
-                              <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-receipt" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                  fill-rule="evenodd"
-                                  d="M1.92.506a.5.5 0 0 1 .434.14L3 1.293l.646-.647a.5.5 0 0 1 .708 0L5 1.293l.646-.647a.5.5 0 0 1 .708 0L7 1.293l.646-.647a.5.5 0 0 1 .708 0L9 1.293l.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .801.13l.5 1A.5.5 0 0 1 15 2v12a.5.5 0 0 1-.053.224l-.5 1a.5.5 0 0 1-.8.13L13 14.707l-.646.647a.5.5 0 0 1-.708 0L11 14.707l-.646.647a.5.5 0 0 1-.708 0L9 14.707l-.646.647a.5.5 0 0 1-.708 0L7 14.707l-.646.647a.5.5 0 0 1-.708 0L5 14.707l-.646.647a.5.5 0 0 1-.708 0L3 14.707l-.646.647a.5.5 0 0 1-.801-.13l-.5-1A.5.5 0 0 1 1 14V2a.5.5 0 0 1 .053-.224l.5-1a.5.5 0 0 1 .367-.27zm.217 1.338L2 2.118v11.764l.137.274.51-.51a.5.5 0 0 1 .707 0l.646.647.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.646.646.646-.646a.5.5 0 0 1 .708 0l.509.509.137-.274V2.118l-.137-.274-.51.51a.5.5 0 0 1-.707 0L12 1.707l-.646.647a.5.5 0 0 1-.708 0L10 1.707l-.646.647a.5.5 0 0 1-.708 0L8 1.707l-.646.647a.5.5 0 0 1-.708 0L6 1.707l-.646.647a.5.5 0 0 1-.708 0L4 1.707l-.646.647a.5.5 0 0 1-.708 0l-.509-.51z"
-                                />
-                                <path
-                                  fill-rule="evenodd"
-                                  d="M3 4.5a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 1 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm8-6a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5z"
-                                />
-                              </svg>
-                            </div>
-                          </div>
-                          <div className="col">
-                            <div className="info">
-                              <div className="desc">You have a new invoice. Proin venenatis interdum est.</div>
-                              <div className="meta"> 1 day ago</div>
-                            </div>
-                          </div>
-                        </div>
-                        <a className="link-mask" href="notifications.html"></a>
-                      </div>
-                      <div className="item p-3">
-                        <div className="row gx-2 justify-content-between align-items-center">
-                          <div className="col-auto">
-                            <div className="app-icon-holder icon-holder-mono">
-                              <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-bar-chart-line" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                  fill-rule="evenodd"
-                                  d="M11 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h1V7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7h1V2zm1 12h2V2h-2v12zm-3 0V7H7v7h2zm-5 0v-3H2v3h2z"
-                                />
-                              </svg>
-                            </div>
-                          </div>
-                          <div className="col">
-                            <div className="info">
-                              <div className="desc">Your report is ready. Proin venenatis interdum est.</div>
-                              <div className="meta"> 3 days ago</div>
-                            </div>
-                          </div>
-                        </div>
-                        <a className="link-mask" href="notifications.html"></a>
-                      </div>
-                      <div className="item p-3">
-                        <div className="row gx-2 justify-content-between align-items-center">
-                          <div className="col-auto">
-                            <img className="profile-image" src="/assets/images/profiles/profile-2.png" alt="" />
-                          </div>
-                          <div className="col">
-                            <div className="info">
-                              <div className="desc">James sent you a new message.</div>
-                              <div className="meta"> 7 days ago</div>
-                            </div>
-                          </div>
-                        </div>
-                        <a className="link-mask" href="notifications.html"></a>
-                      </div> */}
+
                     </div>
 
                     <div className="dropdown-menu-footer p-2 text-center">

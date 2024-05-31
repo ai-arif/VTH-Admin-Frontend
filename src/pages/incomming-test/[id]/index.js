@@ -26,7 +26,7 @@ const index = () => {
 
   useEffect(() => {
     if (router.query?.id) {
-      axios.get(`http://localhost:5000/api/v1/prescription/lab/test/${router.query?.id}`).then((res) => {
+      axiosInstance.get(`/prescription/lab/test/${router.query?.id}`).then((res) => {
         let result = res.data?.data?.data;
         setPrescriptions(result);
         setActiveTab(res.data?.data?.data?.tests?.[0]?._id);
@@ -36,7 +36,7 @@ const index = () => {
 
   useEffect(() => {
     if (prescriptions?._id)
-      axios.get(`http://localhost:5000/api/v1/test/test-result/${prescriptions?.appointment?._id}`).then((response) => {
+      axiosInstance.get(`/test/test-result/${prescriptions?.appointment?._id}`).then((response) => {
         let arr = [];
         response.data?.data?.data.map((r) => {
           if (r.status == true) arr.push(r?.testId);
@@ -103,6 +103,7 @@ const index = () => {
     try {
       const data = {
         testId: activeTab,
+        prescriptionId: prescriptions?._id,
         appointmentId: prescriptions?.appointment?._id,
         phone: prescriptions?.appointment?.phone,
         name: testAllInfo?.testName,

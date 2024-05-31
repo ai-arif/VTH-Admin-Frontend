@@ -4,26 +4,38 @@ import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { TiEdit } from "react-icons/ti";
+import axiosInstance from "../../utils/axiosInstance";
 
 const IncomingTestHome = () => {
   const [prescriptions, setPrescriptions] = useState([]);
   const [refetch, setRefetch] = useState(0);
 
   useEffect(() => {
-    axios.get(`http://localhost:5000/api/v1/prescription/lab/test`).then((res) => {
+    axiosInstance.get(`/prescription/lab/test`).then((res) => {
       let result = res.data?.data?.data;
+      // console.log({ result })
       setPrescriptions(result);
     });
   }, [refetch]);
 
   const handleStatus = (status, id) => {
-    console.log({ status, id });
-    axios.patch(`http://localhost:5000/api/v1/prescription/lab/test/${id}`, { status }).then((res) => {
+    axiosInstance.patch(`/prescription/lab/test/${id}`, { status: status }).then((res) => {
       let result = res.data;
       setRefetch(result);
 
       if (result.success) {
         toast.success("Status updated successfully!");
+      }
+    });
+  };
+
+  const handleTestCost = (amount = 50, id) => {
+    axiosInstance.patch(`/test/test-result/${id}`, { amount }).then((res) => {
+      let result = res.data;
+
+      if (result.success) {
+        setRefetch(result);
+        toast.success("Const updated successfully!");
       }
     });
   };
@@ -40,6 +52,7 @@ const IncomingTestHome = () => {
                 <th className="text-nowrap">Case No.</th>
                 <th className="text-nowrap">Owner Name:</th>
                 <th className="text-nowrap">Date:</th>
+                <th className="text-nowrap">Test Cost</th>
                 <th className="text-nowrap">Status:</th>
                 <th className="text-nowrap">Actions</th>
               </tr>
@@ -51,18 +64,20 @@ const IncomingTestHome = () => {
                   <td>{sp?.appointment?.caseNo}</td>
                   <td>{sp?.appointment?.ownerName}</td>
                   <td className="text-nowrap">{new Date(sp?.appointment?.createdAt).toDateString()}</td>
-                  {/* <td className="text-nowrap">{sp?.testStatue ? "Success" : "Pending"}</td> */}
+                  <td>{sp?.totalTestCost ? sp?.totalTestCost : <button onClick={() => { handleTestCost(100, sp?._id) }}>Add</button>}</td>
+
                   <td className="text-nowrap">
                     <select defaultValue={sp?.testStatue} onChange={(e) => handleStatus(e.target.value, sp._id)} className="form-select" aria-label="Default select example">
-                      <option value={true}>Success</option>
-                      <option value={false}>Pending</option>
+                      <option value={'success'}>Success</option>
+                      <option value={'processing'}>Processing</option>
+                      <option value={'pending'}>Pending</option>
                     </select>
                   </td>
                   <td className="d-flex gap-3">
                     <Link href={`/incomming-test/${sp._id}`}>
                       <TiEdit type="button" title="edit" className="edit-icon" />
                     </Link>
-                    <RiDeleteBinLine type="button" onClick={() => {}} title="delete" className="delete-icon" />
+                    <RiDeleteBinLine type="button" onClick={() => { }} title="delete" className="delete-icon" />
                   </td>
                 </tr>
               ))}
