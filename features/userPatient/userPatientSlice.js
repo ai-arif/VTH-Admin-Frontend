@@ -1,20 +1,20 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-
 import { getAllUserPatient, searchUserPatient } from "./userPatientAPI";
 
 const initialState = {
-  userPatient: {},
   userPatients: [],
   status: "idle",
   error: null,
+  currentPage: 1,
+  totalPages: 1,
 };
 
-export const fetchAllUserPatient = createAsyncThunk("userPatient/fetchAllUserPatient", async (parameter) => {
-  const response = await getAllUserPatient(parameter?.page, parameter?.limit);
+export const fetchAllUserPatient = createAsyncThunk("userPatient/fetchAllUserPatient", async ({ page = 1, limit = 10 }) => {
+  const response = await getAllUserPatient(page, limit);
   return response;
 });
 
-export const searchUserPatientAsync = createAsyncThunk("userPatient/searchUserPatientAsync", async (search, page, limit) => {
+export const searchUserPatientAsync = createAsyncThunk("userPatient/searchUserPatientAsync", async ({ search, page = 1, limit = 10 }) => {
   const response = await searchUserPatient(search, page, limit);
   return response;
 });
@@ -26,6 +26,9 @@ export const userPatientSlice = createSlice({
     resetUserPatient: (state) => {
       state.userPatient = {};
     },
+    setCurrentPage: (state, action) => {
+      state.currentPage = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -34,7 +37,8 @@ export const userPatientSlice = createSlice({
       })
       .addCase(fetchAllUserPatient.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.userPatients = action.payload.data;
+        state.userPatients = action.payload.data.users;
+        state.totalPages = action.payload.data.totalPages;
       })
       .addCase(fetchAllUserPatient.rejected, (state, action) => {
         state.status = "failed";
@@ -45,7 +49,8 @@ export const userPatientSlice = createSlice({
       })
       .addCase(searchUserPatientAsync.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.userPatients = action.payload.data;
+        state.userPatients = action.payload.data.users;
+        state.totalPages = action.payload.data.totalPages;
       })
       .addCase(searchUserPatientAsync.rejected, (state, action) => {
         state.status = "failed";
@@ -54,6 +59,6 @@ export const userPatientSlice = createSlice({
   },
 });
 
-export const { resetUserPatient } = userPatientSlice.actions;
+export const { resetUserPatient, setCurrentPage } = userPatientSlice.actions;
 
 export default userPatientSlice.reducer;
