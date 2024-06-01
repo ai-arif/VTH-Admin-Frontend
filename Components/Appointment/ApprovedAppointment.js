@@ -1,17 +1,19 @@
 import Link from "next/link";
-import React, { useEffect, useRef } from "react";
-import { RiDeleteBinLine } from "react-icons/ri";
+import React, { useEffect, useRef, useState } from "react";
+import { RiDeleteBinLine, RiImageLine } from "react-icons/ri";
 import { TiEdit } from "react-icons/ti";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { deleteExistingAppointment, fetchApprovedAppointments, searchApprovedAppointmentData } from "../../features/appointment/appointmentSlice";
 import { formatDate } from "../../utils/formatDate";
 import Loader from "../UI/Loader";
+import AppointmentImagesModal from "./modals/appointmentImagesModal";
 
 const ApprovedAppointment = () => {
   const search = useRef("");
   const dispatch = useDispatch();
   const { appointments, status } = useSelector((state) => state.appointment);
+  const [modalImages, setModalImages] = useState([]);
 
   // handling delete single appointment
   const handleDeleteAppointment = async (caseNo) => {
@@ -130,6 +132,9 @@ const ApprovedAppointment = () => {
                         <TiEdit type="button" title="edit" className="edit-icon" />
                       </Link>
                       <RiDeleteBinLine type="button" onClick={() => handleDeleteAppointment(appointment.caseNo)} title="delete" className="delete-icon" />
+                      <button disabled={appointment?.images?.length == 0} className="bg-transparent border-0" onClick={() => { setModalImages(appointment?.images) }} type="button" data-bs-toggle="modal" data-bs-target="#showImages">
+                        <RiImageLine className="download-icon" />
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -179,6 +184,8 @@ const ApprovedAppointment = () => {
           </nav>
         </div>
       </div>
+      {/* modals  */}
+      <AppointmentImagesModal modalImages={modalImages} />
     </div>
   );
 };
