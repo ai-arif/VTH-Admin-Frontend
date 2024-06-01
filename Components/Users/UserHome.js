@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,6 +9,7 @@ import Pagination from "../UI/Pagination";
 const UserHome = () => {
   const search = useRef("");
   const dispatch = useDispatch();
+  const router = useRouter();
   const { userPatients, status, currentPage, totalPages } = useSelector((state) => state.userPatient);
   const [searchMode, setSearchMode] = useState(false);
 
@@ -33,7 +35,13 @@ const UserHome = () => {
   };
 
   const handlePageChange = (page) => {
+    router.push({
+      pathname: router.pathname,
+      query: { ...router.query, page },
+    });
+
     dispatch(setCurrentPage(page));
+
     if (searchMode) {
       handleSearch(page);
     } else {
@@ -42,10 +50,12 @@ const UserHome = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchAllUserPatient({ page: currentPage }));
-  }, [dispatch, currentPage]);
+    const page = parseInt(router.query.page) || 1;
+    dispatch(setCurrentPage(page));
+    dispatch(fetchAllUserPatient({ page }));
+  }, [dispatch, router.query.page]);
 
-  if (status === "loading") return <Loader />;
+  if (status === "loading" && currentPage < 2) return <Loader />;
 
   return (
     <div>
@@ -86,9 +96,7 @@ const UserHome = () => {
                   </table>
                 </div>
               </div>
-              <div className="d-flex justify-content-end">
-                <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
-              </div>
+              <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
             </div>
           </div>
         </div>
