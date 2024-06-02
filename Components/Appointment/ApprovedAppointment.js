@@ -1,21 +1,24 @@
 import Link from "next/link";
-import React, { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { RiDeleteBinLine, RiImageLine } from "react-icons/ri";
 import { TiEdit } from "react-icons/ti";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
-import { deleteExistingAppointment, fetchApprovedAppointments, fetchPendingAppointments, searchApprovedAppointmentData } from "../../features/appointment/appointmentSlice";
+import { deleteExistingAppointment, fetchApprovedAppointments, searchApprovedAppointmentsData, setCurrentPage } from "../../features/appointment/appointmentSlice";
 import axiosInstance from "../../utils/axiosInstance";
 import { formatDate } from "../../utils/formatDate";
 import TestPaymentModal from "../IncomingTest/TestPaymentModal";
 import Loader from "../UI/Loader";
+import Pagination from "../UI/Pagination";
 import AppointmentImagesModal from "./modals/appointmentImagesModal";
 
 const ApprovedAppointment = () => {
-  const search = useRef("");
+  const [search, setSearch] = useState("");
+  const router = useRouter();
   const dispatch = useDispatch();
-  const { appointments, status } = useSelector((state) => state.appointment);
+  const { appointments, status, currentPage, totalPages } = useSelector((state) => state.appointment);
   const [modalImages, setModalImages] = useState([]);
   const [amount, setAmount] = useState(null);
   const [appointmentId, setAppointmentId] = useState("");
@@ -37,7 +40,7 @@ const ApprovedAppointment = () => {
         try {
           const response = await dispatch(deleteExistingAppointment(caseNo));
           if (response?.payload?.success) {
-            dispatch(fetchApprovedAppointments());
+            await dispatch(fetchApprovedAppointments({}));
 
             Swal.fire({
               icon: "success",
@@ -71,18 +74,22 @@ const ApprovedAppointment = () => {
     });
   };
 
-  const handleSearch = async () => {
+  const handleSearch = async (page = 1) => {
     try {
-      const searchValue = search.current.value;
-      if (searchValue.trim()) {
-        // const res = await dispatch(searchApprovedAppointmentData(searchValue));
-        // console.log(res);
-        // if (res?.payload?.data?.data?.length <= 0) {
-        //   toast.error("Data Not Found!");
-        // }
+      if (search.trim()) {
+        const res = await dispatch(searchApprovedAppointmentsData({ search, page, status: "approved" }));
+        if (res?.payload?.data?.appointments?.length <= 0) {
+          toast.error("Data Not Found!");
+        }
       }
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      handleSearch();
     }
   };
 
@@ -98,25 +105,35 @@ const ApprovedAppointment = () => {
     });
   };
 
-  const handleKeyPress = (event) => {
-    if (event.key === "Enter") {
-      handleSearch();
-    }
+  const handlePageChange = async (page) => {
+    router.push({
+      pathname: router.pathname,
+      query: { ...router.query, page },
+    });
+    await dispatch(setCurrentPage(page));
   };
 
   useEffect(() => {
-    dispatch(fetchApprovedAppointments());
-  }, [dispatch]);
+    const page = parseInt(router.query.page) || 1;
+
+    dispatch(setCurrentPage(page));
+
+    if (search) {
+      dispatch(searchApprovedAppointmentsData({ search, page, status: "approved" }));
+    } else {
+      dispatch(fetchApprovedAppointments({ page }));
+    }
+  }, [dispatch, router.query.page]);
 
   // loader
-  if (status === "loading") return <Loader />;
+  if (status === "loading" && currentPage < 2) return <Loader />;
 
   return (
     <div className="container-fluid">
       <div className="app-card p-5 mt-4 text-center shadow-sm">
         <div className="d-flex align-items-center justify-content-between mb-4">
           <div className="input-group w-50">
-            <input ref={search} onKeyDown={handleKeyPress} type="text" className="form-control" placeholder="Recipient's name, phone, case no" />
+            <input onChange={(e) => setSearch(e.target.value)} onKeyDown={handleKeyPress} type="search" className="form-control" placeholder="Recipient's name, phone, case no" />
             <button onClick={handleSearch} className="btn btn-primary text-white" type="button" id="button-addon2">
               Search
             </button>
@@ -140,7 +157,7 @@ const ApprovedAppointment = () => {
               <tbody>
                 {appointments?.appointments?.map((appointment, idx) => (
                   <tr key={appointment._id}>
-                    <td>{idx + 1}</td>
+                    <td>{(currentPage - 1) * 5 + idx + 1}</td>
                     <td>{appointment.caseNo}</td>
                     <td>{appointment.ownerName}</td>
                     <td>{appointment.phone}</td>
@@ -188,47 +205,8 @@ const ApprovedAppointment = () => {
             </table>
           </div>
         </div>
-        {/* footer part pagination */}
-        <div className="d-flex justify-content-between align-items-center">
-          <div className="d-flex gap-2">
-            <span className="text-nowrap">Items per page</span>
-            <select className="form-select form-select-sm">
-              <option value="1">10</option>
-              <option value="2">20</option>
-              <option value="3">50</option>
-              <option value="4">100</option>
-            </select>
-          </div>
-          <nav aria-label="Page navigation example">
-            <ul className="pagination">
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  Previous
-                </a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  1
-                </a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  2
-                </a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  3
-                </a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  Next
-                </a>
-              </li>
-            </ul>
-          </nav>
-        </div>
+        {/* pagination */}
+        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
       </div>
       {/* modals  */}
       <AppointmentImagesModal modalImages={modalImages} />

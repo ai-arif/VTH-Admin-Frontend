@@ -6,8 +6,8 @@ import {
   getAppointmentsByPhone,
   getApprovedAppointments,
   getPendingAppointments,
-  searchApprovedAppointment,
-  searchPendingAppointment,
+  searchApprovedAppointments,
+  searchPendingAppointments,
   updateAppointment,
 } from "./appointmentAPI";
 
@@ -17,14 +17,16 @@ const initialState = {
   appointment: null,
   status: "idle",
   error: null,
+  currentPage: 1,
+  totalPages: 1,
 };
 
-export const fetchApprovedAppointments = createAsyncThunk("appointment/fetchApprovedAppointments", async () => {
-  return await getApprovedAppointments();
+export const fetchApprovedAppointments = createAsyncThunk("appointment/fetchApprovedAppointments", async ({ page, limit }) => {
+  return await getApprovedAppointments(page, limit);
 });
 
-export const fetchPendingAppointments = createAsyncThunk("appointment/fetchPendingAppointments", async () => {
-  return await getPendingAppointments();
+export const fetchPendingAppointments = createAsyncThunk("appointment/fetchPendingAppointments", async ({ page, limit }) => {
+  return await getPendingAppointments(page, limit);
 });
 
 export const fetchAppointmentById = createAsyncThunk("appointment/fetchAppointmentById", async (id) => {
@@ -47,13 +49,13 @@ export const fetchAppointmentsByPhone = createAsyncThunk("appointment/fetchAppoi
   return await getAppointmentsByPhone(phone);
 });
 
-export const searchApprovedAppointmentData = createAsyncThunk("appointment/searchApprovedAppointmentData", async (search) => {
-  const response = await searchApprovedAppointment(search);
+export const searchApprovedAppointmentsData = createAsyncThunk("appointment/searchApprovedAppointmentsData", async ({ search, page, limit, status }) => {
+  const response = await searchApprovedAppointments(search, page, limit, status);
   return response;
 });
 
-export const searchPendingAppointmentData = createAsyncThunk("appointment/searchPendingAppointmentData", async (search) => {
-  const response = await searchPendingAppointment(search);
+export const searchPendingAppointmentsData = createAsyncThunk("appointment/searchPendingAppointmentsData", async ({ search, page, limit, status }) => {
+  const response = await searchPendingAppointments(search, page, limit, status);
   return response;
 });
 
@@ -64,6 +66,9 @@ const appointmentSlice = createSlice({
     clearAppointment(state) {
       state.appointment = null;
     },
+    setCurrentPage: (state, action) => {
+      state.currentPage = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -73,6 +78,7 @@ const appointmentSlice = createSlice({
       .addCase(fetchApprovedAppointments.fulfilled, (state, action) => {
         state.status = "success";
         state.appointments = action.payload.data;
+        state.totalPages = action.payload.data.totalPages;
       })
       .addCase(fetchApprovedAppointments.rejected, (state, action) => {
         state.status = "failed";
@@ -84,6 +90,7 @@ const appointmentSlice = createSlice({
       .addCase(fetchPendingAppointments.fulfilled, (state, action) => {
         state.status = "success";
         state.pendingAppointments = action.payload.data;
+        state.totalPages = action.payload.data.totalPages;
       })
       .addCase(fetchPendingAppointments.rejected, (state, action) => {
         state.status = "failed";
@@ -138,29 +145,33 @@ const appointmentSlice = createSlice({
         state.status = "failed";
         state.error = action.error.message;
       })
-      .addCase(searchApprovedAppointmentData.pending, (state) => {
+      .addCase(searchApprovedAppointmentsData.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(searchApprovedAppointmentData.fulfilled, (state, action) => {
-        (state.status = "success"), (state.patients = action.payload.data);
+      .addCase(searchApprovedAppointmentsData.fulfilled, (state, action) => {
+        state.status = "success";
+        state.appointments = action.payload.data;
+        state.totalPages = action.payload.data.totalPages;
       })
-      .addCase(searchApprovedAppointmentData.rejected, (state, action) => {
+      .addCase(searchApprovedAppointmentsData.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       })
-      .addCase(searchPendingAppointmentData.pending, (state) => {
+      .addCase(searchPendingAppointmentsData.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(searchPendingAppointmentData.fulfilled, (state, action) => {
-        (state.status = "success"), (state.patients = action.payload.data);
+      .addCase(searchPendingAppointmentsData.fulfilled, (state, action) => {
+        state.status = "success";
+        state.pendingAppointments = action.payload.data;
+        state.totalPages = action.payload.data.totalPages;
       })
-      .addCase(searchPendingAppointmentData.rejected, (state, action) => {
+      .addCase(searchPendingAppointmentsData.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });
   },
 });
 
-export const { clearAppointment } = appointmentSlice.actions;
+export const { clearAppointment, setCurrentPage } = appointmentSlice.actions;
 
 export default appointmentSlice.reducer;
