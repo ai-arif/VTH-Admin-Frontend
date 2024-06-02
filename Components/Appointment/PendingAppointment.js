@@ -12,14 +12,13 @@ import TestPaymentModal from "../IncomingTest/TestPaymentModal";
 import Loader from "../UI/Loader";
 import AppointmentImagesModal from "./modals/appointmentImagesModal";
 
-
 const PendingAppointment = () => {
   const search = useRef("");
   const dispatch = useDispatch();
   const { pendingAppointments, status } = useSelector((state) => state.appointment);
   const [modalImages, setModalImages] = useState([]);
   const [amount, setAmount] = useState(null);
-  const [appointmentId, setAppointmentId] = useState('');
+  const [appointmentId, setAppointmentId] = useState("");
 
   // handling delete single appointment
   const handleDeleteAppointment = async (caseNo) => {
@@ -77,6 +76,7 @@ const PendingAppointment = () => {
       let result = res.data;
 
       if (result.success) {
+        setAmount(null);
         dispatch(fetchPendingAppointments());
         toast.success("Payment and status updated successfully!");
       }
@@ -148,14 +148,40 @@ const PendingAppointment = () => {
                     <td>{appointment.phone}</td>
                     <td>{formatDate(appointment.date)}</td>
                     {/* <td> */}
-                    <td className="text-center">{appointment?.amount ? appointment?.amount : <button className="btn-info btn text-white" onClick={() => { setAppointmentId(appointment?._id) }} type="button" data-bs-toggle="modal" data-bs-target="#paymentModal">Pay</button>}</td>
+                    <td className="text-center">
+                      {appointment?.amount ? (
+                        appointment?.amount
+                      ) : (
+                        <button
+                          className="btn-info btn text-white"
+                          onClick={() => {
+                            setAppointmentId(appointment?._id);
+                          }}
+                          type="button"
+                          data-bs-toggle="modal"
+                          data-bs-target="#paymentModal"
+                        >
+                          Pay
+                        </button>
+                      )}
+                    </td>
 
                     <td className="d-flex gap-3 justify-content-center">
                       <Link href={`/appointment/${appointment.caseNo}`}>
                         <TiEdit type="button" title="edit" className="edit-icon" />
                       </Link>
                       <RiDeleteBinLine type="button" onClick={() => handleDeleteAppointment(appointment.caseNo)} title="delete" className="delete-icon" />
-                      <button disabled={appointment?.images?.length == 0} title={appointment?.images?.length == 0 ? "No image available" : "View images"} className="bg-transparent border-0" onClick={() => { setModalImages(appointment?.images) }} type="button" data-bs-toggle="modal" data-bs-target="#showImages">
+                      <button
+                        disabled={appointment?.images?.length == 0}
+                        title={appointment?.images?.length == 0 ? "No image available" : "View images"}
+                        className="bg-transparent border-0"
+                        onClick={() => {
+                          setModalImages(appointment?.images);
+                        }}
+                        type="button"
+                        data-bs-toggle="modal"
+                        data-bs-target="#showImages"
+                      >
                         <RiImageLine className="download-icon" />
                       </button>
                     </td>
@@ -210,7 +236,7 @@ const PendingAppointment = () => {
 
       {/* modals  */}
       <AppointmentImagesModal modalImages={modalImages} />
-      <TestPaymentModal handleTestCost={handlePaymentAndStatus} setAmount={setAmount} amount={amount} title={'appointment'} />
+      <TestPaymentModal handleTestCost={handlePaymentAndStatus} setAmount={setAmount} amount={amount} title={"appointment"} />
     </div>
   );
 };

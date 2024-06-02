@@ -43,7 +43,7 @@ const StaffsHome = () => {
           const response = await dispatch(deleteStaffData(id));
 
           if (response?.payload?.success) {
-            dispatch(fetchStaffs({}));
+            await dispatch(fetchStaffs({}));
 
             Swal.fire({
               icon: "success",
@@ -158,7 +158,7 @@ const StaffsHome = () => {
                     <tbody>
                       {staffs?.users?.map((staff, idx) => (
                         <tr key={staff._id}>
-                          <td>{(currentPage - 1) * 5 + idx + 1}</td>
+                          <td>{(currentPage - 1) * 15 + idx + 1}</td>
                           <td>{staff.fullName}</td>
                           <td>{staff.phone}</td>
                           <td className="text-capitalize">{staff.role}</td>
