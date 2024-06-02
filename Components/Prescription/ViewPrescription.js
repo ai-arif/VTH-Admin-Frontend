@@ -17,6 +17,7 @@ const ViewPrescription = () => {
   const { prescriptions, status } = useSelector((state) => state.prescription);
   const [modalImages, setModalImages] = useState([]);
 
+
   // handling delete single prescription
   const handleDeletePrescription = async (id) => {
     Swal.fire({
@@ -128,10 +129,16 @@ const ViewPrescription = () => {
                     <td className="text-nowrap">{prescription?.appointment?.ownerName}</td>
                     <td className="">{prescription?.appointment?.department?.name}</td>
                     <td className="">{formatDate(prescription?.appointment?.date)}</td>
-                    <td className="d-flex gap-3 justify-content-center">
-                      <Link href={`/incomming-test/${prescription._id}`}>
+                    <td className="d-flex gap-3 justify-content-end">
+                      {/* <Link href={`/incomming-test/${prescription._id}`}>
                         <GrTest type="button" title="Test result" className="download-icon" />
-                      </Link>
+                      </Link> */}
+                      {
+                        prescription?.tests?.length > 0 &&
+                        <Link href={`/prescription/view/${prescription?.appointment?._id}`}>
+                          <GrTest type="button" title="Test result" className="download-icon" />
+                        </Link>
+                      }
                       <Link href={`/prescription/${prescription._id}`}>
                         <TiEdit type="button" title="edit" className="edit-icon" />
                       </Link>
