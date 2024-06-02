@@ -1,17 +1,19 @@
 import Link from "next/link";
-import React, { useEffect, useRef } from "react";
-import { RiDeleteBinLine } from "react-icons/ri";
+import React, { useEffect, useRef, useState } from "react";
+import { RiDeleteBinLine, RiImageLine } from "react-icons/ri";
 import { TiEdit } from "react-icons/ti";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { deletePrescriptionData, fetchPrescription, searchPrescriptionData } from "../../features/prescription/prescriptionSlice";
 import { formatDate } from "../../utils/formatDate";
+import AppointmentImagesModal from "../Appointment/modals/appointmentImagesModal";
 import Loader from "../UI/Loader";
 
 const ViewPrescription = () => {
   const search = useRef("");
   const dispatch = useDispatch();
   const { prescriptions, status } = useSelector((state) => state.prescription);
+  const [modalImages, setModalImages] = useState([]);
 
   // handling delete single prescription
   const handleDeletePrescription = async (id) => {
@@ -129,6 +131,9 @@ const ViewPrescription = () => {
                         <TiEdit type="button" title="edit" className="edit-icon" />
                       </Link>
                       <RiDeleteBinLine type="button" onClick={() => handleDeletePrescription(prescription._id)} title="delete" className="delete-icon" />
+                      <button disabled={prescription?.appointment?.images?.length == 0} title={prescription?.appointment?.images?.length == 0 ? "No image available" : "View images"} className="bg-transparent border-0" onClick={() => { setModalImages(prescription?.appointment?.images) }} type="button" data-bs-toggle="modal" data-bs-target="#showImages">
+                        <RiImageLine className="download-icon" />
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -178,6 +183,8 @@ const ViewPrescription = () => {
           </nav>
         </div>
       </div>
+      {/* modals  */}
+      <AppointmentImagesModal modalImages={modalImages} />
     </div>
   );
 };
