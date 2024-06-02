@@ -13,7 +13,7 @@ import AddStaff from "./modals/AddStaff";
 import UpdateStaff from "./modals/UpdateStaff";
 
 const StaffsHome = () => {
-  const search = useRef("");
+  const [search, setSearch] = useState("");
   const [existingData, setExistingData] = useState({});
   const [searchMode, setSearchMode] = useState(false);
   const router = useRouter();
@@ -43,7 +43,7 @@ const StaffsHome = () => {
           const response = await dispatch(deleteStaffData(id));
 
           if (response?.payload?.success) {
-            dispatch(fetchStaffs());
+            dispatch(fetchStaffs({}));
 
             Swal.fire({
               icon: "success",
@@ -78,11 +78,9 @@ const StaffsHome = () => {
   };
 
   const handleSearch = async (page = 1) => {
-    setSearchMode(true);
     try {
-      const searchValue = search.current.value;
-      if (searchValue.trim()) {
-        const res = await dispatch(searchStaffData({ search: searchValue, page }));
+      if (search.trim()) {
+        const res = await dispatch(searchStaffData({ search, page }));
         if (res?.payload?.data?.users?.length <= 0) {
           toast.error("Data Not Found!");
         }
@@ -98,25 +96,24 @@ const StaffsHome = () => {
     }
   };
 
-  const handlePageChange = (page) => {
+  const handlePageChange = async (page) => {
     router.push({
       pathname: router.pathname,
       query: { ...router.query, page },
     });
-
-    dispatch(setCurrentPage(page));
-
-    if (searchMode) {
-      handleSearch(page);
-    } else {
-      dispatch(fetchStaffs(page));
-    }
+    await dispatch(setCurrentPage(page));
   };
 
   useEffect(() => {
     const page = parseInt(router.query.page) || 1;
+
     dispatch(setCurrentPage(page));
-    dispatch(fetchStaffs(page));
+
+    if (search) {
+      dispatch(searchStaffData({ search, page }));
+    } else {
+      dispatch(fetchStaffs({ page }));
+    }
   }, [dispatch, router.query.page]);
 
   // loader
@@ -135,7 +132,7 @@ const StaffsHome = () => {
               <h3 className="page-title pb-3">All Staffs</h3>
               <div className="d-flex justify-content-between mb-4">
                 <div className="input-group w-50">
-                  <input ref={search} onKeyDown={handleKeyPress} type="text" className="form-control" placeholder="Recipient's name or phone" />
+                  <input onChange={(e) => setSearch(e.target.value)} onKeyDown={handleKeyPress} type="search" className="form-control" placeholder="Recipient's name or phone" />
                   <button onClick={handleSearch} className="btn btn-primary text-white" type="button" id="button-addon2">
                     Search
                   </button>
@@ -161,7 +158,7 @@ const StaffsHome = () => {
                     <tbody>
                       {staffs?.users?.map((staff, idx) => (
                         <tr key={staff._id}>
-                          <td>{(currentPage - 1) * 15 + idx + 1}</td>
+                          <td>{(currentPage - 1) * 5 + idx + 1}</td>
                           <td>{staff.fullName}</td>
                           <td>{staff.phone}</td>
                           <td className="text-capitalize">{staff.role}</td>

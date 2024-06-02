@@ -1,6 +1,6 @@
 import axiosInstance from "../../utils/axiosInstance";
 
-export const getStaffs = async (page = 1, limit = 15) => {
+export const getStaffs = async (page = 1, limit = 5) => {
   try {
     const response = await axiosInstance.get(`/staffs/admins?page=${page}&limit=${limit}`);
     return response.data;
@@ -35,7 +35,7 @@ export const addStaff = async (data) => {
   }
 };
 
-export const searchStaff = async (search, page = 1, limit = 15) => {
+export const searchStaff = async (search, page = 1, limit = 5) => {
   try {
     const response = await axiosInstance.get(`/staffs/admins/search?search=${search}&page=${page}&limit=${limit}`);
     return response.data;
