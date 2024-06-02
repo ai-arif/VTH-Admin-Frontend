@@ -10,7 +10,7 @@ const initialState = {
   totalPages: 1,
 };
 
-export const fetchStaffs = createAsyncThunk("staff/fetchStaffs", async (page, limit) => {
+export const fetchStaffs = createAsyncThunk("staff/fetchStaffs", async ({ page, limit }) => {
   const response = await getStaffs(page, limit);
   return response;
 });

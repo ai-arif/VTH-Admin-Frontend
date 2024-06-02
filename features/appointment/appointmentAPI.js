@@ -1,17 +1,17 @@
 import axiosInstance from "../../utils/axiosInstance";
 
-export const getApprovedAppointments = async () => {
+export const getApprovedAppointments = async (page = 1, limit = 5) => {
   try {
-    const response = await axiosInstance.get("/appointment/approved");
+    const response = await axiosInstance.get(`/appointment/approved?page=${page}&limit=${limit}`);
     return response.data;
   } catch (error) {
     return Promise.reject(error);
   }
 };
 
-export const getPendingAppointments = async () => {
+export const getPendingAppointments = async (page = 1, limit = 5) => {
   try {
-    const response = await axiosInstance.get("/appointment/pending");
+    const response = await axiosInstance.get(`/appointment/pending?page=${page}&limit=${limit}`);
     return response.data;
   } catch (error) {
     return Promise.reject(error);
@@ -65,18 +65,18 @@ export const getAppointmentsByPhone = async (phone) => {
   }
 };
 
-export const searchApprovedAppointment = async (search) => {
+export const searchApprovedAppointments = async (search, page = 1, limit = 5, status = "approved") => {
   try {
-    const response = await axiosInstance.get(`/appointment/approved/search?search=${search}`);
+    const response = await axiosInstance.get(`/appointment?search=${search}&page=${page}&limit=${limit}&status=${status}`);
     return response.data;
   } catch (error) {
     return Promise.reject(error);
   }
 };
 
-export const searchPendingAppointment = async (search) => {
+export const searchPendingAppointments = async (search, page = 1, limit = 5, status = "pending") => {
   try {
-    const response = await axiosInstance.get(`/appointment/pending/search?search=${search}`);
+    const response = await axiosInstance.get(`/appointment?search=${search}&page=${page}&limit=${limit}&status=${status}`);
     return response.data;
   } catch (error) {
     return Promise.reject(error);

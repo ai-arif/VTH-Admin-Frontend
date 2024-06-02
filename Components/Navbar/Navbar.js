@@ -58,9 +58,9 @@ const Navbar = () => {
   useEffect(() => {
     axiosInstance.get("/notification").then((res) => {
       const result = res.data.data;
-      console.log(result)
+      // console.log(result)
       setNotifications(result?.data);
-      setUnseenNotifications(result?.count)
+      setUnseenNotifications(result?.count);
     });
   }, [reFetch]);
 
@@ -95,7 +95,7 @@ const Navbar = () => {
     });
   };
 
-  console.log(unseenNotifications)
+  // console.log(unseenNotifications);
 
   return (
     <header className="app-header fixed-top">

@@ -46,7 +46,7 @@ const AddStaff = () => {
         toast.success("Account created successfully!");
         reset();
         // const page = parseInt(router.query.page) || 1;
-        await dispatch(fetchStaffs());
+        await dispatch(fetchStaffs({}));
         document.getElementById("closeModal").click();
       } else {
         toast.error("Failed to create account! Please try again later.");
