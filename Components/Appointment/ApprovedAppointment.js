@@ -1,11 +1,14 @@
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
+import toast from "react-hot-toast";
 import { RiDeleteBinLine, RiImageLine } from "react-icons/ri";
 import { TiEdit } from "react-icons/ti";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
-import { deleteExistingAppointment, fetchApprovedAppointments, searchApprovedAppointmentData } from "../../features/appointment/appointmentSlice";
+import { deleteExistingAppointment, fetchApprovedAppointments, fetchPendingAppointments, searchApprovedAppointmentData } from "../../features/appointment/appointmentSlice";
+import axiosInstance from "../../utils/axiosInstance";
 import { formatDate } from "../../utils/formatDate";
+import TestPaymentModal from "../IncomingTest/TestPaymentModal";
 import Loader from "../UI/Loader";
 import AppointmentImagesModal from "./modals/appointmentImagesModal";
 
@@ -14,6 +17,8 @@ const ApprovedAppointment = () => {
   const dispatch = useDispatch();
   const { appointments, status } = useSelector((state) => state.appointment);
   const [modalImages, setModalImages] = useState([]);
+  const [amount, setAmount] = useState(null);
+  const [appointmentId, setAppointmentId] = useState('');
 
   // handling delete single appointment
   const handleDeleteAppointment = async (caseNo) => {
@@ -81,6 +86,17 @@ const ApprovedAppointment = () => {
     }
   };
 
+  const handlePaymentAndStatus = (amount) => {
+    axiosInstance.patch(`/appointment/${appointmentId}`, { payment: "paid", amount: amount }).then((res) => {
+      let result = res.data;
+
+      if (result.success) {
+        dispatch(fetchApprovedAppointments());
+        toast.success("Payment and status updated successfully!");
+      }
+    });
+  };
+
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
       handleSearch();
@@ -116,6 +132,7 @@ const ApprovedAppointment = () => {
                   <th className="text-nowrap">Owner Name</th>
                   <th className="text-nowrap">Phone No.</th>
                   <th className="text-nowrap">Date & Time</th>
+                  <th className="text-nowrap">Payment</th>
                   <th className="text-nowrap">Actions</th>
                 </tr>
               </thead>
@@ -127,6 +144,8 @@ const ApprovedAppointment = () => {
                     <td>{appointment.ownerName}</td>
                     <td>{appointment.phone}</td>
                     <td>{formatDate(appointment.date)}</td>
+                    <td className="text-center">{appointment?.amount ? appointment?.amount : <button className="btn-info btn text-white" onClick={() => { setAppointmentId(appointment?._id) }} type="button" data-bs-toggle="modal" data-bs-target="#paymentModal">Pay</button>}</td>
+
                     <td className="d-flex gap-3 justify-content-center">
                       <Link href={`/appointment/${appointment.caseNo}`}>
                         <TiEdit type="button" title="edit" className="edit-icon" />
@@ -186,6 +205,7 @@ const ApprovedAppointment = () => {
       </div>
       {/* modals  */}
       <AppointmentImagesModal modalImages={modalImages} />
+      <TestPaymentModal handleTestCost={handlePaymentAndStatus} setAmount={setAmount} amount={amount} title={'appointment'} />
     </div>
   );
 };
