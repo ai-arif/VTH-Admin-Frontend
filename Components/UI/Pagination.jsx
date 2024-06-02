@@ -27,11 +27,13 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
 
   const pageNumbers = getPageNumbers();
 
+  // console.log(pageNumbers);
+
   return (
     <div className="d-flex justify-content-end">
       <nav aria-label="Page navigation example">
         <ul className="pagination">
-          <li className={`page-item ${currentPage === 1 && "disabled"}`}>
+          <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
             <button className="page-link" onClick={() => onPageChange(currentPage - 1)} disabled={currentPage === 1}>
               Previous
             </button>
@@ -42,14 +44,14 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
                 <span className="page-link">...</span>
               </li>
             ) : (
-              <li key={index} className={`page-item ${currentPage === number && "active"}`}>
+              <li key={index} className={`page-item ${currentPage === number ? "active" : ""}`}>
                 <button className="page-link" onClick={() => onPageChange(number)}>
                   {number}
                 </button>
               </li>
             )
           )}
-          <li className={`page-item ${currentPage === totalPages && "disabled"}`}>
+          <li className={`page-item ${currentPage === totalPages ? "disabled" : ""}`}>
             <button className="page-link" onClick={() => onPageChange(currentPage + 1)} disabled={currentPage === totalPages}>
               Next
             </button>

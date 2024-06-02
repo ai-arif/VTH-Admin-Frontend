@@ -6,10 +6,12 @@ const initialState = {
   staff: {},
   status: "idle",
   error: null,
+  currentPage: 1,
+  totalPages: 1,
 };
 
-export const fetchStaffs = createAsyncThunk("staff/fetchStaffs", async () => {
-  const response = await getStaffs();
+export const fetchStaffs = createAsyncThunk("staff/fetchStaffs", async (page, limit) => {
+  const response = await getStaffs(page, limit);
   return response;
 });
 
@@ -28,8 +30,8 @@ export const updateStaffData = createAsyncThunk("staff/updateStaffData", async (
   return response;
 });
 
-export const searchStaffData = createAsyncThunk("staff/searchStaffData", async (search) => {
-  const response = await searchStaff(search);
+export const searchStaffData = createAsyncThunk("staff/searchStaffData", async ({ search, page, limit }) => {
+  const response = await searchStaff(search, page, limit);
   return response;
 });
 
@@ -37,9 +39,12 @@ export const staffSlice = createSlice({
   name: "staff",
   initialState,
   reducers: {
-    // resetStaff: (state) => {
-    //   state.staff = {};
-    // },
+    resetStaff: (state) => {
+      state.staff = {};
+    },
+    setCurrentPage: (state, action) => {
+      state.currentPage = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -47,7 +52,9 @@ export const staffSlice = createSlice({
         state.status = "loading";
       })
       .addCase(fetchStaffs.fulfilled, (state, action) => {
-        (state.status = "success"), (state.staffs = action.payload.data);
+        state.status = "success";
+        state.staffs = action.payload.data;
+        state.totalPages = action.payload.data.totalPages;
       })
       .addCase(fetchStaffs.rejected, (state, action) => {
         state.status = "failed";
@@ -85,7 +92,9 @@ export const staffSlice = createSlice({
         state.status = "loading";
       })
       .addCase(searchStaffData.fulfilled, (state, action) => {
-        (state.status = "success"), (state.patients = action.payload.data);
+        state.status = "success";
+        state.staffs = action.payload.data;
+        state.totalPages = action.payload.data.totalPages;
       })
       .addCase(searchStaffData.rejected, (state, action) => {
         state.status = "failed";
@@ -94,6 +103,6 @@ export const staffSlice = createSlice({
   },
 });
 
-// export const { resetStaff } = staffSlice.actions;
+export const { resetStaff, setCurrentPage } = staffSlice.actions;
 
 export default staffSlice.reducer;

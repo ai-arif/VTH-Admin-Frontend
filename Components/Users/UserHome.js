@@ -7,11 +7,11 @@ import Loader from "../UI/Loader";
 import Pagination from "../UI/Pagination";
 
 const UserHome = () => {
-  const search = useRef("");
-  const dispatch = useDispatch();
-  const router = useRouter();
-  const { userPatients, status, currentPage, totalPages } = useSelector((state) => state.userPatient);
   const [searchMode, setSearchMode] = useState(false);
+  const search = useRef("");
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const { userPatients, status, currentPage, totalPages } = useSelector((state) => state.userPatient);
 
   const handleSearch = async (page = 1) => {
     setSearchMode(true);
@@ -55,7 +55,8 @@ const UserHome = () => {
     dispatch(fetchAllUserPatient({ page }));
   }, [dispatch, router.query.page]);
 
-  if (status === "loading" && currentPage < 2) return <Loader />;
+  // loader
+  // if (status === "loading" && currentPage < 2) return <Loader />;
 
   return (
     <div>
@@ -86,7 +87,7 @@ const UserHome = () => {
                     <tbody>
                       {userPatients?.map((user, idx) => (
                         <tr key={user._id}>
-                          <td>{(currentPage - 1) * 10 + idx + 1}</td>
+                          <td>{(currentPage - 1) * 15 + idx + 1}</td>
                           <td>{user.fullName}</td>
                           <td>{user.phone}</td>
                           <td>{user.role}</td>
