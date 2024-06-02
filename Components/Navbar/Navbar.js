@@ -60,7 +60,7 @@ const Navbar = () => {
       // console.log(result)
       setNotifications(result.data);
     });
-  }, [reFetch])
+  }, [reFetch]);
 
   function timeAgo(dateString) {
     const now = new Date();
@@ -91,7 +91,7 @@ const Navbar = () => {
       const result = res.data.data;
       setRefetch(reFetch + 1);
     });
-  }
+  };
 
   return (
     <header className="app-header fixed-top">
@@ -121,7 +121,16 @@ const Navbar = () => {
 
               <div className="app-utilities col-auto">
                 <div className="app-utility-item app-notifications-dropdown dropdown">
-                  <a onClick={() => setRefetch(reFetch + 1)} className="dropdown-toggle no-toggle-arrow" id="notifications-dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false" title="Notifications">
+                  <a
+                    onClick={() => setRefetch(reFetch + 1)}
+                    className="dropdown-toggle no-toggle-arrow"
+                    id="notifications-dropdown-toggle"
+                    data-bs-toggle="dropdown"
+                    href="#"
+                    role="button"
+                    aria-expanded="false"
+                    title="Notifications"
+                  >
                     <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-bell icon" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                       <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2z" />
                       <path
@@ -151,18 +160,14 @@ const Navbar = () => {
                                   <div className="desc text-white">{notification?.description}</div>
                                   <div className="meta">
                                     <p className="m-0 text-end">{timeAgo(notification?.createdAt)}</p>
-                                    <p className="m-0 text-end">{notification?.isViewed ? "Seen" : "Unseen"}
-                                    </p>
+                                    <p className="m-0 text-end">{notification?.isViewed ? "Seen" : "Unseen"}</p>
                                   </div>
-
                                 </div>
                               </div>
                             </div>
-                            <a className="link-mask" href="notifications.html"></a>
                           </div>
                         </Link>
                       ))}
-
                     </div>
 
                     <div className="dropdown-menu-footer p-2 text-center">

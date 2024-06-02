@@ -8,14 +8,8 @@ import { fetchStaffs, updateStaffData } from "../../../features/staff/staffSlice
 
 const UpdateStaff = ({ existingData }) => {
   const [isDoctor, setIsDoctor] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
   const { departments } = useSelector((state) => state.department);
-
-  // password show hide toggle
-  const handleTogglePassword = () => {
-    setShowPassword(!showPassword);
-  };
 
   const handleGetRole = (role) => {
     if (role === "doctor") {
@@ -43,10 +37,10 @@ const UpdateStaff = ({ existingData }) => {
       const response = await dispatch(updateStaffData(staffData));
 
       if (response?.payload?.success) {
+        document.getElementById("closeModal").click();
         toast.success("Account updated successfully!");
         reset();
-        await dispatch(fetchStaffs());
-        document.getElementById("closeModal").click();
+        await dispatch(fetchStaffs({}));
       } else {
         toast.error("Failed to update account! Please try again later.");
       }
@@ -95,17 +89,6 @@ const UpdateStaff = ({ existingData }) => {
                 </label>
                 <input type="text" {...register("phone", { required: true })} className={`form-control ${errors.phone && "border-danger"}`} />
                 {errors.phone && <small className="text-danger">Please write phone</small>}
-              </div>
-              <div className="mb-3 position-relative">
-                <label htmlFor="password" className="form-label">
-                  Password
-                </label>
-                <input type={showPassword ? "text" : "password"} {...register("password", { required: true })} className={`form-control ${errors.password && "border-danger"}`} />
-                {errors.password && <small className="text-danger">Please write password</small>}
-
-                <div onClick={handleTogglePassword} type="button" className="position-absolute" id="user-eye">
-                  {showPassword ? <AiFillEye size={18} /> : <AiFillEyeInvisible size={18} />}
-                </div>
               </div>
               <div className="mb-3">
                 <label htmlFor="role" className="form-label">

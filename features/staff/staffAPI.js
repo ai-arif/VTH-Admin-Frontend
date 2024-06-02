@@ -1,8 +1,8 @@
 import axiosInstance from "../../utils/axiosInstance";
 
-export const getStaffs = async () => {
+export const getStaffs = async (page = 1, limit = 15) => {
   try {
-    const response = await axiosInstance.get("/staffs/admins");
+    const response = await axiosInstance.get(`/staffs/admins?page=${page}&limit=${limit}`);
     return response.data;
   } catch (error) {
     return Promise.reject(error);
@@ -35,9 +35,9 @@ export const addStaff = async (data) => {
   }
 };
 
-export const searchStaff = async (search) => {
+export const searchStaff = async (search, page = 1, limit = 15) => {
   try {
-    const response = await axiosInstance.get(`/staffs/search?search=${search}`);
+    const response = await axiosInstance.get(`/staffs/admins/search?search=${search}&page=${page}&limit=${limit}`);
     return response.data;
   } catch (error) {
     return Promise.reject(error);

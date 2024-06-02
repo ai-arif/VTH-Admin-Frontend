@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -10,6 +11,7 @@ const AddStaff = () => {
   const [isDoctor, setIsDoctor] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
+  const router = useRouter();
   const { departments } = useSelector((state) => state.department);
 
   // password show hide toggle
@@ -43,6 +45,7 @@ const AddStaff = () => {
       if (response?.payload?.success) {
         toast.success("Account created successfully!");
         reset();
+        // const page = parseInt(router.query.page) || 1;
         await dispatch(fetchStaffs());
         document.getElementById("closeModal").click();
       } else {
