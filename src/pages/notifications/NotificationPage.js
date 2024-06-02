@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import axiosInstance from '../../../utils/axiosInstance';
 
 const NotificationPage = () => {
@@ -44,10 +45,19 @@ const NotificationPage = () => {
         });
     }
 
+    const handleSeenAllNotification = () => {
+        axiosInstance.patch(`/notification`).then((res) => {
+            if (res?.data?.success) {
+                toast.success("All notification marked as seen")
+                setRefetch(reFetch + 1);
+            }
+        });
+    }
+
     return (
         <div className="d-flex align-items-center justify-content-center">
             <div className='w'>
-                <p className='text-end'>Total unseen notifications: {notifications?.count}</p>
+                <div className='text-end my-1'>Total unseen notifications: {notifications?.count} | <button type='button' className='border-0 bg-primary p-1 rounded' onClick={handleSeenAllNotification}>Mark all seen</button></div>
                 {notifications?.data?.map((notification) => (
                     <Link onClick={() => handleSeenNotification(notification?._id)} href={notification?.destinationUrl || "/"} key={notification?._id}>
                         <div className="item p-3 border">

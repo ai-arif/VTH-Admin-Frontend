@@ -153,7 +153,7 @@ const PendingAppointment = () => {
                         <TiEdit type="button" title="edit" className="edit-icon" />
                       </Link>
                       <RiDeleteBinLine type="button" onClick={() => handleDeleteAppointment(appointment.caseNo)} title="delete" className="delete-icon" />
-                      <button disabled={appointment?.images?.length == 0} className="bg-transparent border-0" onClick={() => { setModalImages(appointment?.images) }} type="button" data-bs-toggle="modal" data-bs-target="#showImages">
+                      <button disabled={appointment?.images?.length == 0} title={appointment?.images?.length == 0 ? "No image available" : "View images"} className="bg-transparent border-0" onClick={() => { setModalImages(appointment?.images) }} type="button" data-bs-toggle="modal" data-bs-target="#showImages">
                         <RiImageLine className="download-icon" />
                       </button>
                     </td>
