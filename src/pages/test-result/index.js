@@ -58,14 +58,15 @@ const Index = () => {
     return output;
   }
 
-  // useEffect(() => {
-  //   axios.get(`http://localhost:5000/api/v1/test/test-result/test15`).then(res => {
-  //     let result = res.data?.data?.data;
-  //     setTestResults(result);
-  //     // console.log(result[0]?.data);
-  //     // console.log(transformInput(result[0]?.data));
-  //   });
-  // }, []);
+  useEffect(() => {
+    const id = '665af0c79c4f321d34a9758c'
+    axios.get(`http://localhost:5000/api/v1/test/test-result/${id}`).then(res => {
+      let result = res.data?.data?.data;
+      setTestResults(result);
+      // console.log(result[0]?.data);
+      // console.log(transformInput(result[0]?.data));
+    });
+  }, []);
 
 
   return (
