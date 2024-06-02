@@ -5,10 +5,13 @@ import toast from "react-hot-toast";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { TiEdit } from "react-icons/ti";
 import axiosInstance from "../../utils/axiosInstance";
+import TestPaymentModal from "./TestPaymentModal";
 
 const IncomingTestHome = () => {
   const [prescriptions, setPrescriptions] = useState([]);
   const [refetch, setRefetch] = useState(0);
+  const [testId, setTestId] = useState('');
+  const [amount, setAmount] = useState(null);
 
   useEffect(() => {
     axiosInstance.get(`/prescription/lab/test`).then((res) => {
@@ -29,13 +32,20 @@ const IncomingTestHome = () => {
     });
   };
 
-  const handleTestCost = (amount = 50, id) => {
-    axiosInstance.patch(`/test/test-result/${id}`, { amount }).then((res) => {
+  const handleTestCost = (amount) => {
+    if (!testId || !amount) {
+      return toast.error('Amount is required!');
+    }
+
+    // console.log({ amount, testId })
+    axiosInstance.patch(`/test/test-result/${testId}`, { amount: parseFloat(amount)?.toFixed(2) }).then((res) => {
       let result = res.data;
+      // console.log({ result })
 
       if (result.success) {
+        setAmount(null)
         setRefetch(result);
-        toast.success("Const updated successfully!");
+        toast.success("Payment and status updated successfully!");
       }
     });
   };
@@ -64,7 +74,8 @@ const IncomingTestHome = () => {
                   <td>{sp?.appointment?.caseNo}</td>
                   <td>{sp?.appointment?.ownerName}</td>
                   <td className="text-nowrap">{new Date(sp?.appointment?.createdAt).toDateString()}</td>
-                  <td>{sp?.totalTestCost ? sp?.totalTestCost : <button onClick={() => { handleTestCost(100, sp?._id) }}>Add</button>}</td>
+                  {/* payment */}
+                  <td className="text-center">{sp?.totalTestCost ? sp?.totalTestCost : <button className="btn-info btn text-white" onClick={() => { setTestId(sp?._id) }} type="button" data-bs-toggle="modal" data-bs-target="#paymentModal">Pay</button>}</td>
 
                   <td className="text-nowrap">
                     <select defaultValue={sp?.testStatue} onChange={(e) => handleStatus(e.target.value, sp._id)} className="form-select" aria-label="Default select example">
@@ -125,6 +136,7 @@ const IncomingTestHome = () => {
           </nav>
         </div>
       </div>
+      <TestPaymentModal handleTestCost={handleTestCost} setAmount={setAmount} amount={amount} title={'tests'} />
     </div>
   );
 };
