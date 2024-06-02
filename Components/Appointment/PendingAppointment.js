@@ -8,6 +8,7 @@ import Swal from "sweetalert2";
 import { deleteExistingAppointment, fetchPendingAppointments } from "../../features/appointment/appointmentSlice";
 import axiosInstance from "../../utils/axiosInstance";
 import { formatDate } from "../../utils/formatDate";
+import TestPaymentModal from "../IncomingTest/TestPaymentModal";
 import Loader from "../UI/Loader";
 import AppointmentImagesModal from "./modals/appointmentImagesModal";
 
@@ -17,6 +18,8 @@ const PendingAppointment = () => {
   const dispatch = useDispatch();
   const { pendingAppointments, status } = useSelector((state) => state.appointment);
   const [modalImages, setModalImages] = useState([]);
+  const [amount, setAmount] = useState(null);
+  const [appointmentId, setAppointmentId] = useState('');
 
   // handling delete single appointment
   const handleDeleteAppointment = async (caseNo) => {
@@ -69,8 +72,8 @@ const PendingAppointment = () => {
     });
   };
 
-  const handlePaymentAndStatus = (amount, id) => {
-    axiosInstance.patch(`/appointment/${id}`, { payment: "paid", amount: amount }).then((res) => {
+  const handlePaymentAndStatus = (amount) => {
+    axiosInstance.patch(`/appointment/${appointmentId}`, { payment: "paid", amount: amount }).then((res) => {
       let result = res.data;
 
       if (result.success) {
@@ -144,10 +147,9 @@ const PendingAppointment = () => {
                     <td>{appointment.ownerName}</td>
                     <td>{appointment.phone}</td>
                     <td>{formatDate(appointment.date)}</td>
-                    <td>
-                      {appointment?.amount ? appointment?.amount :
-                        <button onClick={() => handlePaymentAndStatus(700, appointment?._id)}>Pay</button>
-                      }</td>
+                    {/* <td> */}
+                    <td className="text-center">{appointment?.amount ? appointment?.amount : <button className="btn-info btn text-white" onClick={() => { setAppointmentId(appointment?._id) }} type="button" data-bs-toggle="modal" data-bs-target="#paymentModal">Pay</button>}</td>
+
                     <td className="d-flex gap-3 justify-content-center">
                       <Link href={`/appointment/${appointment.caseNo}`}>
                         <TiEdit type="button" title="edit" className="edit-icon" />
@@ -208,6 +210,7 @@ const PendingAppointment = () => {
 
       {/* modals  */}
       <AppointmentImagesModal modalImages={modalImages} />
+      <TestPaymentModal handleTestCost={handlePaymentAndStatus} setAmount={setAmount} amount={amount} title={'appointment'} />
     </div>
   );
 };

@@ -1,5 +1,7 @@
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
+import { GiTestTubes } from "react-icons/gi";
+import { GrTest } from "react-icons/gr";
 import { RiDeleteBinLine, RiImageLine } from "react-icons/ri";
 import { TiEdit } from "react-icons/ti";
 import { useDispatch, useSelector } from "react-redux";
@@ -127,6 +129,9 @@ const ViewPrescription = () => {
                     <td className="">{prescription?.appointment?.department?.name}</td>
                     <td className="">{formatDate(prescription?.appointment?.date)}</td>
                     <td className="d-flex gap-3 justify-content-center">
+                      <Link href={`/incomming-test/${prescription._id}`}>
+                        <GrTest type="button" title="Test result" className="download-icon" />
+                      </Link>
                       <Link href={`/prescription/${prescription._id}`}>
                         <TiEdit type="button" title="edit" className="edit-icon" />
                       </Link>
