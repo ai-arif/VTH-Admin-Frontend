@@ -3,7 +3,6 @@ import { jwtDecode } from "jwt-decode";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { RiLogoutCircleLine } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
 import { setLoggedInUserData } from "../../features/loggedInUser/loggedInUserAPI";
 import axiosInstance from "../../utils/axiosInstance";
@@ -196,8 +195,8 @@ const Navbar = () => {
                     </div>
                   </div>
                 </div>
-                <div className="app-utility-item">
-                  <Link href="/settings" title="Settings">
+                <div className="app-utility-item app-user-dropdown dropdown">
+                  <div className="dropdown-toggle" id="user-dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">
                     <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-gear icon" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                       <path
                         fill-rule="evenodd"
@@ -205,7 +204,20 @@ const Navbar = () => {
                       />
                       <path fill-rule="evenodd" d="M8 5.754a2.246 2.246 0 1 0 0 4.492 2.246 2.246 0 0 0 0-4.492zM4.754 8a3.246 3.246 0 1 1 6.492 0 3.246 3.246 0 0 1-6.492 0z" />
                     </svg>
-                  </Link>
+                  </div>
+                  <ul className="dropdown-menu" aria-labelledby="user-dropdown-toggle">
+                    <li>
+                      <Link href="/settings" className="dropdown-item">
+                        Settings
+                      </Link>
+                    </li>
+                    <li>
+                      <hr className="dropdown-divider" />
+                    </li>
+                    <button onClick={handleLogout} className="dropdown-item">
+                      Log Out
+                    </button>
+                  </ul>
                 </div>
               </div>
             </div>
@@ -233,12 +245,18 @@ const Navbar = () => {
             <nav className="app-nav app-nav-footer">
               <ul className="app-menu footer-menu list-unstyled">
                 <li className="nav-item">
-                  <button onClick={handleLogout} className="nav-link">
+                  <Link className="nav-link" href="/settings">
                     <span className="nav-icon">
-                      <RiLogoutCircleLine size={16} />
+                      <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-gear" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                          fill-rule="evenodd"
+                          d="M8.837 1.626c-.246-.835-1.428-.835-1.674 0l-.094.319A1.873 1.873 0 0 1 4.377 3.06l-.292-.16c-.764-.415-1.6.42-1.184 1.185l.159.292a1.873 1.873 0 0 1-1.115 2.692l-.319.094c-.835.246-.835 1.428 0 1.674l.319.094a1.873 1.873 0 0 1 1.115 2.693l-.16.291c-.415.764.42 1.6 1.185 1.184l.292-.159a1.873 1.873 0 0 1 2.692 1.116l.094.318c.246.835 1.428.835 1.674 0l.094-.319a1.873 1.873 0 0 1 2.693-1.115l.291.16c.764.415 1.6-.42 1.184-1.185l-.159-.291a1.873 1.873 0 0 1 1.116-2.693l.318-.094c.835-.246.835-1.428 0-1.674l-.319-.094a1.873 1.873 0 0 1-1.115-2.692l.16-.292c.415-.764-.42-1.6-1.185-1.184l-.291.159A1.873 1.873 0 0 1 8.93 1.945l-.094-.319zm-2.633-.283c.527-1.79 3.065-1.79 3.592 0l.094.319a.873.873 0 0 0 1.255.52l.292-.16c1.64-.892 3.434.901 2.54 2.541l-.159.292a.873.873 0 0 0 .52 1.255l.319.094c1.79.527 1.79 3.065 0 3.592l-.319.094a.873.873 0 0 0-.52 1.255l.16.292c.893 1.64-.902 3.434-2.541 2.54l-.292-.159a.873.873 0 0 0-1.255.52l-.094.319c-.527 1.79-3.065 1.79-3.592 0l-.094-.319a.873.873 0 0 0-1.255-.52l-.292.16c-1.64.893-3.433-.902-2.54-2.541l.159-.292a.873.873 0 0 0-.52-1.255l-.319-.094c-1.79-.527-1.79-3.065 0-3.592l.319-.094a.873.873 0 0 0 .52-1.255l-.16-.292c-.892-1.64.902-3.433 2.541-2.54l.292.159a.873.873 0 0 0 1.255-.52l.094-.319z"
+                        />
+                        <path fill-rule="evenodd" d="M8 5.754a2.246 2.246 0 1 0 0 4.492 2.246 2.246 0 0 0 0-4.492zM4.754 8a3.246 3.246 0 1 1 6.492 0 3.246 3.246 0 0 1-6.492 0z" />
+                      </svg>
                     </span>
-                    <span className="nav-link-text">Log Out</span>
-                  </button>
+                    <span className="nav-link-text">Settings</span>
+                  </Link>
                 </li>
               </ul>
             </nav>
