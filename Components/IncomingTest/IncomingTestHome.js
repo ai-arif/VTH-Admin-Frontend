@@ -10,7 +10,7 @@ import TestPaymentModal from "./TestPaymentModal";
 const IncomingTestHome = () => {
   const [prescriptions, setPrescriptions] = useState([]);
   const [refetch, setRefetch] = useState(0);
-  const [testId, setTestId] = useState('');
+  const [testId, setTestId] = useState("");
   const [amount, setAmount] = useState(null);
 
   useEffect(() => {
@@ -34,7 +34,7 @@ const IncomingTestHome = () => {
 
   const handleTestCost = (amount) => {
     if (!testId || !amount) {
-      return toast.error('Amount is required!');
+      return toast.error("Amount is required!");
     }
 
     // console.log({ amount, testId })
@@ -43,7 +43,7 @@ const IncomingTestHome = () => {
       // console.log({ result })
 
       if (result.success) {
-        setAmount(null)
+        setAmount(null);
         setRefetch(result);
         toast.success("Payment and status updated successfully!");
       }
@@ -75,20 +75,36 @@ const IncomingTestHome = () => {
                   <td>{sp?.appointment?.ownerName}</td>
                   <td className="text-nowrap">{new Date(sp?.appointment?.createdAt).toDateString()}</td>
                   {/* payment */}
-                  <td className="text-center">{sp?.totalTestCost ? sp?.totalTestCost : <button className="btn-info btn text-white" onClick={() => { setTestId(sp?._id) }} type="button" data-bs-toggle="modal" data-bs-target="#paymentModal">Pay</button>}</td>
+                  <td className="text-center">
+                    {sp?.totalTestCost ? (
+                      sp?.totalTestCost
+                    ) : (
+                      <button
+                        className="pay-btn"
+                        onClick={() => {
+                          setTestId(sp?._id);
+                        }}
+                        type="button"
+                        data-bs-toggle="modal"
+                        data-bs-target="#paymentModal"
+                      >
+                        Pay
+                      </button>
+                    )}
+                  </td>
 
                   <td className="text-nowrap">
                     <select defaultValue={sp?.testStatue} onChange={(e) => handleStatus(e.target.value, sp._id)} className="form-select" aria-label="Default select example">
-                      <option value={'success'}>Success</option>
-                      <option value={'processing'}>Processing</option>
-                      <option value={'pending'}>Pending</option>
+                      <option value={"success"}>Success</option>
+                      <option value={"processing"}>Processing</option>
+                      <option value={"pending"}>Pending</option>
                     </select>
                   </td>
                   <td className="d-flex gap-3">
                     <Link href={`/incomming-test/${sp._id}`}>
                       <TiEdit type="button" title="edit" className="edit-icon" />
                     </Link>
-                    <RiDeleteBinLine type="button" onClick={() => { }} title="delete" className="delete-icon" />
+                    <RiDeleteBinLine type="button" onClick={() => {}} title="delete" className="delete-icon" />
                   </td>
                 </tr>
               ))}
@@ -136,7 +152,7 @@ const IncomingTestHome = () => {
           </nav>
         </div>
       </div>
-      <TestPaymentModal handleTestCost={handleTestCost} setAmount={setAmount} amount={amount} title={'tests'} />
+      <TestPaymentModal handleTestCost={handleTestCost} setAmount={setAmount} amount={amount} title={"tests"} />
     </div>
   );
 };

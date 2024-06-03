@@ -11528,7 +11528,7 @@ button.close:focus {
   color: #5d6778;
 }
 .app-utility-item > a:hover {
-  color: #252930;
+  /* color: #252930; */
 }
 .app-utility-item .dropdown-toggle {
   position: relative;
@@ -12473,7 +12473,7 @@ button.close:focus {
   background-color: #5b99ea;
   padding: 6px;
   font-size: 28px;
-  color: white;
+  color: #fff;
   transition: background-color 0.2s;
 }
 .edit-icon:hover {
@@ -12485,7 +12485,7 @@ button.close:focus {
   background-color: #d26d69;
   padding: 6px;
   font-size: 28px;
-  color: white;
+  color: #fff;
   transition: background-color 0.2s;
 }
 .delete-icon:hover {
@@ -12497,9 +12497,22 @@ button.close:focus {
   background-color: #15a362;
   padding: 6px;
   font-size: 28px;
-  color: white;
+  color: #fff;
   transition: background-color 0.2s;
 }
 .download-icon:hover {
   background-color: #18ba70;
+}
+
+.pay-btn {
+  border: none;
+  border-radius: 2px;
+  background-color: var(--vth-green);
+  color: #fff;
+  padding: 4px 8px;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+.pay-btn:hover {
+  background-color: var(--vth-light-green);
 }
