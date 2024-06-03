@@ -93,6 +93,7 @@ const UserHome = () => {
                   </table>
                 </div>
               </div>
+              {/* pagination */}
               <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
             </div>
           </div>

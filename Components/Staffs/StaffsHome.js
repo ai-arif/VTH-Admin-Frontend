@@ -15,7 +15,6 @@ import UpdateStaff from "./modals/UpdateStaff";
 const StaffsHome = () => {
   const [search, setSearch] = useState("");
   const [existingData, setExistingData] = useState({});
-  const [searchMode, setSearchMode] = useState(false);
   const router = useRouter();
   const dispatch = useDispatch();
   const { staffs, status, currentPage, totalPages } = useSelector((state) => state.staff);
@@ -133,7 +132,7 @@ const StaffsHome = () => {
               <div className="d-flex justify-content-between mb-4">
                 <div className="input-group w-50">
                   <input onChange={(e) => setSearch(e.target.value)} onKeyDown={handleKeyPress} type="search" className="form-control" placeholder="Recipient's name or phone" />
-                  <button onClick={handleSearch} className="btn btn-primary text-white" type="button" id="button-addon2">
+                  <button onClick={() => handleSearch(currentPage)} className="btn btn-primary text-white" type="button" id="button-addon2">
                     Search
                   </button>
                 </div>
