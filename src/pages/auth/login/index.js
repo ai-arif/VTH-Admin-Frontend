@@ -69,7 +69,7 @@ const index = () => {
               <div className="auth-form-container text-start">
                 <form className="auth-form login-form">
                   <div className="phone mb-3">
-                    <label className="sr-only text-muted pb-1" for="signin-phone">
+                    <label className="sr-only text-muted pb-1" htmlFor="signin-phone">
                       Phone
                     </label>
                     <input
@@ -84,7 +84,7 @@ const index = () => {
                     />
                   </div>
                   <div className="password mb-3 position-relative">
-                    <label className="sr-only text-muted pb-1" for="signin-password">
+                    <label className="sr-only text-muted pb-1" htmlFor="signin-password">
                       Password
                     </label>
                     <input
@@ -105,7 +105,7 @@ const index = () => {
                     <div className="col-6">
                       <div className="form-check">
                         <input className="form-check-input" type="checkbox" value="" id="RememberPassword" />
-                        <label className="form-check-label" for="RememberPassword">
+                        <label className="form-check-label" htmlFor="RememberPassword">
                           Remember me
                         </label>
                       </div>

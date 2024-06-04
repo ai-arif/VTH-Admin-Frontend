@@ -5,7 +5,6 @@ const initialState = {
   userPatients: [],
   status: "idle",
   error: null,
-  currentPage: 1,
   totalPages: 1,
 };
 
@@ -25,9 +24,6 @@ export const userPatientSlice = createSlice({
   reducers: {
     resetUserPatient: (state) => {
       state.userPatient = {};
-    },
-    setCurrentPage: (state, action) => {
-      state.currentPage = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -59,6 +55,6 @@ export const userPatientSlice = createSlice({
   },
 });
 
-export const { resetUserPatient, setCurrentPage } = userPatientSlice.actions;
+export const { resetUserPatient } = userPatientSlice.actions;
 
 export default userPatientSlice.reducer;

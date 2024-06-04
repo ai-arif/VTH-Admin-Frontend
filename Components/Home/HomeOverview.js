@@ -12,7 +12,6 @@ import { useSelector } from "react-redux";
 import axiosInstance from "../../utils/axiosInstance";
 import HomeDiagrams from "./HomeDiagrams";
 
-
 const HomeOverview = () => {
   const { data } = useSelector((state) => state.loggedInUser);
 
@@ -20,15 +19,31 @@ const HomeOverview = () => {
   const [days, setDays] = useState(1);
 
   useEffect(() => {
-    axiosInstance.get(`/overview?daysBefore=${days}`).then(res => {
-      setAllData(res.data?.data)
-    })
-  }, [days])
+    axiosInstance.get(`/overview?daysBefore=${days}`).then((res) => {
+      setAllData(res.data?.data);
+    });
+  }, [days]);
 
-
-  const { totalRoles, staffs, totalStuffs, users, departments, clinicalTests,
-    species, speciesComplaints, totalComplaints, medicines, allAppointments, totalAppointment,
-    prescriptions, pharmacyOrders, testResults, totalPatientRegister, monthlyOrders, dailyOrders } = allData;
+  const {
+    totalRoles,
+    staffs,
+    totalStuffs,
+    users,
+    departments,
+    clinicalTests,
+    species,
+    speciesComplaints,
+    totalComplaints,
+    medicines,
+    allAppointments,
+    totalAppointment,
+    prescriptions,
+    pharmacyOrders,
+    testResults,
+    totalPatientRegister,
+    monthlyOrders,
+    dailyOrders,
+  } = allData;
 
   // console.log({ allData })
 
@@ -41,11 +56,16 @@ const HomeOverview = () => {
           <p>Have a nice day at great work</p>
         </div>
         <div style={{ width: "fit-content" }}>
-          <p>Showing data of last {days == 365 && "1 year"}{days == 180 && "6 months"}{days == 30 && "1 month"}{days == 15 && "15 days"}{days == 7 && "7 days"}{days == 1 && "24 hours"}</p>
+          <p>
+            Showing data of last {days == 365 && "1 year"}
+            {days == 180 && "6 months"}
+            {days == 30 && "1 month"}
+            {days == 15 && "15 days"}
+            {days == 7 && "7 days"}
+            {days == 1 && "24 hours"}
+          </p>
           <div style={{ width: "fit-content" }} className="d-flex gap-2 align-items-center">
-            <label style={{ width: "fit-content", whiteSpace: "nowrap" }} >
-              Filter overviews
-            </label>
+            <label style={{ width: "fit-content", whiteSpace: "nowrap" }}>Filter overviews</label>
             {/* select drop down for district */}
             <select defaultValue={days} onChange={(e) => setDays(e.target.value)} className="form-select" aria-label="Default select example">
               <option value="1">1 days</option>
@@ -60,8 +80,8 @@ const HomeOverview = () => {
       </div>
 
       {/* main contents  */}
-      <div class="container">
-        <div class="row gap-3 my-3">
+      <div className="container">
+        <div className="row gap-3 my-3">
           <div className="col bg-primary text-white rounded p-2 d-flex justify-content-start gap-2 align-items-center">
             <MdOutlineDateRange className="display-2" />
             <div className="">
@@ -92,7 +112,7 @@ const HomeOverview = () => {
           </div>
         </div>
 
-        <div class="row gap-3 my-3">
+        <div className="row gap-3 my-3">
           <div className="col bg-primary text-white rounded p-2 d-flex justify-content-start gap-2 align-items-center">
             <MdOutlineSick className="display-2" />
             <div className="">
@@ -123,7 +143,7 @@ const HomeOverview = () => {
           </div>
         </div>
 
-        <div class="row gap-3 my-3">
+        <div className="row gap-3 my-3">
           <div className="col bg-primary text-white rounded p-2 d-flex justify-content-start gap-2 align-items-center">
             <GrUserWorker className="display-2" />
             <div className="">

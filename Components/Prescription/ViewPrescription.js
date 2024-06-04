@@ -1,22 +1,24 @@
 import Link from "next/link";
-import React, { useEffect, useRef, useState } from "react";
-import { GiTestTubes } from "react-icons/gi";
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { GrTest } from "react-icons/gr";
 import { RiDeleteBinLine, RiImageLine } from "react-icons/ri";
 import { TiEdit } from "react-icons/ti";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
-import { deletePrescriptionData, fetchPrescription, searchPrescriptionData } from "../../features/prescription/prescriptionSlice";
+import { deletePrescriptionData, fetchPrescription, searchPrescriptionData, setCurrentPage } from "../../features/prescription/prescriptionSlice";
 import { formatDate } from "../../utils/formatDate";
 import AppointmentImagesModal from "../Appointment/modals/appointmentImagesModal";
 import Loader from "../UI/Loader";
+import Pagination from "../UI/Pagination";
 
 const ViewPrescription = () => {
-  const search = useRef("");
-  const dispatch = useDispatch();
-  const { prescriptions, status } = useSelector((state) => state.prescription);
+  const [search, setSearch] = useState("");
   const [modalImages, setModalImages] = useState([]);
-
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const { prescriptions, status, currentPage, totalPages } = useSelector((state) => state.prescription);
 
   // handling delete single prescription
   const handleDeletePrescription = async (id) => {
@@ -72,13 +74,11 @@ const ViewPrescription = () => {
 
   const handleSearch = async () => {
     try {
-      const searchValue = search.current.value;
-      if (searchValue.trim()) {
-        // const res = await dispatch(searchPrescriptionData(searchValue));
-        // console.log(res);
-        // if (res?.payload?.data?.data?.length <= 0) {
-        //   toast.error("Data Not Found!");
-        // }
+      if (search.trim()) {
+        const res = await dispatch(searchPrescriptionData({ search }));
+        if (res?.payload?.data?.data?.length <= 0) {
+          toast.error("Data Not Found!");
+        }
       }
     } catch (error) {
       console.log(error);
@@ -91,19 +91,35 @@ const ViewPrescription = () => {
     }
   };
 
+  const handlePageChange = async (page) => {
+    router.push({
+      pathname: router.pathname,
+      query: { ...router.query, page },
+    });
+    await dispatch(setCurrentPage(page));
+  };
+
   useEffect(() => {
-    dispatch(fetchPrescription());
-  }, [dispatch]);
+    const page = parseInt(router.query.page) || 1;
+
+    dispatch(setCurrentPage(page));
+
+    if (search) {
+      dispatch(searchPrescriptionData({ search }));
+    } else {
+      dispatch(fetchPrescription({ page }));
+    }
+  }, [dispatch, router.query.page]);
 
   // loader
-  if (status === "loading") return <Loader />;
+  // if (status === "loading" && currentPage < 2) return <Loader />;
 
   return (
     <div className="container-fluid">
       <div className="app-card p-5 text-center shadow-sm">
         <div className="d-flex align-items-center justify-content-between mb-4">
           <div className="input-group w-50">
-            <input ref={search} onKeyDown={handleKeyPress} type="text" className="form-control" placeholder="Recipient's name, phone, case no" />
+            <input onChange={(e) => setSearch(e.target.value)} onKeyDown={handleKeyPress} type="search" className="form-control" placeholder="Recipient's name or phone" />
             <button onClick={handleSearch} className="btn btn-primary text-white" type="button" id="button-addon2">
               Search
             </button>
@@ -125,7 +141,7 @@ const ViewPrescription = () => {
               <tbody>
                 {prescriptions?.data?.map((prescription, idx) => (
                   <tr key={prescription._id}>
-                    <td>{idx + 1}</td>
+                    <td>{(currentPage - 1) * 5 + idx + 1}</td>
                     <td className="text-nowrap">{prescription?.appointment?.ownerName}</td>
                     <td className="">{prescription?.appointment?.department?.name}</td>
                     <td className="">{formatDate(prescription?.appointment?.date)}</td>
@@ -133,17 +149,26 @@ const ViewPrescription = () => {
                       {/* <Link href={`/incomming-test/${prescription._id}`}>
                         <GrTest type="button" title="Test result" className="download-icon" />
                       </Link> */}
-                      {
-                        prescription?.tests?.length > 0 &&
+                      {prescription?.tests?.length > 0 && (
                         <Link href={`/prescription/view/${prescription?.appointment?._id}`}>
                           <GrTest type="button" title="Test result" className="download-icon" />
                         </Link>
-                      }
+                      )}
                       <Link href={`/prescription/${prescription._id}`}>
                         <TiEdit type="button" title="edit" className="edit-icon" />
                       </Link>
                       <RiDeleteBinLine type="button" onClick={() => handleDeletePrescription(prescription._id)} title="delete" className="delete-icon" />
-                      <button disabled={prescription?.appointment?.images?.length == 0} title={prescription?.appointment?.images?.length == 0 ? "No image available" : "View images"} className="bg-transparent border-0" onClick={() => { setModalImages(prescription?.appointment?.images) }} type="button" data-bs-toggle="modal" data-bs-target="#showImages">
+                      <button
+                        disabled={prescription?.appointment?.images?.length == 0}
+                        title={prescription?.appointment?.images?.length == 0 ? "No image available" : "View images"}
+                        className="bg-transparent border-0"
+                        onClick={() => {
+                          setModalImages(prescription?.appointment?.images);
+                        }}
+                        type="button"
+                        data-bs-toggle="modal"
+                        data-bs-target="#showImages"
+                      >
                         <RiImageLine className="download-icon" />
                       </button>
                     </td>
@@ -153,47 +178,8 @@ const ViewPrescription = () => {
             </table>
           </div>
         </div>
-        {/* footer part pagination */}
-        <div className="d-flex justify-content-between align-items-center">
-          <div className="d-flex gap-2">
-            <span className="text-nowrap">Items per page</span>
-            <select className="form-select form-select-sm">
-              <option value="1">10</option>
-              <option value="2">20</option>
-              <option value="3">50</option>
-              <option value="4">100</option>
-            </select>
-          </div>
-          <nav aria-label="Page navigation example">
-            <ul className="pagination">
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  Previous
-                </a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  1
-                </a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  2
-                </a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  3
-                </a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  Next
-                </a>
-              </li>
-            </ul>
-          </nav>
-        </div>
+        {/* pagination */}
+        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
       </div>
       {/* modals  */}
       <AppointmentImagesModal modalImages={modalImages} />

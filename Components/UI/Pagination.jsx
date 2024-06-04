@@ -27,8 +27,6 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
 
   const pageNumbers = getPageNumbers();
 
-  // console.log(pageNumbers);
-
   return (
     <div className="d-flex justify-content-end">
       <nav aria-label="Page navigation example">

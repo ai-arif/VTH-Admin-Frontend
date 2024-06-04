@@ -2,20 +2,23 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAllUserPatient, searchUserPatientAsync, setCurrentPage } from "../../features/userPatient/userPatientSlice";
+import { fetchAllUserPatient, searchUserPatientAsync } from "../../features/userPatient/userPatientSlice";
 import Loader from "../UI/Loader";
 import Pagination from "../UI/Pagination";
 
 const UserHome = () => {
   const [search, setSearch] = useState("");
   const router = useRouter();
+  // const [page, setPage] = useState(parseInt(router.query.page));
   const dispatch = useDispatch();
-  const { userPatients, status, currentPage, totalPages } = useSelector((state) => state.userPatient);
+  const { userPatients, status, totalPages } = useSelector((state) => state.userPatient);
+  // console.log({ userPatients });
+  const currentPage = parseInt(router.query.page) || 1;
 
-  const handleSearch = async (page = 1) => {
+  const handleSearch = async () => {
     try {
       if (search.trim()) {
-        const res = await dispatch(searchUserPatientAsync({ search, page }));
+        const res = await dispatch(searchUserPatientAsync({ search }));
         if (res?.payload?.data?.users?.length <= 0) {
           toast.error("Data Not Found!");
         }
@@ -36,21 +39,16 @@ const UserHome = () => {
       pathname: router.pathname,
       query: { ...router.query, page },
     });
-    await dispatch(setCurrentPage(page));
+    // dispatch(fetchAllUserPatient({ page }));
   };
 
   useEffect(() => {
-    const page = parseInt(router.query.page) || 1;
+    console.log("useEffect");
+    console.log({ currentPage });
+    dispatch(fetchAllUserPatient({ page: currentPage }));
+  }, [dispatch, currentPage]);
 
-    dispatch(setCurrentPage(page));
-
-    if (search) {
-      dispatch(searchUserPatientAsync({ search, page }));
-    } else {
-      dispatch(fetchAllUserPatient({ page }));
-    }
-  }, [dispatch, router.query.page]);
-
+  // console.log({ currentPage });
   // loader
   // if (status === "loading" && currentPage < 2) return <Loader />;
 
@@ -63,7 +61,7 @@ const UserHome = () => {
               <div className="d-flex align-items-center justify-content-between mb-4">
                 <div className="input-group w-50">
                   <input onChange={(e) => setSearch(e.target.value)} onKeyDown={handleKeyPress} type="search" className="form-control" placeholder="Recipient's name or phone" />
-                  <button onClick={() => handleSearch(currentPage)} className="btn btn-primary text-white" type="button" id="button-addon2">
+                  <button onClick={handleSearch} className="btn btn-primary text-white" type="button" id="button-addon2">
                     Search
                   </button>
                 </div>
@@ -83,7 +81,7 @@ const UserHome = () => {
                     <tbody>
                       {userPatients?.map((user, idx) => (
                         <tr key={user._id}>
-                          <td>{(currentPage - 1) * 15 + idx + 1}</td>
+                          <td>{(currentPage - 1) * 5 + idx + 1}</td>
                           <td>{user.fullName}</td>
                           <td>{user.phone}</td>
                           <td>{user.role}</td>
