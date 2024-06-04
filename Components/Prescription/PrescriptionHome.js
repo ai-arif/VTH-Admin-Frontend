@@ -51,9 +51,6 @@ const PrescriptionHome = () => {
   const { tests } = useSelector((state) => state.test);
   const { medicines } = useSelector((state) => state.medicine);
 
-  // console.log(medicines?.data);
-  // console.log(tests?.data);
-
   const { handleSubmit, register, control, reset } = useForm();
 
   const getPatentByPhone = async () => {

@@ -7,7 +7,7 @@ import { RiDeleteBinLine, RiImageLine } from "react-icons/ri";
 import { TiEdit } from "react-icons/ti";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
-import { deletePrescriptionData, fetchPrescription, searchPrescriptionData, setCurrentPage } from "../../features/prescription/prescriptionSlice";
+import { deletePrescriptionData, fetchPrescription, searchPrescriptionData } from "../../features/prescription/prescriptionSlice";
 import { formatDate } from "../../utils/formatDate";
 import AppointmentImagesModal from "../Appointment/modals/appointmentImagesModal";
 import Loader from "../UI/Loader";
@@ -18,7 +18,8 @@ const ViewPrescription = () => {
   const [modalImages, setModalImages] = useState([]);
   const router = useRouter();
   const dispatch = useDispatch();
-  const { prescriptions, status, currentPage, totalPages } = useSelector((state) => state.prescription);
+  const { prescriptions, status, totalPages } = useSelector((state) => state.prescription);
+  const currentPage = parseInt(router.query.page) || 1;
 
   // handling delete single prescription
   const handleDeletePrescription = async (id) => {
@@ -38,7 +39,7 @@ const ViewPrescription = () => {
           const response = await dispatch(deletePrescriptionData(id));
 
           if (response?.payload?.success) {
-            dispatch(fetchPrescription());
+            dispatch(fetchPrescription({ page: currentPage }));
 
             Swal.fire({
               icon: "success",
@@ -96,20 +97,13 @@ const ViewPrescription = () => {
       pathname: router.pathname,
       query: { ...router.query, page },
     });
-    await dispatch(setCurrentPage(page));
   };
 
   useEffect(() => {
-    const page = parseInt(router.query.page) || 1;
-
-    dispatch(setCurrentPage(page));
-
-    if (search) {
-      dispatch(searchPrescriptionData({ search }));
-    } else {
-      dispatch(fetchPrescription({ page }));
+    if (router.isReady) {
+      dispatch(fetchPrescription({ page: currentPage }));
     }
-  }, [dispatch, router.query.page]);
+  }, [router.isReady, dispatch, currentPage]);
 
   // loader
   // if (status === "loading" && currentPage < 2) return <Loader />;
@@ -141,14 +135,11 @@ const ViewPrescription = () => {
               <tbody>
                 {prescriptions?.data?.map((prescription, idx) => (
                   <tr key={prescription._id}>
-                    <td>{(currentPage - 1) * 5 + idx + 1}</td>
+                    <td>{(currentPage - 1) * 15 + idx + 1}</td>
                     <td className="text-nowrap">{prescription?.appointment?.ownerName}</td>
                     <td className="">{prescription?.appointment?.department?.name}</td>
                     <td className="">{formatDate(prescription?.appointment?.date)}</td>
                     <td className="d-flex gap-3 justify-content-end">
-                      {/* <Link href={`/incomming-test/${prescription._id}`}>
-                        <GrTest type="button" title="Test result" className="download-icon" />
-                      </Link> */}
                       {prescription?.tests?.length > 0 && (
                         <Link href={`/prescription/view/${prescription?.appointment?._id}`}>
                           <GrTest type="button" title="Test result" className="download-icon" />

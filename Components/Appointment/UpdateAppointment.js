@@ -114,6 +114,7 @@ const UpdateAppointment = () => {
                       <option value="Fulpur">Fulpur</option>
                       <option value="Haluaghat">Haluaghat</option>
                       <option value="Dhubaura">Dhubaura</option>
+                      <option value="Pagla">Pagla</option>
                     </select>
                     {errors.upazila && <small className="text-danger">Please select any upazilla</small>}
                   </div>

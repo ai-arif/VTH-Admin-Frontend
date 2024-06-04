@@ -6,7 +6,6 @@ const initialState = {
   prescription: {},
   status: "idle",
   error: null,
-  currentPage: 1,
   totalPages: 1,
 };
 
@@ -46,9 +45,6 @@ export const prescriptionSlice = createSlice({
   reducers: {
     resetPrescription: (state) => {
       state.prescription = {};
-    },
-    setCurrentPage: (state, action) => {
-      state.currentPage = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -119,6 +115,6 @@ export const prescriptionSlice = createSlice({
   },
 });
 
-export const { resetPrescription, setCurrentPage } = prescriptionSlice.actions;
+export const { resetPrescription } = prescriptionSlice.actions;
 
 export default prescriptionSlice.reducer;

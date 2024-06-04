@@ -6,7 +6,7 @@ import { RiDeleteBinLine } from "react-icons/ri";
 import { TiEdit } from "react-icons/ti";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
-import { deleteStaffData, fetchStaffs, searchStaffData, setCurrentPage } from "../../features/staff/staffSlice";
+import { deleteStaffData, fetchStaffs, searchStaffData } from "../../features/staff/staffSlice";
 import Loader from "../UI/Loader";
 import Pagination from "../UI/Pagination";
 import AddStaff from "./modals/AddStaff";
@@ -17,7 +17,8 @@ const StaffsHome = () => {
   const [existingData, setExistingData] = useState({});
   const router = useRouter();
   const dispatch = useDispatch();
-  const { staffs, status, currentPage, totalPages } = useSelector((state) => state.staff);
+  const { staffs, status, totalPages } = useSelector((state) => state.staff);
+  const currentPage = parseInt(router.query.page) || 1;
 
   // handle get single staff data for update
   const handleGetStaff = (staff) => {
@@ -42,7 +43,7 @@ const StaffsHome = () => {
           const response = await dispatch(deleteStaffData(id));
 
           if (response?.payload?.success) {
-            await dispatch(fetchStaffs({}));
+            await dispatch(fetchStaffs({ page: currentPage }));
 
             Swal.fire({
               icon: "success",
@@ -100,20 +101,13 @@ const StaffsHome = () => {
       pathname: router.pathname,
       query: { ...router.query, page },
     });
-    await dispatch(setCurrentPage(page));
   };
 
   useEffect(() => {
-    const page = parseInt(router.query.page) || 1;
-
-    dispatch(setCurrentPage(page));
-
-    if (search) {
-      dispatch(searchStaffData({ search }));
-    } else {
-      dispatch(fetchStaffs({ page }));
+    if (router.isReady) {
+      dispatch(fetchStaffs({ page: currentPage }));
     }
-  }, [dispatch, router.query.page]);
+  }, [router.isReady, dispatch, currentPage]);
 
   // loader
   // if (status === "loading" && currentPage < 2) return <Loader />;
@@ -157,7 +151,7 @@ const StaffsHome = () => {
                     <tbody>
                       {staffs?.users?.map((staff, idx) => (
                         <tr key={staff._id}>
-                          <td>{(currentPage - 1) * 5 + idx + 1}</td>
+                          <td>{(currentPage - 1) * 15 + idx + 1}</td>
                           <td>{staff.fullName}</td>
                           <td>{staff.phone}</td>
                           <td className="text-capitalize">{staff.role}</td>

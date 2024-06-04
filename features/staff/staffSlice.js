@@ -6,7 +6,6 @@ const initialState = {
   staff: {},
   status: "idle",
   error: null,
-  currentPage: 1,
   totalPages: 1,
 };
 
@@ -41,9 +40,6 @@ export const staffSlice = createSlice({
   reducers: {
     resetStaff: (state) => {
       state.staff = {};
-    },
-    setCurrentPage: (state, action) => {
-      state.currentPage = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -103,6 +99,6 @@ export const staffSlice = createSlice({
   },
 });
 
-export const { resetStaff, setCurrentPage } = staffSlice.actions;
+export const { resetStaff } = staffSlice.actions;
 
 export default staffSlice.reducer;

@@ -589,20 +589,18 @@ const PatientRegistrationForm = () => {
                     </div>
                   )}
                   {activeTab === "tests" && (
-                    <>
-                      <div className="row info-group">
-                        <div className="mb-3">
-                          <label className="form-label">Tests</label>
-                          <Controller name="tests" control={control} defaultValue={[]} render={({ field }) => <Select options={testOptions} isMulti {...field} styles={customStyles} />} />
-                        </div>
+                    <div className="row info-group">
+                      <div className="mb-3">
+                        <label className="form-label">Tests</label>
+                        <Controller name="tests" control={control} defaultValue={[]} render={({ field }) => <Select options={testOptions} isMulti {...field} styles={customStyles} />} />
                       </div>
-                      <div className="d-flex justify-content-center my-3">
-                        <button type="submit" className="btn btn-primary text-white">
-                          Submit
-                        </button>
-                      </div>
-                    </>
+                    </div>
                   )}
+                  <div className="d-flex justify-content-center my-3">
+                    <button type="submit" className="btn btn-primary text-white">
+                      Submit
+                    </button>
+                  </div>
                 </form>
               </div>
               <br />

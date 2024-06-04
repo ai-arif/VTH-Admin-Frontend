@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -8,8 +9,10 @@ import { fetchStaffs, updateStaffData } from "../../../features/staff/staffSlice
 
 const UpdateStaff = ({ existingData }) => {
   const [isDoctor, setIsDoctor] = useState(false);
+  const router = useRouter();
   const dispatch = useDispatch();
   const { departments } = useSelector((state) => state.department);
+  const currentPage = parseInt(router.query.page) || 1;
 
   const handleGetRole = (role) => {
     if (role === "doctor") {
@@ -40,7 +43,7 @@ const UpdateStaff = ({ existingData }) => {
         document.getElementById("closeModal").click();
         toast.success("Account updated successfully!");
         reset();
-        await dispatch(fetchStaffs({}));
+        await dispatch(fetchStaffs({ page: currentPage }));
       } else {
         toast.error("Failed to update account! Please try again later.");
       }
