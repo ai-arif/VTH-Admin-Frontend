@@ -76,10 +76,10 @@ const StaffsHome = () => {
     });
   };
 
-  const handleSearch = async (page = 1) => {
+  const handleSearch = async () => {
     try {
       if (search.trim()) {
-        const res = await dispatch(searchStaffData({ search, page }));
+        const res = await dispatch(searchStaffData({ search }));
         if (res?.payload?.data?.users?.length <= 0) {
           toast.error("Data Not Found!");
         }
@@ -109,7 +109,7 @@ const StaffsHome = () => {
     dispatch(setCurrentPage(page));
 
     if (search) {
-      dispatch(searchStaffData({ search, page }));
+      dispatch(searchStaffData({ search }));
     } else {
       dispatch(fetchStaffs({ page }));
     }
@@ -132,7 +132,7 @@ const StaffsHome = () => {
               <div className="d-flex justify-content-between mb-4">
                 <div className="input-group w-50">
                   <input onChange={(e) => setSearch(e.target.value)} onKeyDown={handleKeyPress} type="search" className="form-control" placeholder="Recipient's name or phone" />
-                  <button onClick={() => handleSearch(currentPage)} className="btn btn-primary text-white" type="button" id="button-addon2">
+                  <button onClick={handleSearch} className="btn btn-primary text-white" type="button" id="button-addon2">
                     Search
                   </button>
                 </div>
@@ -157,7 +157,7 @@ const StaffsHome = () => {
                     <tbody>
                       {staffs?.users?.map((staff, idx) => (
                         <tr key={staff._id}>
-                          <td>{(currentPage - 1) * 15 + idx + 1}</td>
+                          <td>{(currentPage - 1) * 5 + idx + 1}</td>
                           <td>{staff.fullName}</td>
                           <td>{staff.phone}</td>
                           <td className="text-capitalize">{staff.role}</td>

@@ -2,14 +2,16 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { addPrescription, deletePrescription, getPrescriptions, getSinglePrescription, searchPrescription, updatePrescription } from "./prescriptionAPI";
 
 const initialState = {
-  prescription: {},
   prescriptions: [],
+  prescription: {},
   status: "idle",
   error: null,
+  currentPage: 1,
+  totalPages: 1,
 };
 
-export const fetchPrescription = createAsyncThunk("prescription/fetchPrescription", async () => {
-  const response = await getPrescriptions();
+export const fetchPrescription = createAsyncThunk("prescription/fetchPrescription", async ({ page, limit }) => {
+  const response = await getPrescriptions(page, limit);
   return response;
 });
 
@@ -33,8 +35,8 @@ export const fetchSinglePrescription = createAsyncThunk("prescription/fetchSingl
   return response;
 });
 
-export const searchPrescriptionData = createAsyncThunk("patient/searchPrescriptionData", async (search) => {
-  const response = await searchPrescription(search);
+export const searchPrescriptionData = createAsyncThunk("patient/searchPrescriptionData", async ({ search, page, limit }) => {
+  const response = await searchPrescription(search, page, limit);
   return response;
 });
 
@@ -42,9 +44,12 @@ export const prescriptionSlice = createSlice({
   name: "prescription",
   initialState,
   reducers: {
-    // resetPrescription: (state) => {
-    //   state.prescription = {};
-    // },
+    resetPrescription: (state) => {
+      state.prescription = {};
+    },
+    setCurrentPage: (state, action) => {
+      state.currentPage = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -52,7 +57,9 @@ export const prescriptionSlice = createSlice({
         state.status = "loading";
       })
       .addCase(fetchPrescription.fulfilled, (state, action) => {
-        (state.status = "success"), (state.prescriptions = action.payload.data);
+        state.status = "success";
+        state.prescriptions = action.payload.data;
+        state.totalPages = action.payload.data.totalPages;
       })
       .addCase(fetchPrescription.rejected, (state, action) => {
         state.status = "failed";
@@ -101,7 +108,9 @@ export const prescriptionSlice = createSlice({
         state.status = "loading";
       })
       .addCase(searchPrescriptionData.fulfilled, (state, action) => {
-        (state.status = "success"), (state.prescriptions = action.payload.data);
+        state.status = "success";
+        state.prescriptions = action.payload.data;
+        state.totalPages = action.payload.data.totalPages;
       })
       .addCase(searchPrescriptionData.rejected, (state, action) => {
         state.status = "failed";
@@ -110,6 +119,6 @@ export const prescriptionSlice = createSlice({
   },
 });
 
-export const { resetPrescription } = prescriptionSlice.actions;
+export const { resetPrescription, setCurrentPage } = prescriptionSlice.actions;
 
 export default prescriptionSlice.reducer;

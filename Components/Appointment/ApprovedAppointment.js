@@ -74,10 +74,10 @@ const ApprovedAppointment = () => {
     });
   };
 
-  const handleSearch = async (page = 1) => {
+  const handleSearch = async () => {
     try {
       if (search.trim()) {
-        const res = await dispatch(searchApprovedAppointmentsData({ search, page, status: "approved" }));
+        const res = await dispatch(searchApprovedAppointmentsData({ search, status: "approved" }));
         if (res?.payload?.data?.appointments?.length <= 0) {
           toast.error("Data Not Found!");
         }
@@ -119,7 +119,7 @@ const ApprovedAppointment = () => {
     dispatch(setCurrentPage(page));
 
     if (search) {
-      dispatch(searchApprovedAppointmentsData({ search, page, status: "approved" }));
+      dispatch(searchApprovedAppointmentsData({ search, status: "approved" }));
     } else {
       dispatch(fetchApprovedAppointments({ page }));
     }
@@ -167,7 +167,7 @@ const ApprovedAppointment = () => {
                         appointment?.amount
                       ) : (
                         <button
-                          className="btn-info btn text-white"
+                          className="pay-btn"
                           onClick={() => {
                             setAppointmentId(appointment?._id);
                           }}

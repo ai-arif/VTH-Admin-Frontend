@@ -74,10 +74,10 @@ const PendingAppointment = () => {
     });
   };
 
-  const handleSearch = async (page = 1) => {
+  const handleSearch = async () => {
     try {
       if (search.trim()) {
-        const res = await dispatch(searchPendingAppointmentsData({ search, page, status: "pending" }));
+        const res = await dispatch(searchPendingAppointmentsData({ search, status: "pending" }));
         if (res?.payload?.data?.appointments?.length <= 0) {
           toast.error("Data Not Found!");
         }
@@ -119,7 +119,7 @@ const PendingAppointment = () => {
     dispatch(setCurrentPage(page));
 
     if (search) {
-      dispatch(searchPendingAppointmentsData({ search, page, status: "pending" }));
+      dispatch(searchPendingAppointmentsData({ search, status: "pending" }));
     } else {
       dispatch(fetchPendingAppointments({ page }));
     }
@@ -168,7 +168,7 @@ const PendingAppointment = () => {
                         appointment?.amount
                       ) : (
                         <button
-                          className="btn-info btn text-white"
+                          className="pay-btn"
                           onClick={() => {
                             setAppointmentId(appointment?._id);
                           }}
