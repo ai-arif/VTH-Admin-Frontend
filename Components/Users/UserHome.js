@@ -9,10 +9,8 @@ import Pagination from "../UI/Pagination";
 const UserHome = () => {
   const [search, setSearch] = useState("");
   const router = useRouter();
-  // const [page, setPage] = useState(parseInt(router.query.page));
   const dispatch = useDispatch();
   const { userPatients, status, totalPages } = useSelector((state) => state.userPatient);
-  // console.log({ userPatients });
   const currentPage = parseInt(router.query.page) || 1;
 
   const handleSearch = async () => {
@@ -39,16 +37,14 @@ const UserHome = () => {
       pathname: router.pathname,
       query: { ...router.query, page },
     });
-    // dispatch(fetchAllUserPatient({ page }));
   };
 
   useEffect(() => {
-    console.log("useEffect");
-    console.log({ currentPage });
-    dispatch(fetchAllUserPatient({ page: currentPage }));
-  }, [dispatch, currentPage]);
+    if (router.isReady) {
+      dispatch(fetchAllUserPatient({ page: currentPage }));
+    }
+  }, [router.isReady, dispatch, currentPage]);
 
-  // console.log({ currentPage });
   // loader
   // if (status === "loading" && currentPage < 2) return <Loader />;
 
@@ -81,7 +77,7 @@ const UserHome = () => {
                     <tbody>
                       {userPatients?.map((user, idx) => (
                         <tr key={user._id}>
-                          <td>{(currentPage - 1) * 5 + idx + 1}</td>
+                          <td>{(currentPage - 1) * 15 + idx + 1}</td>
                           <td>{user.fullName}</td>
                           <td>{user.phone}</td>
                           <td>{user.role}</td>

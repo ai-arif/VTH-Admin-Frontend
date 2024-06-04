@@ -35,7 +35,7 @@ export const addStaff = async (data) => {
   }
 };
 
-export const searchStaff = async (search, page = 1, limit = 5) => {
+export const searchStaff = async (search, page = 1, limit = 40) => {
   try {
     const response = await axiosInstance.get(`/staffs/admins/search?search=${search}&page=${page}&limit=${limit}`);
     return response.data;

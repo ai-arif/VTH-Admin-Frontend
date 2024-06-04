@@ -6,7 +6,6 @@ import { GrTest, GrTestDesktop } from "react-icons/gr";
 import { HiOutlineUserGroup } from "react-icons/hi2";
 import { MdOutlineLocalPharmacy } from "react-icons/md";
 import { SlLayers } from "react-icons/sl";
-import { VscOutput } from "react-icons/vsc";
 
 export const menuConfig = {
   admin: [
