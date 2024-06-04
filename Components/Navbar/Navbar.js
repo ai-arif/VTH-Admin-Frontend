@@ -1,68 +1,23 @@
+import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { AiOutlineHome, AiOutlineMedicineBox } from "react-icons/ai";
-import { BsBarChartLine, BsFolder } from "react-icons/bs";
-import { GiCow } from "react-icons/gi";
-import { GrTest, GrTestDesktop } from "react-icons/gr";
-import { HiOutlineUserGroup } from "react-icons/hi2";
-import { SlLayers } from "react-icons/sl";
-import { VscOutput } from "react-icons/vsc";
 import { useDispatch, useSelector } from "react-redux";
+import { setLoggedInUserData } from "../../features/loggedInUser/loggedInUserAPI";
 import axiosInstance from "../../utils/axiosInstance";
+import menuConfig from "../../utils/menuConfig";
 import NavItem from "./NavItem";
 import SubmenuNavItem from "./SubmenuNavItem";
-// import {  } from "../../features/staff/staffSlice";
-
-// import notificationImg = from '../../public/assets/images/info.png'
-import Cookies from "js-cookie";
-import { jwtDecode } from "jwt-decode";
-import { FaHospitalUser } from "react-icons/fa6";
-import { MdOutlineLocalPharmacy } from "react-icons/md";
-import { setLoggedInUserData } from "../../features/loggedInUser/loggedInUserAPI";
 
 const Navbar = () => {
-  const dispatch = useDispatch();
-  const router = useRouter();
-  // const { data } = useSelector((state) => state.loggedInUser);
-  // console.log({ data });
-
-  // useEffect(() => {
-  // dispatch(fetchUser());
-  // }, [dispatch]);
-
-  // const handleLogout = () => {
-  //   Cookies.remove("token");
-  //   router.push("/auth/login");
-  // };
-
   const [notifications, setNotifications] = useState([]);
   const [unseenNotifications, setUnseenNotifications] = useState(0);
   const [reFetch, setRefetch] = useState(0);
-
-  useEffect(() => {
-    const token = Cookies.get("token");
-    if (token) {
-      const decoded = jwtDecode(token);
-      if (decoded?.id) {
-        axiosInstance.get(`/staffs/${decoded?.id}`).then((res) => {
-          // console.log({ res: res.data?.data })
-          dispatch(setLoggedInUserData(res.data?.data));
-        });
-      } else {
-        dispatch(setLoggedInUserData(decoded));
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    axiosInstance.get("/notification").then((res) => {
-      const result = res.data.data;
-      // console.log(result)
-      setNotifications(result?.data);
-      setUnseenNotifications(result?.count);
-    });
-  }, [reFetch]);
+  const [menuItems, setMenuItems] = useState([]);
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const { data } = useSelector((state) => state.loggedInUser);
 
   function timeAgo(dateString) {
     const now = new Date();
@@ -95,7 +50,64 @@ const Navbar = () => {
     });
   };
 
-  // console.log(unseenNotifications);
+  const handleLogout = () => {
+    Cookies.remove("token");
+    router.push("/auth/login");
+  };
+
+  useEffect(() => {
+    const token = Cookies.get("token");
+    if (token) {
+      const decoded = jwtDecode(token);
+      if (decoded?.id) {
+        axiosInstance.get(`/staffs/${decoded?.id}`).then((res) => {
+          dispatch(setLoggedInUserData(res.data?.data));
+        });
+      } else {
+        dispatch(setLoggedInUserData(decoded));
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (data?.role) {
+      setMenuItems(menuConfig[data.role] || []);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    axiosInstance.get("/notification").then((res) => {
+      const result = res.data.data;
+      setNotifications(result?.data);
+      setUnseenNotifications(result?.count);
+    });
+  }, [reFetch]);
+
+  const renderNavItem = (item) => {
+    if (item.hrefParent) {
+      return (
+        <SubmenuNavItem
+          key={item.hrefParent}
+          hrefParent={item.hrefParent}
+          hrefOne={item.hrefOne}
+          hrefTwo={item.hrefTwo}
+          hrefNameOne={item.labelOne}
+          hrefNameTwo={item.labelTwo}
+          submenuNumber={item.submenuNumber}
+        >
+          <span className="nav-icon">{item.icon}</span>
+          <span className="nav-link-text">{item.label}</span>
+        </SubmenuNavItem>
+      );
+    } else {
+      return (
+        <NavItem key={item.href} href={item.href}>
+          <span className="nav-icon">{item.icon}</span>
+          <span className="nav-link-text">{item.label}</span>
+        </NavItem>
+      );
+    }
+  };
 
   return (
     <header className="app-header fixed-top">
@@ -114,13 +126,17 @@ const Navbar = () => {
               <div className="search-mobile-trigger d-sm-none col">
                 <i className="search-mobile-trigger-icon fa-solid fa-magnifying-glass"></i>
               </div>
-              <div className="app-search-box col">
-                <form className="app-search-form">
-                  <input type="text" placeholder="Search..." name="search" className="form-control search-input" />
-                  <button type="submit" className="btn search-btn btn-primary" value="Search">
-                    <i className="fa-solid fa-magnifying-glass"></i>
-                  </button>
-                </form>
+              <div className="col">
+                <div style={{ color: "#eaeaea", opacity: "0.7" }} className="d-flex flex-column">
+                  <span>{data?.fullName}</span>
+                  <small>{data?.phone}</small>
+                </div>
+              </div>
+
+              <div className="col">
+                <div style={{ color: "#eaeaea", opacity: "0.7" }}>
+                  <h6 className="text-uppercase">{data?.role}</h6>
+                </div>
               </div>
 
               <div className="app-utilities col-auto">
@@ -179,8 +195,8 @@ const Navbar = () => {
                     </div>
                   </div>
                 </div>
-                <div className="app-utility-item">
-                  <a href="settings.html" title="Settings">
+                <div className="app-utility-item app-user-dropdown dropdown">
+                  <div className="dropdown-toggle" id="user-dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">
                     <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-gear icon" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                       <path
                         fill-rule="evenodd"
@@ -188,30 +204,19 @@ const Navbar = () => {
                       />
                       <path fill-rule="evenodd" d="M8 5.754a2.246 2.246 0 1 0 0 4.492 2.246 2.246 0 0 0 0-4.492zM4.754 8a3.246 3.246 0 1 1 6.492 0 3.246 3.246 0 0 1-6.492 0z" />
                     </svg>
-                  </a>
-                </div>
-
-                <div className="app-utility-item app-user-dropdown dropdown">
-                  <a className="dropdown-toggle" id="user-dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
-                    <img src="/assets/images/user.png" alt="user profile" />
-                  </a>
+                  </div>
                   <ul className="dropdown-menu" aria-labelledby="user-dropdown-toggle">
                     <li>
-                      <a className="dropdown-item" href="account.html">
-                        Account
-                      </a>
-                    </li>
-                    <li>
-                      <a className="dropdown-item" href="settings.html">
+                      <Link href="/settings" className="dropdown-item">
                         Settings
-                      </a>
+                      </Link>
                     </li>
                     <li>
                       <hr className="dropdown-divider" />
                     </li>
-                    <li>
-                      <span className="dropdown-item">Log Out</span>
-                    </li>
+                    <button onClick={handleLogout} className="dropdown-item">
+                      Log Out
+                    </button>
                   </ul>
                 </div>
               </div>
@@ -231,151 +236,16 @@ const Navbar = () => {
               <span className="logo-text">VTH Dashboard</span>
             </Link>
           </div>
-
           <nav id="app-nav-main" className="app-nav app-nav-main flex-grow-1">
             <ul className="app-menu list-unstyled accordion" id="menu-accordion">
-              <NavItem href="/">
-                <span className="nav-icon">
-                  <AiOutlineHome size={22} />
-                </span>
-                <span className="nav-link-text">Home</span>
-              </NavItem>
-
-              <NavItem href="/staffs">
-                <span className="nav-icon">
-                  <FaHospitalUser size={20} />
-                </span>
-                <span className="nav-link-text">Staffs</span>
-              </NavItem>
-
-              <NavItem href="/users">
-                <span className="nav-icon">
-                  <HiOutlineUserGroup size={20} />
-                </span>
-                <span className="nav-link-text">Users</span>
-              </NavItem>
-
-              <SubmenuNavItem hrefParent="/appointment" hrefOne="/appointment/new" hrefTwo="/appointment/view" hrefNameOne="New Appointment" hrefNameTwo="View Appointment" submenuNumber="submenu-1">
-                <span className="nav-icon">
-                  <BsFolder size={20} />
-                </span>
-                <span className="nav-link-text">Appointment</span>
-              </SubmenuNavItem>
-
-              <SubmenuNavItem
-                hrefParent="/patient-registration"
-                hrefOne="/patient-registration/add"
-                hrefTwo="/patient-registration/view"
-                hrefNameOne="Add Registration"
-                hrefNameTwo="View Registration"
-                submenuNumber="submenu-2"
-              >
-                <span className="nav-icon pt-2">
-                  <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-columns-gap" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                      fill-rule="evenodd"
-                      d="M6 1H1v3h5V1zM1 0a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1H1zm14 12h-5v3h5v-3zm-5-1a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1h-5zM6 8H1v7h5V8zM1 7a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1H1zm14-6h-5v7h5V1zm-5-1a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1h-5z"
-                    />
-                  </svg>
-                </span>
-                <span className="nav-link-text">History & Clinical Examination</span>
-              </SubmenuNavItem>
-
-              <SubmenuNavItem
-                hrefParent="/prescription"
-                hrefOne="/prescription/add"
-                hrefTwo="/prescription/view"
-                hrefNameOne="Add Prescription"
-                hrefNameTwo="View Prescription"
-                submenuNumber="submenu-3"
-              >
-                <span className="nav-icon">
-                  <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-card-list" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                      fill-rule="evenodd"
-                      d="M14.5 3h-13a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z"
-                    />
-                    <path
-                      fill-rule="evenodd"
-                      d="M5 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 5 8zm0-2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm0 5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5z"
-                    />
-                    <circle cx="3.5" cy="5.5" r=".5" />
-                    <circle cx="3.5" cy="8" r=".5" />
-                    <circle cx="3.5" cy="10.5" r=".5" />
-                  </svg>
-                </span>
-                <span className="nav-link-text">Prescription</span>
-              </SubmenuNavItem>
-
-              <NavItem href="/test-parameter">
-                <span className="nav-icon">
-                  <BsBarChartLine size={18} />
-                </span>
-                <span className="nav-link-text">Test Parameter</span>
-              </NavItem>
-
-              <NavItem href="/incomming-test">
-                <span className="nav-icon">
-                  <GrTestDesktop size={16} />
-                </span>
-                <span className="nav-link-text">Incoming Test</span>
-              </NavItem>
-
-              <NavItem href="/test-result">
-                <span className="nav-icon">
-                  <VscOutput size={18} />
-                </span>
-                <span className="nav-link-text">Test Result</span>
-              </NavItem>
-
-              <NavItem href="/tests">
-                <span className="nav-icon">
-                  <GrTest size={18} />
-                </span>
-                <span className="nav-link-text">Tests</span>
-              </NavItem>
-
-              <NavItem href="/departments">
-                <span className="nav-icon">
-                  <SlLayers size={20} />
-                </span>
-                <span className="nav-link-text">Departments</span>
-              </NavItem>
-
-              <SubmenuNavItem hrefParent="/medicine" hrefOne="/medicine/add" hrefTwo="/medicine/view" hrefNameOne="Add Medicine" hrefNameTwo="View Medicine" submenuNumber="submenu-4">
-                <span className="nav-icon">
-                  <AiOutlineMedicineBox size={23} />
-                </span>
-                <span className="nav-link-text">Medicine</span>
-              </SubmenuNavItem>
-
-              <NavItem href="/pharmacy">
-                <span className="nav-icon">
-                  <MdOutlineLocalPharmacy size={22} />
-                </span>
-                <span className="nav-link-text">Pharmacy</span>
-              </NavItem>
-
-              <SubmenuNavItem
-                hrefParent="/species-complaints"
-                hrefOne="/species-complaints/species"
-                hrefTwo="/species-complaints/complaints"
-                hrefNameOne="Species"
-                hrefNameTwo="Complaints"
-                submenuNumber="submenu-5"
-              >
-                <span className="nav-icon">
-                  <GiCow size={20} />
-                </span>
-                <span className="nav-link-text">Species & Complaints</span>
-              </SubmenuNavItem>
+              {menuItems?.map(renderNavItem)}
             </ul>
           </nav>
           <div className="app-sidepanel-footer">
             <nav className="app-nav app-nav-footer">
               <ul className="app-menu footer-menu list-unstyled">
                 <li className="nav-item">
-                  <a className="nav-link" href="settings.html">
+                  <Link className="nav-link" href="/settings">
                     <span className="nav-icon">
                       <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-gear" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                         <path
@@ -386,7 +256,7 @@ const Navbar = () => {
                       </svg>
                     </span>
                     <span className="nav-link-text">Settings</span>
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </nav>
