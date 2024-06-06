@@ -1,22 +1,24 @@
-import React, { useEffect, useRef, useState } from "react";
-
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { FaPlus } from "react-icons/fa6";
+import { RiDeleteBinLine } from "react-icons/ri";
+import { TiEdit } from "react-icons/ti";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { deleteTestData, fetchTest, searchTestData } from "../../features/test/testSlice";
-import AddTest from "./modals/AddTest";
-
-import toast from "react-hot-toast";
-import { RiDeleteBinLine } from "react-icons/ri";
-import { TiEdit } from "react-icons/ti";
 import Loader from "../UI/Loader";
+import Pagination from "../UI/Pagination";
+import AddTest from "./modals/AddTest";
 import UpdateTest from "./modals/UpdateTest";
 
 const TestHome = () => {
+  const [search, setSearch] = useState("");
+  const router = useRouter();
   const [existingTest, setExistingTest] = useState({});
-  const search = useRef("");
   const dispatch = useDispatch();
-  const { tests, status } = useSelector((state) => state.test);
+  const { tests, status, totalPages } = useSelector((state) => state.test);
+  const currentPage = parseInt(router.query.page) || 1;
 
   // handling update single test
   const handleUpdateTest = async (test) => {
@@ -39,17 +41,29 @@ const TestHome = () => {
       if (result.isConfirmed) {
         try {
           const response = await dispatch(deleteTestData(id));
-          dispatch(fetchTest());
 
-          Swal.fire({
-            icon: "success",
-            title: "Deleted!",
-            text: "Your test has been deleted.",
-            showConfirmButton: false,
-            timer: 1500,
-            color: "#eaeaea",
-            background: "#161719",
-          });
+          if (response?.payload?.success) {
+            await dispatch(fetchTest({ page: currentPage }));
+
+            Swal.fire({
+              icon: "success",
+              title: "Deleted!",
+              text: "Your test has been deleted.",
+              showConfirmButton: false,
+              timer: 1500,
+              color: "#eaeaea",
+              background: "#161719",
+            });
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "Error!",
+              text: "Failed to delete department. Please try again later.",
+              confirmButtonColor: "#15a362",
+              color: "#eaeaea",
+              background: "#161719",
+            });
+          }
         } catch (error) {
           Swal.fire({
             icon: "error",
@@ -65,11 +79,9 @@ const TestHome = () => {
 
   const handleSearch = async () => {
     try {
-      const searchValue = search.current.value;
-      if (searchValue.trim()) {
-        const res = await dispatch(searchTestData(searchValue));
-        console.log(res);
-        if (res?.payload?.data?.data?.length <= 0) {
+      if (search.trim()) {
+        const res = await dispatch(searchTestData({ search }));
+        if (res?.payload?.data?.users?.length <= 0) {
           toast.error("Data Not Found!");
         }
       }
@@ -84,12 +96,21 @@ const TestHome = () => {
     }
   };
 
+  const handlePageChange = async (page) => {
+    router.push({
+      pathname: router.pathname,
+      query: { ...router.query, page },
+    });
+  };
+
   useEffect(() => {
-    dispatch(fetchTest());
-  }, [dispatch]);
+    if (router.isReady) {
+      dispatch(fetchTest({ page: currentPage }));
+    }
+  }, [router.isReady, dispatch, currentPage]);
 
   // loader
-  if (status === "loading") return <Loader />;
+  // if (status === "loading" && currentPage < 2) return <Loader />;
 
   return (
     <div>
@@ -104,7 +125,7 @@ const TestHome = () => {
               <h3 className="pb-3">Tests</h3>
               <div className="d-flex justify-content-between mb-4">
                 <div className="input-group w-50">
-                  <input ref={search} onKeyDown={handleKeyPress} type="text" className="form-control" placeholder="Search by test name" />
+                  <input onChange={(e) => setSearch(e.target.value)} onKeyDown={handleKeyPress} type="search" className="form-control" placeholder="Search by test name" />
                   <button onClick={handleSearch} className="btn btn-primary text-white" type="button" id="button-addon2">
                     Search
                   </button>
@@ -116,71 +137,35 @@ const TestHome = () => {
                   </button>
                 </div>
               </div>
-              <div className="table-responsive">
-                <table className="table table-hover table-borderless table-striped table-dark">
-                  <thead>
-                    <tr>
-                      <th className="text-nowrap">SL.No.</th>
-                      <th className="text-nowrap">Test Name</th>
-                      <th className="text-nowrap">Short Description</th>
-                      <th className="text-nowrap">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {tests?.data?.map((test, index) => (
-                      <tr key={test._id}>
-                        <td>{index + 1}</td>
-                        <td className="text-nowrap">{test.testName}</td>
-                        <td>{test.testDetails}</td>
-                        <td className="d-flex gap-3">
-                          <TiEdit type="button" onClick={() => handleUpdateTest(test)} data-bs-toggle="modal" data-bs-target="#updateTest" title="edit" className="edit-icon" />
-                          <RiDeleteBinLine type="button" onClick={() => handleDeleteTest(test._id)} title="delete" className="delete-icon" />
-                        </td>
+              <div className="mb-4">
+                <div className="table-responsive">
+                  <table className="table table-hover table-borderless table-striped table-dark">
+                    <thead>
+                      <tr>
+                        <th className="text-nowrap">SL.No.</th>
+                        <th className="text-nowrap">Test Name</th>
+                        <th className="text-nowrap">Short Description</th>
+                        <th className="text-nowrap">Actions</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-              <div className="d-flex justify-content-between align-items-center">
-                <div className="d-flex  align-items-center gap-2">
-                  <span className="text-nowrap">Items per page</span>
-                  <select className="form-select">
-                    <option value="1">10</option>
-                    <option value="2">20</option>
-                    <option value="3">50</option>
-                    <option value="4">100</option>
-                  </select>
+                    </thead>
+                    <tbody>
+                      {tests?.data?.map((test, idx) => (
+                        <tr key={test._id}>
+                          <td>{(currentPage - 1) * 15 + idx + 1}</td>
+                          <td className="text-nowrap">{test.testName}</td>
+                          <td>{test.testDetails}</td>
+                          <td className="d-flex gap-3">
+                            <TiEdit type="button" onClick={() => handleUpdateTest(test)} data-bs-toggle="modal" data-bs-target="#updateTest" title="edit" className="edit-icon" />
+                            <RiDeleteBinLine type="button" onClick={() => handleDeleteTest(test._id)} title="delete" className="delete-icon" />
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
-                <nav aria-label="Page navigation example">
-                  <ul className="pagination">
-                    <li className="page-item">
-                      <a className="page-link" href="#">
-                        Previous
-                      </a>
-                    </li>
-                    <li className="page-item">
-                      <a className="page-link" href="#">
-                        1
-                      </a>
-                    </li>
-                    <li className="page-item">
-                      <a className="page-link" href="#">
-                        2
-                      </a>
-                    </li>
-                    <li className="page-item">
-                      <a className="page-link" href="#">
-                        3
-                      </a>
-                    </li>
-                    <li className="page-item">
-                      <a className="page-link" href="#">
-                        Next
-                      </a>
-                    </li>
-                  </ul>
-                </nav>
               </div>
+              {/* pagination */}
+              <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
             </div>
           </div>
         </div>
