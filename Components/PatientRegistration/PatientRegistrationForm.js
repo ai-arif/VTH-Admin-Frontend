@@ -307,7 +307,9 @@ const PatientRegistrationForm = () => {
                       </div>
                       <div className="row">
                         <div className="mb-3 col-md-6">
-                          <label className="form-label">Age</label>
+                          <label className="form-label">
+                            Age <small>(optional)</small>
+                          </label>
                           <input type="text" {...register("age")} className="form-control" />
                         </div>
                         <div className="mb-3 col-md-6">

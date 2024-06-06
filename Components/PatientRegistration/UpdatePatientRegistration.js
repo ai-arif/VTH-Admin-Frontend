@@ -82,7 +82,7 @@ const UpdatePatientRegistration = () => {
 
       if (response?.payload?.success) {
         toast.success("Patient data updated successfully!");
-        dispatch(fetchPatient());
+        dispatch(fetchPatient({}));
         router.push("/patient-registration/view");
       } else {
         toast.error("Failed to update patient data! Please try again later.");
@@ -259,7 +259,9 @@ const UpdatePatientRegistration = () => {
                       </div>
                       <div className="row">
                         <div className="mb-3 col-md-6">
-                          <label className="form-label">Age</label>
+                          <label className="form-label">
+                            Age <small>(optional)</small>
+                          </label>
                           <input type="text" {...register("age")} className="form-control" />
                         </div>
                         <div className="mb-3 col-md-6">

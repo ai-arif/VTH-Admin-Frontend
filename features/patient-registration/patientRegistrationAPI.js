@@ -1,17 +1,18 @@
 import axiosInstance from "../../utils/axiosInstance";
 
-export const registerPatient = async (patientData) => {
+export const getPatient = async (page = 1, limit = 5) => {
   try {
-    const response = await axiosInstance.post("/patient-registration", patientData);
+    console.log({ page });
+    const response = await axiosInstance.get(`/patient-registration?page=${page}&limit=${limit}`);
     return response.data;
   } catch (error) {
     return Promise.reject(error);
   }
 };
 
-export const getPatient = async () => {
+export const registerPatient = async (patientData) => {
   try {
-    const response = await axiosInstance.get("/patient-registration");
+    const response = await axiosInstance.post("/patient-registration", patientData);
     return response.data;
   } catch (error) {
     return Promise.reject(error);
@@ -46,9 +47,9 @@ export const deletePatient = async (id) => {
 };
 
 // search?search=&page&limit
-export const searchPatient = async (search) => {
+export const searchPatient = async (search, page = 1, limit = 40) => {
   try {
-    const response = await axiosInstance.get(`/patient-registration/search?search=${search}`);
+    const response = await axiosInstance.get(`/patient-registration/search?search=${search}&page=${page}&limit=${limit}`);
     return response.data;
   } catch (error) {
     return Promise.reject(error);
