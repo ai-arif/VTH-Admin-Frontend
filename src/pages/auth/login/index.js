@@ -48,7 +48,7 @@ const index = () => {
         router.push("/");
       }
     } catch (error) {
-      toast.error(error.response.data.message || "Invalid credentials");
+      toast.error(error?.response?.data?.message || "Invalid credentials");
       console.log(error);
       setLoading(false);
     }

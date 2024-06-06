@@ -18,21 +18,19 @@ export const getSubParameter = async (id) => {
   }
 };
 
-
-
 // /test/search?search=a&page=1&limit=10 , take search, page, limit as query params
-export const searchTest = async (search, page, limit) => {
+export const searchTest = async (search, page = 1, limit = 40) => {
   try {
     const response = await axiosInstance.get(`/test/search?search=${search}&page=${page}&limit=${limit}`);
     return response.data;
   } catch (error) {
     return Promise.reject(error);
   }
-}
+};
 
-export const getTest = async () => {
+export const getTest = async (page = 1, limit = 15) => {
   try {
-    const response = await axiosInstance.get("/test");
+    const response = await axiosInstance.get(`/test?page=${page}&limit=${limit}`);
     return response.data;
   } catch (error) {
     return Promise.reject(error);
@@ -66,7 +64,7 @@ export const deleteTest = async (id) => {
   }
 };
 
-//test parameter 
+//test parameter
 export const getParameter = async (id) => {
   try {
     const response = await axiosInstance.get(`/test/parameter/${id}`);
@@ -94,7 +92,6 @@ export const updateTestParameter = async (test) => {
   }
 };
 
-
 export const deleteParameter = async (id) => {
   try {
     const response = await axiosInstance.delete(`/parameter/${id}`, data);
@@ -104,8 +101,7 @@ export const deleteParameter = async (id) => {
   }
 };
 
-
-// sub params 
+// sub params
 export const updateTestSubParameter = async (test) => {
   try {
     const response = await axiosInstance.put(`/test/parameter/sub/${test.id}`, test);
@@ -115,7 +111,7 @@ export const updateTestSubParameter = async (test) => {
   }
 };
 
-// additional fields 
+// additional fields
 export const getAllAdditionalFields = async (id) => {
   try {
     const response = await axiosInstance.get(`/test/parameter/additional/${id}`);
@@ -143,8 +139,7 @@ export const updateTestAdditionalField = async (test) => {
   }
 };
 
-
-// get test all info including sub and additional fields 
+// get test all info including sub and additional fields
 export const getTestAllFields = async (id) => {
   try {
     const response = await axiosInstance.get(`/test/full-test/${id}`);

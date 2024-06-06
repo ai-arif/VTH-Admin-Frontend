@@ -1,10 +1,20 @@
-import React, { useState } from "react";
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
-import { updateTestData,fetchTest } from "../../../features/test/testSlice";
+import { fetchTest, updateTestData } from "../../../features/test/testSlice";
 
 const UpdateTest = ({ existingTest }) => {
   const dispatch = useDispatch();
-  const [test, setTest] = useState({ testName: "", testDetails: "" });
+  const router = useRouter();
+  const [test, setTest] = useState({ testName: existingTest.testName || "", testDetails: existingTest.testDetails || "" });
+  const currentPage = parseInt(router.query.page) || 1;
+
+  useEffect(() => {
+    if (existingTest.testName || existingTest.testDetails) {
+      setTest({ testName: existingTest.testName, testDetails: existingTest.testDetails });
+    }
+  }, [existingTest.testName, existingTest.testDetails]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -12,20 +22,21 @@ const UpdateTest = ({ existingTest }) => {
   };
 
   const handleSubmit = async () => {
-    
     if (test.testName === "") {
-      alert("Please fill all fields");
+      toast.error("Please fill test name field");
       return;
     }
-    // modal-backdrop fade show click on these class div
-    document.querySelector(".modal-backdrop").click();
-    
-    const response = await dispatch(updateTestData({ ...test, id: existingTest._id }));
-    
-    
-    await dispatch(fetchTest());
-    
-    setTest({ testName: "", testDetails: "" });
+
+    try {
+      await dispatch(updateTestData({ ...test, id: existingTest._id }));
+      await dispatch(fetchTest({ page: currentPage }));
+      toast.success("Test updated successfully!");
+      document.getElementById("closeModal").click();
+      setTest({ testName: "", testDetails: "" });
+    } catch (error) {
+      toast.error("An error occurred while crating test. Please try again later.");
+      console.error(error);
+    }
   };
 
   return (
@@ -37,7 +48,7 @@ const UpdateTest = ({ existingTest }) => {
               <h1 className="modal-title fs-5" id="updateTestLabel">
                 Update Test
               </h1>
-              <button id="closeModal"  type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              <button id="closeModal" type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div className="modal-body">
               <div className="mb-3">
@@ -57,7 +68,7 @@ const UpdateTest = ({ existingTest }) => {
               <button id="closeModal" type="button" className="btn btn-secondary" data-bs-dismiss="modal">
                 Close
               </button>
-              <button onClick={handleSubmit} type="submit" className="btn app-btn-primary">
+              <button onClick={handleSubmit} id="closeModal" type="submit" className="btn app-btn-primary" data-bs-dismiss="modal">
                 Update Test
               </button>
             </div>

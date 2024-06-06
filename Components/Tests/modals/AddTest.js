@@ -1,7 +1,8 @@
+import { useRouter } from "next/router";
 import React, { useState } from "react";
+import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
-import { createTest,fetchTest } from "../../../features/test/testSlice";
-import { createUserAsync } from "../../../features/staff/staffSlice";
+import { createTest, fetchTest } from "../../../features/test/testSlice";
 
 const AddTest = () => {
   const dispatch = useDispatch();
@@ -13,17 +14,26 @@ const AddTest = () => {
   };
 
   const handleSubmit = async () => {
-    
-    
     if (test.testName === "") {
-      alert("Please fill all fields");
+      toast.error("Please fill test field");
       return;
     }
-    document.getElementById("closeModal").click();
-    await dispatch(createTest(test));
-    await dispatch(fetchTest());
-    
-    setTest({ testName: "", testDetails: "" });
+
+    try {
+      const response = await dispatch(createTest(test));
+
+      if (response?.payload?.success) {
+        document.getElementById("closeModal").click();
+        toast.success("Test created successfully!");
+        await dispatch(fetchTest({}));
+        setTest({ testName: "", testDetails: "" });
+      } else {
+        toast.error("Failed to create test! Please try again later.");
+      }
+    } catch (error) {
+      toast.error("An error occurred while crating test. Please try again later.");
+      console.error(error);
+    }
   };
 
   return (

@@ -1,5 +1,6 @@
 import Link from "next/link";
-import React, { useEffect, useRef } from "react";
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { TiEdit } from "react-icons/ti";
@@ -8,11 +9,14 @@ import Swal from "sweetalert2";
 import { deletePatientData, fetchPatient, searchPatientData } from "../../features/patient-registration/patientRegistrationSlice";
 import { formatDate } from "../../utils/formatDate";
 import Loader from "../UI/Loader";
+import Pagination from "../UI/Pagination";
 
 const RegistrationList = () => {
-  const search = useRef("");
+  const [search, setSearch] = useState("");
+  const router = useRouter();
   const dispatch = useDispatch();
-  const { patients, status } = useSelector((state) => state.patient);
+  const { patients, status, totalPages } = useSelector((state) => state.patient);
+  const currentPage = parseInt(router.query.page) || 1;
 
   // handling delete single patient
   const handleDeletePatient = async (id) => {
@@ -32,7 +36,7 @@ const RegistrationList = () => {
           const response = await dispatch(deletePatientData(id));
 
           if (response?.payload?.success) {
-            dispatch(fetchPatient());
+            dispatch(fetchPatient({ page: currentPage }));
 
             Swal.fire({
               icon: "success",
@@ -68,9 +72,8 @@ const RegistrationList = () => {
 
   const handleSearch = async () => {
     try {
-      const searchValue = search.current.value;
-      if (searchValue.trim()) {
-        const res = await dispatch(searchPatientData(searchValue));
+      if (search.trim()) {
+        const res = await dispatch(searchPatientData({ search }));
         if (res?.payload?.data?.data?.length <= 0) {
           toast.error("Data Not Found!");
         }
@@ -86,19 +89,28 @@ const RegistrationList = () => {
     }
   };
 
+  const handlePageChange = async (page) => {
+    router.push({
+      pathname: router.pathname,
+      query: { ...router.query, page },
+    });
+  };
+
   useEffect(() => {
-    dispatch(fetchPatient());
-  }, [dispatch]);
+    if (router.isReady) {
+      dispatch(fetchPatient({ page: currentPage }));
+    }
+  }, [router.isReady, dispatch, currentPage]);
 
   // loader
-  if (status === "loading") return <Loader />;
+  // if (status === "loading" && currentPage < 2) return <Loader />;
 
   return (
     <div className="container-fluid">
       <div className="app-card p-5 text-center shadow-sm">
         <div className="d-flex align-items-center justify-content-between mb-4">
           <div className="input-group w-50">
-            <input ref={search} onKeyDown={handleKeyPress} type="text" className="form-control" placeholder="Recipient's name, phone, case no" />
+            <input onChange={(e) => setSearch(e.target.value)} onKeyDown={handleKeyPress} type="search" className="form-control" placeholder="Recipient's name, phone, case no" />
             <button onClick={handleSearch} className="btn btn-primary text-white" type="button">
               Search
             </button>
@@ -121,7 +133,7 @@ const RegistrationList = () => {
               <tbody>
                 {patients?.data?.map((patientInfo, idx) => (
                   <tr key={patientInfo._id}>
-                    <td>{idx + 1}</td>
+                    <td>{(currentPage - 1) * 15 + idx + 1}</td>
                     <td>{patientInfo?.appointmentId?.caseNo}</td>
                     <td>{patientInfo?.appointmentId?.ownerName}</td>
                     <td>{patientInfo?.appointmentId?.phone}</td>
@@ -138,47 +150,8 @@ const RegistrationList = () => {
             </table>
           </div>
         </div>
-        {/* footer part pagination */}
-        <div className="d-flex justify-content-between align-items-center">
-          <div className="d-flex gap-2">
-            <span className="text-nowrap">Items per page</span>
-            <select className="form-select form-select-sm">
-              <option value="1">10</option>
-              <option value="2">20</option>
-              <option value="3">50</option>
-              <option value="4">100</option>
-            </select>
-          </div>
-          <nav aria-label="Page navigation example">
-            <ul className="pagination">
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  Previous
-                </a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  1
-                </a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  2
-                </a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  3
-                </a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  Next
-                </a>
-              </li>
-            </ul>
-          </nav>
-        </div>
+        {/* pagination */}
+        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
       </div>
     </div>
   );
