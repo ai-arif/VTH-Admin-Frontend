@@ -93,8 +93,8 @@ const UpdatePrescription = () => {
     if (id) {
       dispatch(fetchSinglePrescription(id));
     }
-    dispatch(fetchMedicine());
-    dispatch(fetchTest());
+    dispatch(fetchMedicine({}));
+    dispatch(fetchTest({}));
   }, [dispatch, id]);
 
   //   loader

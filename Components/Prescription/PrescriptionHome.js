@@ -122,7 +122,7 @@ const PrescriptionHome = () => {
   }));
 
   useEffect(() => {
-    dispatch(fetchMedicine());
+    dispatch(fetchMedicine({}));
     dispatch(fetchTest({}));
   }, [dispatch]);
 

@@ -25,15 +25,15 @@ const UpdateMedicine = () => {
       const response = await dispatch(updateMedicineData(medicineData));
 
       if (response?.payload?.success) {
-        toast.success("Medicine updated successfully!");
-        dispatch(fetchMedicine());
+        dispatch(fetchMedicine({}));
         router.push("/medicine/view");
+        toast.success("Medicine updated successfully!");
       } else {
         toast.error("Failed to update medicine! Please try again later.");
       }
     } catch (error) {
-      toast.error("An error occurred while updating medicine. Please try again later.");
       console.error(error);
+      toast.error("An error occurred while updating medicine. Please try again later.");
     }
   };
 
