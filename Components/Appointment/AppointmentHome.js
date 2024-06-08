@@ -72,7 +72,7 @@ const AppointmentHome = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchDepartment());
+    dispatch(fetchDepartment({}));
   }, [dispatch]);
 
   return (
@@ -172,7 +172,7 @@ const AppointmentHome = () => {
                     <label className="form-label">Department</label>
                     <select {...register("department", { required: true })} className={`form-select ${errors.department && "border-danger"}`} aria-label="Default select example">
                       <option value="">Select</option>
-                      {departments?.map((department) => (
+                      {departments?.data?.map((department) => (
                         <option key={department._id} value={department._id}>
                           {department.name}
                         </option>

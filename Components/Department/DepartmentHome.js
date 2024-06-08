@@ -1,4 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { FaPlus } from "react-icons/fa6";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { TiEdit } from "react-icons/ti";
@@ -6,14 +8,17 @@ import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { deleteDepartmentData, fetchDepartment, searchDepartmentData } from "../../features/department/departmentSlice";
 import Loader from "../UI/Loader";
+import Pagination from "../UI/Pagination";
 import AddDepartment from "./modals/AddDepartment";
 import UpdateDepartment from "./modals/UpdateDepartment";
 
 const DepartmentHome = () => {
+  const [search, setSearch] = useState("");
+  const router = useRouter();
   const dispatch = useDispatch();
   const [existingData, setExistingData] = useState({});
-  const search = useRef("");
-  const { departments, status } = useSelector((state) => state.department);
+  const { departments, status, totalPages } = useSelector((state) => state.department);
+  const currentPage = parseInt(router.query.page) || 1;
 
   // handle get single department for update
   const handleGetDepartment = (department) => {
@@ -38,7 +43,7 @@ const DepartmentHome = () => {
           const response = await dispatch(deleteDepartmentData(id));
 
           if (response?.payload?.success) {
-            dispatch(fetchDepartment());
+            dispatch(fetchDepartment({ page: currentPage }));
 
             Swal.fire({
               icon: "success",
@@ -74,13 +79,12 @@ const DepartmentHome = () => {
 
   const handleSearch = async () => {
     try {
-      const searchValue = search.current.value;
-      if (searchValue.trim()) {
-        // const res = await dispatch(searchDepartmentData(searchValue));
-        // console.log(res);
-        // if (res?.payload?.data?.data?.length <= 0) {
-        //   toast.error("Data Not Found!");
-        // }
+      if (search.trim()) {
+        const res = await dispatch(searchDepartmentData({ search }));
+        console.log(res);
+        if (res?.payload?.data?.data?.length <= 0) {
+          toast.error("Data Not Found!");
+        }
       }
     } catch (error) {
       console.log(error);
@@ -93,12 +97,21 @@ const DepartmentHome = () => {
     }
   };
 
+  const handlePageChange = async (page) => {
+    router.push({
+      pathname: router.pathname,
+      query: { ...router.query, page },
+    });
+  };
+
   useEffect(() => {
-    dispatch(fetchDepartment());
-  }, [dispatch]);
+    if (router.isReady) {
+      dispatch(fetchDepartment({ page: currentPage }));
+    }
+  }, [router.isReady, dispatch, currentPage]);
 
   // loader
-  if (status === "loading") return <Loader />;
+  // if (status === "loading" && currentPage < 2) return <Loader />;
 
   return (
     <div>
@@ -114,7 +127,7 @@ const DepartmentHome = () => {
               <h3 className="pb-3">All Department</h3>
               <div className="d-flex justify-content-between mb-4">
                 <div className="input-group w-50">
-                  <input ref={search} onKeyDown={handleKeyPress} type="text" className="form-control" placeholder="Recipient's name, phone, case no" />
+                  <input onChange={(e) => setSearch(e.target.value)} onKeyDown={handleKeyPress} type="search" className="form-control" placeholder="Recipient's name, phone, case no" />
                   <button onClick={handleSearch} className="btn btn-primary text-white" type="button" id="button-addon2">
                     Search
                   </button>
@@ -135,9 +148,9 @@ const DepartmentHome = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {departments?.map((department, index) => (
+                    {departments?.data?.map((department, idx) => (
                       <tr key={department._id}>
-                        <td>{index + 1}</td>
+                        <td>{(currentPage - 1) * 2 + idx + 1}</td>
                         <td>{department.name}</td>
                         <td className="d-flex gap-3 justify-content-center">
                           <TiEdit type="button" onClick={() => handleGetDepartment(department)} data-bs-toggle="modal" data-bs-target="#updateDepartment" title="edit" className="edit-icon" />
@@ -148,47 +161,8 @@ const DepartmentHome = () => {
                   </tbody>
                 </table>
               </div>
-              {/* footer part pagination */}
-              <div className="d-flex justify-content-between align-items-center">
-                <div className="d-flex gap-2">
-                  <span className="text-nowrap">Items per page</span>
-                  <select className="form-select form-select-sm">
-                    <option value="1">10</option>
-                    <option value="2">20</option>
-                    <option value="3">50</option>
-                    <option value="4">100</option>
-                  </select>
-                </div>
-                <nav aria-label="Page navigation example">
-                  <ul className="pagination">
-                    <li className="page-item">
-                      <a className="page-link" href="#">
-                        Previous
-                      </a>
-                    </li>
-                    <li className="page-item">
-                      <a className="page-link" href="#">
-                        1
-                      </a>
-                    </li>
-                    <li className="page-item">
-                      <a className="page-link" href="#">
-                        2
-                      </a>
-                    </li>
-                    <li className="page-item">
-                      <a className="page-link" href="#">
-                        3
-                      </a>
-                    </li>
-                    <li className="page-item">
-                      <a className="page-link" href="#">
-                        Next
-                      </a>
-                    </li>
-                  </ul>
-                </nav>
-              </div>
+              {/* pagination */}
+              <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
             </div>
           </div>
         </div>

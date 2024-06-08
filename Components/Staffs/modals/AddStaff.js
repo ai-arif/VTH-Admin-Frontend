@@ -42,9 +42,9 @@ const AddStaff = () => {
       const response = await dispatch(createStaff(staffData));
 
       if (response?.payload?.success) {
-        toast.success("Account created successfully!");
-        reset();
         await dispatch(fetchStaffs({}));
+        reset();
+        toast.success("Account created successfully!");
         document.getElementById("closeModal").click();
       } else {
         toast.error("Failed to create account! Please try again later.");
@@ -57,7 +57,7 @@ const AddStaff = () => {
 
   useEffect(() => {
     if (isDoctor) {
-      dispatch(fetchDepartment());
+      dispatch(fetchDepartment({}));
     }
   }, [dispatch, isDoctor]);
 
@@ -125,7 +125,7 @@ const AddStaff = () => {
                     </label>
                     <select {...register("department", { required: true })} className={`form-select ${errors.department && "border-danger"}`} aria-label="Default select example">
                       <option value="">Select</option>
-                      {departments?.map((department) => (
+                      {departments?.data?.map((department) => (
                         <option key={department._id} value={department._id}>
                           {department.name}
                         </option>
@@ -138,7 +138,7 @@ const AddStaff = () => {
                   <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
                     Close
                   </button>
-                  <button type="submit" className="btn app-btn-primary">
+                  <button type="submit" id="closeModal" className="btn app-btn-primary">
                     Submit
                   </button>
                 </div>

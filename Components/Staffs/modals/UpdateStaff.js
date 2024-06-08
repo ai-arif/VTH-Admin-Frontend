@@ -2,7 +2,6 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchDepartment } from "../../../features/department/departmentSlice";
 import { fetchStaffs, updateStaffData } from "../../../features/staff/staffSlice";
@@ -13,6 +12,13 @@ const UpdateStaff = ({ existingData }) => {
   const dispatch = useDispatch();
   const { departments } = useSelector((state) => state.department);
   const currentPage = parseInt(router.query.page) || 1;
+  // console.log(departments);
+
+  // console.log(existingData);
+  // const dept = departments?.data?.find((data) => data._id === existingData?.department);
+  // const department = dept?.name;
+
+  // console.log(department);
 
   const handleGetRole = (role) => {
     if (role === "doctor") {
@@ -25,7 +31,6 @@ const UpdateStaff = ({ existingData }) => {
   const {
     handleSubmit,
     register,
-    reset,
     formState: { errors },
   } = useForm({ values: existingData });
 
@@ -37,25 +42,25 @@ const UpdateStaff = ({ existingData }) => {
 
       staffData.id = existingData._id;
 
+      // console.log(staffData);
       const response = await dispatch(updateStaffData(staffData));
 
       if (response?.payload?.success) {
-        document.getElementById("closeModal").click();
-        toast.success("Account updated successfully!");
-        reset();
         await dispatch(fetchStaffs({ page: currentPage }));
+        toast.success("Account updated successfully!");
+        document.getElementById("closeUpdateModal").click();
       } else {
         toast.error("Failed to update account! Please try again later.");
       }
     } catch (error) {
-      toast.error("An error occurred while crating account. Please try again later.");
       console.error(error);
+      toast.error("An error occurred while crating account. Please try again later.");
     }
   };
 
   useEffect(() => {
     if (isDoctor) {
-      dispatch(fetchDepartment());
+      dispatch(fetchDepartment({}));
     }
   }, [dispatch, isDoctor]);
 
@@ -75,7 +80,7 @@ const UpdateStaff = ({ existingData }) => {
             <h1 className="modal-title fs-5" id="updateUserLabel">
               Create Staff Account
             </h1>
-            <button id="closeModal" type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button id="closeUpdateModal" type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div className="modal-body">
             <form onSubmit={handleSubmit(onSubmit)}>
@@ -119,7 +124,7 @@ const UpdateStaff = ({ existingData }) => {
                   </label>
                   <select {...register("department", { required: true })} className={`form-select ${errors.department && "border-danger"}`} aria-label="Default select example">
                     <option value="">Select</option>
-                    {departments?.map((department) => (
+                    {departments?.data?.map((department) => (
                       <option key={department._id} value={department._id}>
                         {department.name}
                       </option>
@@ -132,7 +137,7 @@ const UpdateStaff = ({ existingData }) => {
                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
                   Close
                 </button>
-                <button type="submit" className="btn app-btn-primary" data-bs-dismiss="modal">
+                <button type="submit" id="closeUpdateModal" className="btn app-btn-primary">
                   Submit
                 </button>
               </div>

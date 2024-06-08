@@ -19,7 +19,7 @@ const AddDepartment = () => {
 
       if (response?.payload?.success) {
         toast.success("Department added successfully!");
-        await dispatch(fetchDepartment());
+        await dispatch(fetchDepartment({}));
         reset();
         document.getElementById("closeModal").click();
       } else {
