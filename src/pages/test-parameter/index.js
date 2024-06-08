@@ -72,10 +72,8 @@ export default function TestParameter() {
 
   // console.log(allAdditionalFields)
 
-  console.log(subParameterList);
-
   useEffect(() => {
-    dispatch(fetchTest());
+    dispatch(fetchTest({ limit: 3000 }));
   }, [dispatch]);
 
   useEffect(() => {
@@ -327,10 +325,10 @@ export default function TestParameter() {
       <div className="row">
         {/* test params */}
         <div className="col-4">
-          <ul class="list-group">
+          <ul className="list-group">
             {selectedTest.testName &&
               parameterList.data?.map((param, index) => (
-                <li class="list-group-item mt-3">
+                <li className="list-group-item mt-3">
                   <UpdateTestParamsModal existingTestParamsName={param.name} handleSubmit={handleUpdateTestParams} />
                   <span>{param.name}</span>
                   <div className="d-flex justify-content-between align-items-center mt-4">
@@ -408,11 +406,11 @@ export default function TestParameter() {
 
             {activeTabSub === "subParams1" && (
               <div>
-                <ul class="list-group">
+                <ul className="list-group">
                   {subParameterList.data?.map((param, index) => {
                     if (param.isInputField)
                       return (
-                        <li class="w-100 list-group-item mt-3">
+                        <li className="w-100 list-group-item mt-3">
                           <UpdateTestSubParamModal existingTestParamsName={param.value} handleSubmit={handleUpdateTestSubParams} />
                           <span>{param.title}</span>
                           <div className="d-flex justify-content-between">
@@ -463,11 +461,11 @@ export default function TestParameter() {
 
             {activeTabSub === "subParams2" && (
               <div>
-                <ul class="list-group w-100">
+                <ul className="list-group w-100">
                   {subParameterList.data?.map((param, index) => {
                     if (!param.isInputField)
                       return (
-                        <li class="w-100 list-group-item mt-3">
+                        <li className="w-100 list-group-item mt-3">
                           <UpdateTestSubParamModal2 existingTestParamsName={param.title} handleSubmit={handleUpdateTestSubParams} />
                           <span>{param.title}</span>
                           <div className="d-flex justify-content-between">
@@ -536,13 +534,13 @@ export default function TestParameter() {
             {/* tab content 1 */}
             {activeTab === "additional1" && (
               <div>
-                <ul class="list-group w-100">
+                <ul className="list-group w-100">
                   {allAdditionalFields?.data?.map((param, index) => {
                     if (param.isAdditionalFieldInput == true)
                       return (
                         <>
                           <UpdateAdditionalModal1 existingTestParamsName={param.additionalFieldTitle} handleSubmit={handleUpdateTestAdditionalField} />
-                          <li class="list-group-item mt-3 d-flex justify-content-between">
+                          <li className="list-group-item mt-3 d-flex justify-content-between">
                             <span>{param.additionalFieldTitle}</span>
                             <div className="d-flex gap-3 mt-4">
                               <CiEdit
@@ -579,13 +577,13 @@ export default function TestParameter() {
             {/* tab content 2 */}
             {activeTab === "additional2" && (
               <div>
-                <ul class="list-group w-100">
+                <ul className="list-group w-100">
                   {allAdditionalFields?.data?.map((param, index) => {
                     if (param.isAdditionalFieldInput == false)
                       return (
                         <>
                           <UpdateAdditionalModal1 existingTestParamsName={param.additionalFieldTitle} handleSubmit={handleUpdateTestAdditionalField} />
-                          <li class="list-group-item mt-3 d-flex justify-content-between">
+                          <li className="list-group-item mt-3 d-flex justify-content-between">
                             <span>{param.additionalFieldTitle}</span>
                             <div className="d-flex gap-3 mt-4">
                               <CiEdit

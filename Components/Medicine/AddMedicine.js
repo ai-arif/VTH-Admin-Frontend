@@ -2,7 +2,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
-import { createMedicine } from "../../features/medicine/medicineSlice";
+import { createMedicine, fetchMedicine } from "../../features/medicine/medicineSlice";
 
 const AddMedicine = () => {
   const dispatch = useDispatch();
@@ -21,6 +21,7 @@ const AddMedicine = () => {
       if (response?.payload?.success) {
         toast.success("Medicine added successfully!");
         reset();
+        await dispatch(fetchMedicine({}));
       } else {
         toast.error("Failed to add medicine! Please try again later.");
       }
@@ -152,9 +153,7 @@ const AddMedicine = () => {
                     <label className="form-label">Animal Type</label>
                     {/* select field */}
                     <select {...register("animalType", { required: true })} className={`form-select ${errors.animalType && "border-danger"}`} aria-label="Default select example">
-                      <option selected value="">
-                        Select
-                      </option>
+                      <option value="">Select</option>
                       <option value="one">One</option>
                       <option value="two">Two</option>
                       <option value="three">Three</option>

@@ -45,8 +45,8 @@ export const fetchParameter = createAsyncThunk("test/fetchParameter", async (id)
   return response;
 });
 
-export const fetchTest = createAsyncThunk("test/fetchTest", async ({ page, limit }) => {
-  const response = await getTest(page, limit);
+export const fetchTest = createAsyncThunk("test/fetchTest", async ({ page = 1, limit = 15 }) => {
+  const response = await getTest({ page, limit });
   return response;
 });
 
@@ -65,8 +65,8 @@ export const deleteTestData = createAsyncThunk("test/deleteTestData", async (id)
   return response;
 });
 
-export const searchTestData = createAsyncThunk("test/searchTestData", async ({ search, page, limit }) => {
-  const response = await searchTest(search, page, limit);
+export const searchTestData = createAsyncThunk("test/searchTestData", async ({ search, page = 1, limit = 40 }) => {
+  const response = await searchTest({ search, page, limit });
   return response;
 });
 

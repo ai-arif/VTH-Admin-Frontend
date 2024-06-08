@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -5,7 +6,10 @@ import { useDispatch } from "react-redux";
 import { fetchDepartment, updateDepartmentData } from "../../../features/department/departmentSlice";
 
 const UpdateDepartment = ({ existingData }) => {
+  const router = useRouter();
   const dispatch = useDispatch();
+  const currentPage = parseInt(router.query.page) || 1;
+
   const {
     handleSubmit,
     register,
@@ -26,9 +30,9 @@ const UpdateDepartment = ({ existingData }) => {
       const response = await dispatch(updateDepartmentData(departmentData));
 
       if (response?.payload?.success) {
+        await dispatch(fetchDepartment({ page: currentPage }));
         toast.success("Department updated successfully!");
-        await dispatch(fetchDepartment());
-        document.getElementById("closeModal").click();
+        document.getElementById("closeUpdateModal").click();
       } else {
         toast.error("Failed to update department! Please try again later.");
       }
@@ -46,7 +50,7 @@ const UpdateDepartment = ({ existingData }) => {
               <h2 className="modal-title fs-5" id="updateDepartmentLabel">
                 Update Department
               </h2>
-              <button id="closeModal" type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              <button id="closeUpdateModal" type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form onSubmit={handleSubmit(onSubmit)} className="modal-body">
               <div className="pb-5">
@@ -58,10 +62,10 @@ const UpdateDepartment = ({ existingData }) => {
               </div>
 
               <div className="modal-footer">
-                <button id="closeModal" type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
                   Close
                 </button>
-                <button type="submit" id="closeModal" className="btn app-btn-primary" data-bs-dismiss="modal">
+                <button type="submit" id="closeUpdateModal" className="btn app-btn-primary">
                   Submit
                 </button>
               </div>

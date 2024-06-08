@@ -39,7 +39,7 @@ const ViewPrescription = () => {
           const response = await dispatch(deletePrescriptionData(id));
 
           if (response?.payload?.success) {
-            dispatch(fetchPrescription({ page: currentPage }));
+            await dispatch(fetchPrescription({ page: currentPage }));
 
             Swal.fire({
               icon: "success",

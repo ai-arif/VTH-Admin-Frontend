@@ -1,15 +1,16 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { addMedicine,searchMedicine, deleteMedicine, getMedicine, getSingleMedicine, updateMedicine } from "./medicineAPI";
+import { addMedicine, deleteMedicine, getMedicine, getSingleMedicine, searchMedicine, updateMedicine } from "./medicineAPI";
 
 const initialState = {
   medicine: {},
   medicines: [],
   status: "idle",
   error: null,
+  totalPages: 1,
 };
 
-export const fetchMedicine = createAsyncThunk("medicine/fetchMedicine", async () => {
-  const response = await getMedicine();
+export const fetchMedicine = createAsyncThunk("medicine/fetchMedicine", async ({ page = 1, limit = 15 }) => {
+  const response = await getMedicine({ page, limit });
   return response;
 });
 
@@ -33,8 +34,8 @@ export const fetchSingleMedicine = createAsyncThunk("medicine/fetchSingleMedicin
   return response;
 });
 
-export const searchMedicineData = createAsyncThunk("medicine/searchMedicineData", async (search,page,limit) => {
-  const response = await searchMedicine(search,page,limit);
+export const searchMedicineData = createAsyncThunk("medicine/searchMedicineData", async ({ search, page = 1, limit = 40 }) => {
+  const response = await searchMedicine({ search, page, limit });
   return response;
 });
 
@@ -52,7 +53,9 @@ export const medicineSlice = createSlice({
         state.status = "loading";
       })
       .addCase(fetchMedicine.fulfilled, (state, action) => {
-        (state.status = "success"), (state.medicines = action.payload.data);
+        state.status = "success";
+        state.medicines = action.payload.data;
+        state.totalPages = action.payload.data.totalPages;
       })
       .addCase(fetchMedicine.rejected, (state, action) => {
         state.status = "failed";
@@ -103,6 +106,7 @@ export const medicineSlice = createSlice({
       .addCase(searchMedicineData.fulfilled, (state, action) => {
         state.status = "success";
         state.medicines = action.payload.data;
+        state.totalPages = action.payload.data.totalPages;
       })
       .addCase(searchMedicineData.rejected, (state, action) => {
         state.status = "failed";

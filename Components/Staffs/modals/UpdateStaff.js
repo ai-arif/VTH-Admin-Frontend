@@ -12,13 +12,6 @@ const UpdateStaff = ({ existingData }) => {
   const dispatch = useDispatch();
   const { departments } = useSelector((state) => state.department);
   const currentPage = parseInt(router.query.page) || 1;
-  // console.log(departments);
-
-  // console.log(existingData);
-  // const dept = departments?.data?.find((data) => data._id === existingData?.department);
-  // const department = dept?.name;
-
-  // console.log(department);
 
   const handleGetRole = (role) => {
     if (role === "doctor") {
@@ -41,8 +34,6 @@ const UpdateStaff = ({ existingData }) => {
       }
 
       staffData.id = existingData._id;
-
-      // console.log(staffData);
       const response = await dispatch(updateStaffData(staffData));
 
       if (response?.payload?.success) {
@@ -60,7 +51,7 @@ const UpdateStaff = ({ existingData }) => {
 
   useEffect(() => {
     if (isDoctor) {
-      dispatch(fetchDepartment({}));
+      dispatch(fetchDepartment({ limit: 500 }));
     }
   }, [dispatch, isDoctor]);
 

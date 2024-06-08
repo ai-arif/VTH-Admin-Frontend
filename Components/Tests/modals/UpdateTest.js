@@ -31,7 +31,7 @@ const UpdateTest = ({ existingTest }) => {
       await dispatch(updateTestData({ ...test, id: existingTest._id }));
       await dispatch(fetchTest({ page: currentPage }));
       toast.success("Test updated successfully!");
-      document.getElementById("closeModal").click();
+      document.getElementById("closeUpdateModal").click();
       setTest({ testName: "", testDetails: "" });
     } catch (error) {
       toast.error("An error occurred while crating test. Please try again later.");
@@ -48,7 +48,7 @@ const UpdateTest = ({ existingTest }) => {
               <h1 className="modal-title fs-5" id="updateTestLabel">
                 Update Test
               </h1>
-              <button id="closeModal" type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              <button id="closeUpdateModal" type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div className="modal-body">
               <div className="mb-3">
@@ -65,10 +65,10 @@ const UpdateTest = ({ existingTest }) => {
               </div>
             </div>
             <div className="modal-footer">
-              <button id="closeModal" type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
                 Close
               </button>
-              <button onClick={handleSubmit} id="closeModal" type="submit" className="btn app-btn-primary" data-bs-dismiss="modal">
+              <button onClick={handleSubmit} id="closeUpdateModal" type="submit" className="btn app-btn-primary" data-bs-dismiss="modal">
                 Update Test
               </button>
             </div>

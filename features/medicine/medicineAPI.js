@@ -1,8 +1,8 @@
 import axiosInstance from "../../utils/axiosInstance";
 
-export const getMedicine = async () => {
+export const getMedicine = async ({ page = 1, limit = 15 }) => {
   try {
-    const response = await axiosInstance.get("/medicine");
+    const response = await axiosInstance.get(`/medicine?page=${page}&limit=${limit}`);
     return response.data;
   } catch (error) {
     return Promise.reject(error);
@@ -45,7 +45,7 @@ export const deleteMedicine = async (id) => {
   }
 };
 
-export const searchMedicine = async (search,page=1,limit=20) => {
+export const searchMedicine = async ({ search, page = 1, limit = 40 }) => {
   try {
     const response = await axiosInstance.get(`/medicine/search?search=${search}&page=${page}&limit=${limit}`);
     return response.data;

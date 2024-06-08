@@ -1,15 +1,20 @@
 import Link from "next/link";
-import React, { useEffect } from "react";
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
 import { FaPlusSquare } from "react-icons/fa";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
-import { deletePharmacyData, fetchPharmacy } from "../../features/pharmacy/pharmacySlice";
+import { deletePharmacyData, fetchPharmacy, searchPharmacyData } from "../../features/pharmacy/pharmacySlice";
 import Loader from "../UI/Loader";
+import Pagination from "../UI/Pagination";
 
 const PharmacyHome = () => {
+  const [search, setSearch] = useState("");
+  const router = useRouter();
   const dispatch = useDispatch();
-  const { pharmacies, status } = useSelector((state) => state.pharmacy);
+  const { pharmacies, status, totalPages } = useSelector((state) => state.pharmacy);
+  const currentPage = parseInt(router.query.page) || 1;
 
   // handling delete single prescription
   const handleDeletePharmacy = async (id) => {
@@ -63,20 +68,45 @@ const PharmacyHome = () => {
     });
   };
 
-  useEffect(() => {
-    dispatch(fetchPharmacy());
-  }, [dispatch]);
+  const handleSearch = async () => {
+    try {
+      if (search.trim()) {
+        const res = await dispatch(searchPharmacyData({ search }));
+        if (res?.payload?.data?.users?.length <= 0) {
+          toast.error("Data Not Found!");
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-  // loader
-  if (status === "loading") return <Loader />;
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      handleSearch();
+    }
+  };
+
+  const handlePageChange = async (page) => {
+    router.push({
+      pathname: router.pathname,
+      query: { ...router.query, page },
+    });
+  };
+
+  useEffect(() => {
+    if (router.isReady) {
+      dispatch(fetchPharmacy({ page: currentPage }));
+    }
+  }, [router.isReady, dispatch, currentPage]);
 
   return (
     <div className="container-fluid">
       <div className="app-card p-5 text-center shadow-sm">
         <div className="d-flex align-items-center justify-content-between mb-4">
           <div className="input-group w-50">
-            <input type="text" className="form-control" placeholder="Recipient's name, phone, case no" />
-            <button className="btn btn-primary text-white" type="button" id="button-addon2">
+            <input onChange={(e) => setSearch(e.target.value)} onKeyDown={handleKeyPress} type="search" className="form-control" placeholder="Recipient's name, phone, case no" />
+            <button onClick={handleSearch} className="btn btn-primary text-white" type="button" id="button-addon2">
               Search
             </button>
           </div>
@@ -98,7 +128,7 @@ const PharmacyHome = () => {
               <tbody>
                 {pharmacies?.data?.map((pharmacy, idx) => (
                   <tr key={pharmacy._id}>
-                    <td>{idx + 1}</td>
+                    <td>{(currentPage - 1) * 15 + idx + 1}</td>
                     <td>{pharmacy?.appointment?.caseNo}</td>
                     <td>{pharmacy?.appointment?.ownerName}</td>
                     <td>{pharmacy?.appointment?.phone}</td>
@@ -115,38 +145,8 @@ const PharmacyHome = () => {
             </table>
           </div>
         </div>
-        {/* footer part pagination */}
-        <div className="d-flex justify-content-end align-items-center">
-          <nav aria-label="Page navigation example">
-            <ul className="pagination">
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  Previous
-                </a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  1
-                </a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  2
-                </a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  3
-                </a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  Next
-                </a>
-              </li>
-            </ul>
-          </nav>
-        </div>
+        {/* pagination */}
+        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
       </div>
     </div>
   );

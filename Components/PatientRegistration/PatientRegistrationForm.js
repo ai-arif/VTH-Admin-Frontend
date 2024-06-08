@@ -145,8 +145,8 @@ const PatientRegistrationForm = () => {
   }));
 
   useEffect(() => {
-    dispatch(fetchSpecies());
-    dispatch(fetchTest({}));
+    dispatch(fetchSpecies({ limit: 1000 }));
+    dispatch(fetchTest({ limit: 3000 }));
   }, [dispatch]);
 
   return (
@@ -284,7 +284,7 @@ const PatientRegistrationForm = () => {
                           </label>
                           <select {...register("species")} onChange={(e) => getSpeciesById(e.target.value)} className="form-select" aria-label="Default select example">
                             <option value="">Select</option>
-                            {species?.map((specie) => (
+                            {species?.data?.map((specie) => (
                               <option key={specie._id} value={specie._id}>
                                 {specie.name}
                               </option>
@@ -591,22 +591,22 @@ const PatientRegistrationForm = () => {
                     </div>
                   )}
                   {activeTab === "tests" && (
-                    <div className="row info-group">
-                      <div className="mb-3">
-                        <label className="form-label">Tests</label>
-                        <Controller name="tests" control={control} defaultValue={[]} render={({ field }) => <Select options={testOptions} isMulti {...field} styles={customStyles} />} />
+                    <>
+                      <div className="row info-group">
+                        <div className="mb-3">
+                          <label className="form-label">Tests</label>
+                          <Controller name="tests" control={control} defaultValue={[]} render={({ field }) => <Select options={testOptions} isMulti {...field} styles={customStyles} />} />
+                        </div>
                       </div>
-                    </div>
+                      <div className="d-flex justify-content-center my-3">
+                        <button type="submit" className="btn btn-primary text-white">
+                          Submit
+                        </button>
+                      </div>
+                    </>
                   )}
-                  <div className="d-flex justify-content-center my-3">
-                    <button type="submit" className="btn btn-primary text-white">
-                      Submit
-                    </button>
-                  </div>
                 </form>
               </div>
-              <br />
-              <br />
             </div>
           </div>
         </div>

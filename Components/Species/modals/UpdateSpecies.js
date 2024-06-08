@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import React from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -5,7 +6,9 @@ import { useDispatch } from "react-redux";
 import { fetchSpecies, updateSpeciesData } from "../../../features/specie/speciesSlice";
 
 const UpdateSpecies = ({ existingData }) => {
+  const router = useRouter();
   const dispatch = useDispatch();
+  const currentPage = parseInt(router.query.page) || 1;
 
   const {
     handleSubmit,
@@ -21,8 +24,8 @@ const UpdateSpecies = ({ existingData }) => {
 
       if (response?.payload?.success) {
         toast.success("Species updated successfully!");
-        await dispatch(fetchSpecies());
-        document.getElementById("closeModal").click();
+        await dispatch(fetchSpecies({ page: currentPage }));
+        document.getElementById("closeUpdateModal").click();
       } else {
         toast.error("Failed to update species! Please try again later.");
       }
@@ -41,7 +44,7 @@ const UpdateSpecies = ({ existingData }) => {
               <h2 className="modal-title fs-5" id="updateSpeciesLabel">
                 Update Species
               </h2>
-              <button id="closeModal" type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              <button id="closeUpdateModal" type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form onSubmit={handleSubmit(onSubmit)} className="modal-body">
               <div className="pb-5">
@@ -53,10 +56,10 @@ const UpdateSpecies = ({ existingData }) => {
               </div>
 
               <div className="modal-footer">
-                <button id="closeModal" type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
                   Close
                 </button>
-                <button type="submit" className="btn app-btn-primary">
+                <button type="submit" id="closeUpdateModal" className="btn app-btn-primary">
                   Submit
                 </button>
               </div>

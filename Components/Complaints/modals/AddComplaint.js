@@ -21,9 +21,9 @@ const AddComplaint = () => {
       const response = await dispatch(createComplaint(complaint));
 
       if (response?.payload?.success) {
-        toast.success("complaint added successfully!");
-        dispatch(fetchComplaint());
+        await dispatch(fetchComplaint({}));
         reset();
+        toast.success("complaint added successfully!");
         document.getElementById("closeModal").click();
       } else {
         toast.error("Failed to add complaint! Please try again later.");
@@ -35,7 +35,7 @@ const AddComplaint = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchSpecies());
+    dispatch(fetchSpecies({}));
   }, [dispatch]);
 
   return (
@@ -54,7 +54,7 @@ const AddComplaint = () => {
                 <label className="form-label pb-2">Species (Animal Type)</label>
                 <select type="text" {...register("species", { required: true })} className={`form-select ${errors.species && "border-danger"}`}>
                   <option value="">Select</option>
-                  {species?.map((specie) => (
+                  {species?.data?.map((specie) => (
                     <option key={specie._id} value={specie._id}>
                       {specie.name}
                     </option>
@@ -70,10 +70,10 @@ const AddComplaint = () => {
               </div>
 
               <div className="modal-footer">
-                <button id="closeModal" type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
                   Close
                 </button>
-                <button type="submit" className="btn app-btn-primary">
+                <button type="submit" id="closeModal" className="btn app-btn-primary">
                   Submit
                 </button>
               </div>

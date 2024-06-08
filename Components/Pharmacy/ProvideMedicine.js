@@ -81,7 +81,7 @@ const ProvideMedicine = () => {
     if (id) {
       dispatch(fetchSinglePharmacy(id));
     }
-    dispatch(fetchMedicine());
+    dispatch(fetchMedicine({ limit: 3000 }));
   }, [dispatch, id]);
 
   useEffect(() => {

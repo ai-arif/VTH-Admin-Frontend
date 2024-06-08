@@ -6,10 +6,11 @@ const initialState = {
   species: [],
   status: "idle",
   error: null,
+  totalPages: 1,
 };
 
-export const fetchSpecies = createAsyncThunk("specie/fetchSpecies", async () => {
-  const response = await getSpecies();
+export const fetchSpecies = createAsyncThunk("specie/fetchSpecies", async ({ page = 1, limit = 15 }) => {
+  const response = await getSpecies({ page, limit });
   return response;
 });
 
@@ -28,8 +29,8 @@ export const deleteSpeciesData = createAsyncThunk("specie/deleteSpeciesData", as
   return response;
 });
 
-export const searchSpeciesData = createAsyncThunk("patient/searchSpeciesData", async (search) => {
-  const response = await searchSpecies(search);
+export const searchSpeciesData = createAsyncThunk("specie/searchSpeciesData", async ({ search, page = 1, limit = 40 }) => {
+  const response = await searchSpecies({ search, page, limit });
   return response;
 });
 
@@ -47,7 +48,9 @@ export const speciesSlice = createSlice({
         state.status = "loading";
       })
       .addCase(fetchSpecies.fulfilled, (state, action) => {
-        (state.status = "success"), (state.species = action.payload.data);
+        state.status = "success";
+        state.species = action.payload.data;
+        state.totalPages = action.payload.data.totalPages;
       })
       .addCase(fetchSpecies.rejected, (state, action) => {
         state.status = "failed";
@@ -83,7 +86,9 @@ export const speciesSlice = createSlice({
         state.status = "loading";
       })
       .addCase(searchSpeciesData.fulfilled, (state, action) => {
-        (state.status = "success"), (state.species = action.payload.data);
+        state.status = "success";
+        state.species = action.payload.data;
+        state.totalPages = action.payload.data.totalPages;
       })
       .addCase(searchSpeciesData.rejected, (state, action) => {
         state.status = "failed";

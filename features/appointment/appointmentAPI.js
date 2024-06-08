@@ -1,6 +1,6 @@
 import axiosInstance from "../../utils/axiosInstance";
 
-export const getApprovedAppointments = async (page = 1, limit = 5) => {
+export const getApprovedAppointments = async ({ page = 1, limit = 15 }) => {
   try {
     const response = await axiosInstance.get(`/appointment/approved?page=${page}&limit=${limit}`);
     return response.data;
@@ -9,7 +9,7 @@ export const getApprovedAppointments = async (page = 1, limit = 5) => {
   }
 };
 
-export const getPendingAppointments = async (page = 1, limit = 5) => {
+export const getPendingAppointments = async ({ page = 1, limit = 15 }) => {
   try {
     const response = await axiosInstance.get(`/appointment/pending?page=${page}&limit=${limit}`);
     return response.data;
@@ -65,7 +65,7 @@ export const getAppointmentsByPhone = async (phone) => {
   }
 };
 
-export const searchApprovedAppointments = async (search, page = 1, limit = 5, status = "approved") => {
+export const searchApprovedAppointments = async ({ search, page = 1, limit = 40, status = "approved" }) => {
   try {
     const response = await axiosInstance.get(`/appointment?search=${search}&page=${page}&limit=${limit}&status=${status}`);
     return response.data;
@@ -74,7 +74,7 @@ export const searchApprovedAppointments = async (search, page = 1, limit = 5, st
   }
 };
 
-export const searchPendingAppointments = async (search, page = 1, limit = 5, status = "pending") => {
+export const searchPendingAppointments = async ({ search, page = 1, limit = 40, status = "pending" }) => {
   try {
     const response = await axiosInstance.get(`/appointment?search=${search}&page=${page}&limit=${limit}&status=${status}`);
     return response.data;

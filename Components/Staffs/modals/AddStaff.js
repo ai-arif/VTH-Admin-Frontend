@@ -57,7 +57,7 @@ const AddStaff = () => {
 
   useEffect(() => {
     if (isDoctor) {
-      dispatch(fetchDepartment({}));
+      dispatch(fetchDepartment({ limit: 500 }));
     }
   }, [dispatch, isDoctor]);
 

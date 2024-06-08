@@ -17,16 +17,15 @@ const initialState = {
   appointment: null,
   status: "idle",
   error: null,
-  currentPage: 1,
   totalPages: 1,
 };
 
-export const fetchApprovedAppointments = createAsyncThunk("appointment/fetchApprovedAppointments", async ({ page, limit }) => {
-  return await getApprovedAppointments(page, limit);
+export const fetchApprovedAppointments = createAsyncThunk("appointment/fetchApprovedAppointments", async ({ page = 1, limit = 15 }) => {
+  return await getApprovedAppointments({ page, limit });
 });
 
-export const fetchPendingAppointments = createAsyncThunk("appointment/fetchPendingAppointments", async ({ page, limit }) => {
-  return await getPendingAppointments(page, limit);
+export const fetchPendingAppointments = createAsyncThunk("appointment/fetchPendingAppointments", async ({ page = 1, limit = 15 }) => {
+  return await getPendingAppointments({ page, limit });
 });
 
 export const fetchAppointmentById = createAsyncThunk("appointment/fetchAppointmentById", async (id) => {
@@ -49,13 +48,13 @@ export const fetchAppointmentsByPhone = createAsyncThunk("appointment/fetchAppoi
   return await getAppointmentsByPhone(phone);
 });
 
-export const searchApprovedAppointmentsData = createAsyncThunk("appointment/searchApprovedAppointmentsData", async ({ search, page, limit, status }) => {
-  const response = await searchApprovedAppointments(search, page, limit, status);
+export const searchApprovedAppointmentsData = createAsyncThunk("appointment/searchApprovedAppointmentsData", async ({ search, page = 1, limit = 40, status = "approved" }) => {
+  const response = await searchApprovedAppointments({ search, page, limit, status });
   return response;
 });
 
-export const searchPendingAppointmentsData = createAsyncThunk("appointment/searchPendingAppointmentsData", async ({ search, page, limit, status }) => {
-  const response = await searchPendingAppointments(search, page, limit, status);
+export const searchPendingAppointmentsData = createAsyncThunk("appointment/searchPendingAppointmentsData", async ({ search, page = 1, limit = 40, status = "pending" }) => {
+  const response = await searchPendingAppointments({ search, page, limit, status });
   return response;
 });
 
@@ -63,12 +62,9 @@ const appointmentSlice = createSlice({
   name: "appointment",
   initialState,
   reducers: {
-    clearAppointment(state) {
-      state.appointment = null;
-    },
-    setCurrentPage: (state, action) => {
-      state.currentPage = action.payload;
-    },
+    // clearAppointment(state) {
+    //   state.appointment = null;
+    // },
   },
   extraReducers: (builder) => {
     builder
@@ -172,6 +168,6 @@ const appointmentSlice = createSlice({
   },
 });
 
-export const { clearAppointment, setCurrentPage } = appointmentSlice.actions;
+export const { clearAppointment } = appointmentSlice.actions;
 
 export default appointmentSlice.reducer;

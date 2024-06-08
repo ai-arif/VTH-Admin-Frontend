@@ -1,6 +1,6 @@
 import axiosInstance from "../../utils/axiosInstance";
 
-export const getPrescriptions = async (page = 1, limit = 15) => {
+export const getPrescriptions = async ({ page = 1, limit = 15 }) => {
   try {
     const response = await axiosInstance.get(`/prescription?page=${page}&limit=${limit}`);
     return response.data;
@@ -45,7 +45,7 @@ export const deletePrescription = async (id) => {
   }
 };
 
-export const searchPrescription = async (search, page = 1, limit = 40) => {
+export const searchPrescription = async ({ search, page = 1, limit = 40 }) => {
   try {
     const response = await axiosInstance.get(`/prescription/search/by?search=${search}&page=${page}&limit=${limit}`);
     return response.data;

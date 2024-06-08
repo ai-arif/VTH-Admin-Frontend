@@ -81,7 +81,6 @@ const DepartmentHome = () => {
     try {
       if (search.trim()) {
         const res = await dispatch(searchDepartmentData({ search }));
-        console.log(res);
         if (res?.payload?.data?.data?.length <= 0) {
           toast.error("Data Not Found!");
         }
@@ -150,7 +149,7 @@ const DepartmentHome = () => {
                   <tbody>
                     {departments?.data?.map((department, idx) => (
                       <tr key={department._id}>
-                        <td>{(currentPage - 1) * 2 + idx + 1}</td>
+                        <td>{(currentPage - 1) * 15 + idx + 1}</td>
                         <td>{department.name}</td>
                         <td className="d-flex gap-3 justify-content-center">
                           <TiEdit type="button" onClick={() => handleGetDepartment(department)} data-bs-toggle="modal" data-bs-target="#updateDepartment" title="edit" className="edit-icon" />
