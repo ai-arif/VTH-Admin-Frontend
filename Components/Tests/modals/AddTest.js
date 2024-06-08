@@ -23,10 +23,10 @@ const AddTest = () => {
       const response = await dispatch(createTest(test));
 
       if (response?.payload?.success) {
-        document.getElementById("closeModal").click();
-        toast.success("Test created successfully!");
         await dispatch(fetchTest({}));
+        toast.success("Test created successfully!");
         setTest({ testName: "", testDetails: "" });
+        document.getElementById("closeModal").click();
       } else {
         toast.error("Failed to create test! Please try again later.");
       }
@@ -62,10 +62,10 @@ const AddTest = () => {
               </div>
             </div>
             <div className="modal-footer">
-              <button id="closeModal" type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
                 Close
               </button>
-              <button onClick={handleSubmit} type="submit" className="btn app-btn-primary">
+              <button onClick={handleSubmit} id="closeModal" type="submit" className="btn app-btn-primary">
                 Submit
               </button>
             </div>

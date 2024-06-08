@@ -9,7 +9,7 @@ const initialState = {
   totalPages: 1,
 };
 
-export const fetchStaffs = createAsyncThunk("staff/fetchStaffs", async ({ page, limit }) => {
+export const fetchStaffs = createAsyncThunk("staff/fetchStaffs", async ({ page = 1, limit = 15 }) => {
   const response = await getStaffs({ page, limit });
   return response;
 });
@@ -29,7 +29,7 @@ export const updateStaffData = createAsyncThunk("staff/updateStaffData", async (
   return response;
 });
 
-export const searchStaffData = createAsyncThunk("staff/searchStaffData", async ({ search, page, limit }) => {
+export const searchStaffData = createAsyncThunk("staff/searchStaffData", async ({ search, page = 1, limit = 15 }) => {
   const response = await searchStaff({ search, page, limit });
   return response;
 });

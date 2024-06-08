@@ -18,15 +18,15 @@ const AddDepartment = () => {
       const response = await dispatch(createDepartment(department));
 
       if (response?.payload?.success) {
-        toast.success("Department added successfully!");
         await dispatch(fetchDepartment({}));
         reset();
+        toast.success("Department added successfully!");
         document.getElementById("closeModal").click();
       } else {
         toast.error("Failed to add department! Please try again later.");
       }
     } catch (error) {
-      console.error("An error occurred while adding department:", error);
+      console.error(error);
       toast.error("An error occurred while adding department. Please try again later.");
     }
   };
@@ -50,10 +50,10 @@ const AddDepartment = () => {
               </div>
 
               <div className="modal-footer">
-                <button id="closeModal" type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
                   Close
                 </button>
-                <button type="submit" className="btn app-btn-primary">
+                <button type="submit" id="closeModal" className="btn app-btn-primary">
                   Submit
                 </button>
               </div>

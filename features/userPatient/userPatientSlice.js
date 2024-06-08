@@ -8,13 +8,13 @@ const initialState = {
   totalPages: 1,
 };
 
-export const fetchAllUserPatient = createAsyncThunk("userPatient/fetchAllUserPatient", async ({ page, limit }) => {
-  const response = await getAllUserPatient(page, limit);
+export const fetchAllUserPatient = createAsyncThunk("userPatient/fetchAllUserPatient", async ({ page = 1, limit = 15 }) => {
+  const response = await getAllUserPatient({ page, limit });
   return response;
 });
 
-export const searchUserPatientAsync = createAsyncThunk("userPatient/searchUserPatientAsync", async ({ search, page, limit }) => {
-  const response = await searchUserPatient(search, page, limit);
+export const searchUserPatientAsync = createAsyncThunk("userPatient/searchUserPatientAsync", async ({ search, page = 1, limit = 40 }) => {
+  const response = await searchUserPatient({ search, page, limit });
   return response;
 });
 

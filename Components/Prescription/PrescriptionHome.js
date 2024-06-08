@@ -123,7 +123,7 @@ const PrescriptionHome = () => {
 
   useEffect(() => {
     dispatch(fetchMedicine());
-    dispatch(fetchTest());
+    dispatch(fetchTest({}));
   }, [dispatch]);
 
   return (

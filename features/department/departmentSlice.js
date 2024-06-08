@@ -9,7 +9,7 @@ const initialState = {
   totalPages: 1,
 };
 
-export const fetchDepartment = createAsyncThunk("department/fetchDepartment", async ({ page, limit }) => {
+export const fetchDepartment = createAsyncThunk("department/fetchDepartment", async ({ page = 1, limit = 15 }) => {
   const response = await getDepartments({ page, limit });
   return response;
 });
@@ -28,7 +28,7 @@ export const deleteDepartmentData = createAsyncThunk("department/deleteDepartmen
   const response = await deleteDepartment(id);
   return response;
 });
-export const searchDepartmentData = createAsyncThunk("patient/searchDepartmentData", async ({ search, page, limit }) => {
+export const searchDepartmentData = createAsyncThunk("patient/searchDepartmentData", async ({ search, page = 1, limit = 15 }) => {
   const response = await searchDepartment({ search, page, limit });
   return response;
 });
