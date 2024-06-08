@@ -543,22 +543,22 @@ const UpdatePatientRegistration = () => {
                     </div>
                   )}
                   {activeTab === "tests" && (
-                    <div className="row info-group">
-                      <div className="mb-3">
-                        <label className="form-label">Tests</label>
-                        <Controller name="tests" control={control} defaultValue={matchingTests} render={({ field }) => <Select options={testOptions} isMulti {...field} styles={customStyles} />} />
+                    <>
+                      <div className="row info-group">
+                        <div className="mb-3">
+                          <label className="form-label">Tests</label>
+                          <Controller name="tests" control={control} defaultValue={matchingTests} render={({ field }) => <Select options={testOptions} isMulti {...field} styles={customStyles} />} />
+                        </div>
                       </div>
-                    </div>
+                      <div className="d-flex justify-content-center my-3">
+                        <button type="submit" className="btn btn-primary text-white">
+                          Submit
+                        </button>
+                      </div>
+                    </>
                   )}
-                  <div className="d-flex justify-content-center my-3">
-                    <button type="submit" className="btn btn-primary text-white">
-                      Submit
-                    </button>
-                  </div>
                 </form>
               </div>
-              <br />
-              <br />
             </div>
           </div>
         </div>
