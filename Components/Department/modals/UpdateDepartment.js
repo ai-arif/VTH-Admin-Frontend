@@ -10,7 +10,6 @@ const UpdateDepartment = ({ existingData }) => {
     handleSubmit,
     register,
     setValue,
-    reset,
     formState: { errors },
   } = useForm();
 
@@ -28,7 +27,6 @@ const UpdateDepartment = ({ existingData }) => {
 
       if (response?.payload?.success) {
         toast.success("Department updated successfully!");
-        reset();
         await dispatch(fetchDepartment());
         document.getElementById("closeModal").click();
       } else {
@@ -63,7 +61,7 @@ const UpdateDepartment = ({ existingData }) => {
                 <button id="closeModal" type="button" className="btn btn-secondary" data-bs-dismiss="modal">
                   Close
                 </button>
-                <button type="submit" className="btn app-btn-primary">
+                <button type="submit" id="closeModal" className="btn app-btn-primary" data-bs-dismiss="modal">
                   Submit
                 </button>
               </div>

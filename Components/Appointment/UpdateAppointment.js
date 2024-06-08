@@ -61,7 +61,7 @@ const UpdateAppointment = () => {
     if (id) {
       dispatch(fetchAppointmentById(id));
     }
-    dispatch(fetchDepartment());
+    dispatch(fetchDepartment({}));
   }, [dispatch, id]);
 
   //   loader
@@ -143,7 +143,7 @@ const UpdateAppointment = () => {
                   <div className="mb-3 col-md-6">
                     <label className="form-label">Department</label>
                     <select {...register("department", { required: true })} className={`form-select ${errors.department && "border-danger"}`} aria-label="Default select example">
-                      {departments?.map((department) => (
+                      {departments?.data?.map((department) => (
                         <option key={department._id} value={department._id}>
                           {department.name}
                         </option>

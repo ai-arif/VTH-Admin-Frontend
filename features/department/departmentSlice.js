@@ -6,10 +6,11 @@ const initialState = {
   departments: [],
   status: "idle",
   error: null,
+  totalPages: 1,
 };
 
-export const fetchDepartment = createAsyncThunk("department/fetchDepartment", async () => {
-  const response = await getDepartments();
+export const fetchDepartment = createAsyncThunk("department/fetchDepartment", async ({ page, limit }) => {
+  const response = await getDepartments({ page, limit });
   return response;
 });
 
@@ -27,8 +28,8 @@ export const deleteDepartmentData = createAsyncThunk("department/deleteDepartmen
   const response = await deleteDepartment(id);
   return response;
 });
-export const searchDepartmentData = createAsyncThunk("patient/searchDepartmentData", async (search) => {
-  const response = await searchDepartment(search);
+export const searchDepartmentData = createAsyncThunk("patient/searchDepartmentData", async ({ search, page, limit }) => {
+  const response = await searchDepartment({ search, page, limit });
   return response;
 });
 
@@ -46,7 +47,9 @@ export const departmentSlice = createSlice({
         state.status = "loading";
       })
       .addCase(fetchDepartment.fulfilled, (state, action) => {
-        (state.status = "success"), (state.departments = action.payload.data);
+        state.status = "success";
+        state.departments = action.payload.data;
+        state.totalPages = action.payload.data.totalPages;
       })
       .addCase(fetchDepartment.rejected, (state, action) => {
         state.status = "failed";
@@ -74,7 +77,9 @@ export const departmentSlice = createSlice({
         state.status = "loading";
       })
       .addCase(searchDepartmentData.fulfilled, (state, action) => {
-        (state.status = "success"), (state.patients = action.payload.data);
+        state.status = "success";
+        state.patients = action.payload.data;
+        state.totalPages = action.payload.data.totalPages;
       })
       .addCase(searchDepartmentData.rejected, (state, action) => {
         state.status = "failed";

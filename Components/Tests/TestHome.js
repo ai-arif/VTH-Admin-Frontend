@@ -81,7 +81,7 @@ const TestHome = () => {
     try {
       if (search.trim()) {
         const res = await dispatch(searchTestData({ search }));
-        if (res?.payload?.data?.users?.length <= 0) {
+        if (res?.payload?.data?.data?.length <= 0) {
           toast.error("Data Not Found!");
         }
       }

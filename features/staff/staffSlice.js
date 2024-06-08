@@ -10,7 +10,7 @@ const initialState = {
 };
 
 export const fetchStaffs = createAsyncThunk("staff/fetchStaffs", async ({ page, limit }) => {
-  const response = await getStaffs(page, limit);
+  const response = await getStaffs({ page, limit });
   return response;
 });
 
@@ -30,7 +30,7 @@ export const updateStaffData = createAsyncThunk("staff/updateStaffData", async (
 });
 
 export const searchStaffData = createAsyncThunk("staff/searchStaffData", async ({ search, page, limit }) => {
-  const response = await searchStaff(search, page, limit);
+  const response = await searchStaff({ search, page, limit });
   return response;
 });
 
