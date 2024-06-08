@@ -117,7 +117,7 @@ const UpdatePatientRegistration = () => {
     if (id) {
       dispatch(fetchSinglePatient(id));
     }
-    dispatch(fetchSpecies());
+    dispatch(fetchSpecies({}));
     dispatch(fetchTest({}));
   }, [dispatch, id]);
 
@@ -236,7 +236,7 @@ const UpdatePatientRegistration = () => {
                           </label>
                           <select {...register("species")} onChange={(e) => fetchComplaints(e.target.value)} className="form-select" aria-label="Default select example">
                             <option value="">Select</option>
-                            {species?.map((specie) => (
+                            {species?.data?.map((specie) => (
                               <option key={specie._id} value={specie._id}>
                                 {specie.name}
                               </option>

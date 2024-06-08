@@ -25,7 +25,7 @@ const UpdateMedicine = () => {
       const response = await dispatch(updateMedicineData(medicineData));
 
       if (response?.payload?.success) {
-        dispatch(fetchMedicine({}));
+        await dispatch(fetchMedicine({}));
         router.push("/medicine/view");
         toast.success("Medicine updated successfully!");
       } else {

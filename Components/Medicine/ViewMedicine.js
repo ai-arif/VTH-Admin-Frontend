@@ -73,7 +73,7 @@ const ViewMedicine = () => {
     try {
       if (search.trim()) {
         const res = await dispatch(searchMedicineData({ search }));
-        if (res?.payload?.data?.users?.length <= 0) {
+        if (res?.payload?.data?.data?.length <= 0) {
           toast.error("Data Not Found!");
         }
       }
@@ -131,7 +131,7 @@ const ViewMedicine = () => {
               <tbody>
                 {medicines?.data?.map((medicine, idx) => (
                   <tr key={medicine._id}>
-                    <td>{(currentPage - 1) * 3 + idx + 1}</td>
+                    <td>{(currentPage - 1) * 15 + idx + 1}</td>
                     <td className="text-nowrap">{medicine.name}</td>
                     <td className="">{medicine.brandName}</td>
                     <td className="">{medicine.withdrawalPeriod}</td>

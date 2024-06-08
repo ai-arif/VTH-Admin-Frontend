@@ -6,10 +6,11 @@ const initialState = {
   pharmacies: [],
   status: "idle",
   error: null,
+  totalPages: 1,
 };
 
-export const fetchPharmacy = createAsyncThunk("pharmacy/fetchPharmacy", async () => {
-  const response = await getPharmacyPrescription();
+export const fetchPharmacy = createAsyncThunk("pharmacy/fetchPharmacy", async ({ page = 1, limit = 15 }) => {
+  const response = await getPharmacyPrescription({ page, limit });
   return response;
 });
 
@@ -33,8 +34,8 @@ export const deletePharmacyData = createAsyncThunk("pharmacy/deletePharmacyData"
   return response;
 });
 
-export const searchPharmacyData = createAsyncThunk("patient/searchPharmacyData", async (search) => {
-  const response = await searchPharmacy(search);
+export const searchPharmacyData = createAsyncThunk("patient/searchPharmacyData", async ({ search, page = 1, limit = 40 }) => {
+  const response = await searchPharmacy({ search, page, limit });
   return response;
 });
 
@@ -52,7 +53,9 @@ export const pharmacySlice = createSlice({
         state.status = "loading";
       })
       .addCase(fetchPharmacy.fulfilled, (state, action) => {
-        (state.status = "success"), (state.pharmacies = action.payload.data);
+        state.status = "success";
+        state.pharmacies = action.payload.data;
+        state.totalPages = action.payload.data.totalPages;
       })
       .addCase(fetchPharmacy.rejected, (state, action) => {
         state.status = "failed";
@@ -101,7 +104,9 @@ export const pharmacySlice = createSlice({
         state.status = "loading";
       })
       .addCase(searchPharmacyData.fulfilled, (state, action) => {
-        (state.status = "success"), (state.pharmacies = action.payload.data);
+        state.status = "success";
+        state.pharmacies = action.payload.data;
+        state.totalPages = action.payload.data.totalPages;
       })
       .addCase(searchPharmacyData.rejected, (state, action) => {
         state.status = "failed";

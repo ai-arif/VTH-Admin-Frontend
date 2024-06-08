@@ -81,7 +81,6 @@ const DepartmentHome = () => {
     try {
       if (search.trim()) {
         const res = await dispatch(searchDepartmentData({ search }));
-        console.log(res);
         if (res?.payload?.data?.data?.length <= 0) {
           toast.error("Data Not Found!");
         }

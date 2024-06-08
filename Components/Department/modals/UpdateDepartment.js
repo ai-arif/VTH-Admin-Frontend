@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -5,7 +6,10 @@ import { useDispatch } from "react-redux";
 import { fetchDepartment, updateDepartmentData } from "../../../features/department/departmentSlice";
 
 const UpdateDepartment = ({ existingData }) => {
+  const router = useRouter();
   const dispatch = useDispatch();
+  const currentPage = parseInt(router.query.page) || 1;
+
   const {
     handleSubmit,
     register,
@@ -26,7 +30,7 @@ const UpdateDepartment = ({ existingData }) => {
       const response = await dispatch(updateDepartmentData(departmentData));
 
       if (response?.payload?.success) {
-        await dispatch(fetchDepartment({}));
+        await dispatch(fetchDepartment({ page: currentPage }));
         toast.success("Department updated successfully!");
         document.getElementById("closeUpdateModal").click();
       } else {

@@ -1,18 +1,24 @@
+import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { FaPlus } from "react-icons/fa6";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { TiEdit } from "react-icons/ti";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
-import { deleteSpeciesData, fetchSpecies } from "../../features/specie/speciesSlice";
+import { deleteSpeciesData, fetchSpecies, searchSpeciesData } from "../../features/specie/speciesSlice";
 import Loader from "../UI/Loader";
+import Pagination from "../UI/Pagination";
 import AddSpecies from "./modals/AddSpecies";
 import UpdateSpecies from "./modals/UpdateSpecies";
 
 const SpeciesHome = () => {
-  const dispatch = useDispatch();
+  const [search, setSearch] = useState("");
   const [existingData, setExistingData] = useState({});
-  const { species, status } = useSelector((state) => state.specie);
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const { species, status, totalPages } = useSelector((state) => state.specie);
+  const currentPage = parseInt(router.query.page) || 1;
 
   // handle get single species for update
   const handleGetSpecies = (species) => {
@@ -37,7 +43,7 @@ const SpeciesHome = () => {
           const response = await dispatch(deleteSpeciesData(id));
 
           if (response?.payload?.success) {
-            dispatch(fetchSpecies());
+            await dispatch(fetchSpecies({ page: currentPage }));
 
             Swal.fire({
               icon: "success",
@@ -71,12 +77,40 @@ const SpeciesHome = () => {
     });
   };
 
+  const handleSearch = async () => {
+    try {
+      if (search.trim()) {
+        const res = await dispatch(searchSpeciesData({ search }));
+        if (res?.payload?.data?.data?.length <= 0) {
+          toast.error("Data Not Found!");
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      handleSearch();
+    }
+  };
+
+  const handlePageChange = async (page) => {
+    router.push({
+      pathname: router.pathname,
+      query: { ...router.query, page },
+    });
+  };
+
   useEffect(() => {
-    dispatch(fetchSpecies());
-  }, [dispatch]);
+    if (router.isReady) {
+      dispatch(fetchSpecies({ page: currentPage }));
+    }
+  }, [router.isReady, dispatch, currentPage]);
 
   // loader
-  if (status === "loading") return <Loader />;
+  // if (status === "loading" && currentPage < 2) return <Loader />;
 
   return (
     <div>
@@ -91,8 +125,8 @@ const SpeciesHome = () => {
               <h3 className="page-title pb-3">All Species (Animal Type)</h3>
               <div className="d-flex justify-content-between mb-4">
                 <div className="input-group w-50">
-                  <input type="text" className="form-control" placeholder="Search by name" />
-                  <button className="btn btn-primary text-white" type="button" id="button-addon2">
+                  <input onChange={(e) => setSearch(e.target.value)} onKeyDown={handleKeyPress} type="search" className="form-control" placeholder="Search by name" />
+                  <button onClick={handleSearch} className="btn btn-primary text-white" type="button" id="button-addon2">
                     Search
                   </button>
                 </div>
@@ -113,9 +147,9 @@ const SpeciesHome = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {species?.map((specie, index) => (
+                      {species?.data?.map((specie, idx) => (
                         <tr key={specie._id}>
-                          <td>{index + 1}</td>
+                          <td>{(currentPage - 1) * 15 + idx + 1}</td>
                           <td className="text-capitalize">{specie.name}</td>
                           <td className="d-flex gap-3 justify-content-center align-items-center">
                             <TiEdit type="button" onClick={() => handleGetSpecies(specie)} data-bs-toggle="modal" data-bs-target="#updateSpecies" title="edit" className="edit-icon" />
@@ -127,47 +161,8 @@ const SpeciesHome = () => {
                   </table>
                 </div>
               </div>
-              {/* footer part pagination */}
-              <div className="d-flex justify-content-between align-items-center">
-                <div className="d-flex gap-2">
-                  <span className="text-nowrap">Items per page</span>
-                  <select className="form-select form-select-sm">
-                    <option value="1">10</option>
-                    <option value="2">20</option>
-                    <option value="3">50</option>
-                    <option value="4">100</option>
-                  </select>
-                </div>
-                <nav aria-label="Page navigation example">
-                  <ul className="pagination">
-                    <li className="page-item">
-                      <a className="page-link" href="#">
-                        Previous
-                      </a>
-                    </li>
-                    <li className="page-item">
-                      <a className="page-link" href="#">
-                        1
-                      </a>
-                    </li>
-                    <li className="page-item">
-                      <a className="page-link" href="#">
-                        2
-                      </a>
-                    </li>
-                    <li className="page-item">
-                      <a className="page-link" href="#">
-                        3
-                      </a>
-                    </li>
-                    <li className="page-item">
-                      <a className="page-link" href="#">
-                        Next
-                      </a>
-                    </li>
-                  </ul>
-                </nav>
-              </div>
+              {/* pagination */}
+              <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
             </div>
           </div>
         </div>

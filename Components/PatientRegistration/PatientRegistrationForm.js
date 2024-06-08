@@ -145,7 +145,7 @@ const PatientRegistrationForm = () => {
   }));
 
   useEffect(() => {
-    dispatch(fetchSpecies());
+    dispatch(fetchSpecies({}));
     dispatch(fetchTest({}));
   }, [dispatch]);
 
@@ -284,7 +284,7 @@ const PatientRegistrationForm = () => {
                           </label>
                           <select {...register("species")} onChange={(e) => getSpeciesById(e.target.value)} className="form-select" aria-label="Default select example">
                             <option value="">Select</option>
-                            {species?.map((specie) => (
+                            {species?.data?.map((specie) => (
                               <option key={specie._id} value={specie._id}>
                                 {specie.name}
                               </option>

@@ -18,9 +18,9 @@ const AddSpecies = () => {
     try {
       const response = await dispatch(createSpecies(species));
       if (response?.payload?.success) {
-        toast.success("species added successfully!");
-        dispatch(fetchSpecies());
+        await dispatch(fetchSpecies({}));
         reset();
+        toast.success("species added successfully!");
         document.getElementById("closeModal").click();
       } else {
         toast.error("Failed to add species! Please try again later.");
@@ -52,10 +52,10 @@ const AddSpecies = () => {
               </div>
 
               <div className="modal-footer">
-                <button id="closeModal" type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
                   Close
                 </button>
-                <button type="submit" className="btn app-btn-primary">
+                <button type="submit" id="closeModal" className="btn app-btn-primary">
                   Submit
                 </button>
               </div>

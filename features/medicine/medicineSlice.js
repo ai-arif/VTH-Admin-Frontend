@@ -9,7 +9,7 @@ const initialState = {
   totalPages: 1,
 };
 
-export const fetchMedicine = createAsyncThunk("medicine/fetchMedicine", async ({ page = 1, limit = 3 }) => {
+export const fetchMedicine = createAsyncThunk("medicine/fetchMedicine", async ({ page = 1, limit = 15 }) => {
   const response = await getMedicine({ page, limit });
   return response;
 });

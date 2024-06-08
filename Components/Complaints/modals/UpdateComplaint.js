@@ -35,7 +35,7 @@ const UpdateComplaint = ({ existingData }) => {
   };
 
   useEffect(() => {
-    dispatch(fetchSpecies());
+    dispatch(fetchSpecies({}));
   }, [dispatch]);
 
   return (
@@ -53,7 +53,7 @@ const UpdateComplaint = ({ existingData }) => {
               <div className="pb-5">
                 <label className="form-label pb-2">Species (Animal Type)</label>
                 <select type="text" {...register("species", { required: true })} className={`form-select ${errors.species && "border-danger"}`}>
-                  {species?.map((specie, idx) => (
+                  {species?.data?.map((specie, idx) => (
                     <option key={idx} value={specie._id}>
                       {specie.name}
                     </option>
