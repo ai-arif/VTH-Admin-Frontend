@@ -13,7 +13,7 @@ import AddComplaint from "./modals/AddComplaint";
 import UpdateComplaint from "./modals/UpdateComplaint";
 
 const SpeciesHome = () => {
-  const [search, setSearch] = useState("");
+  // const [search, setSearch] = useState("");
   const [existingData, setExistingData] = useState({});
   const router = useRouter();
   const dispatch = useDispatch();
@@ -77,24 +77,24 @@ const SpeciesHome = () => {
     });
   };
 
-  const handleSearch = async () => {
-    try {
-      if (search.trim()) {
-        const res = await dispatch(searchComplaintData({ search }));
-        if (res?.payload?.data?.data?.length <= 0) {
-          toast.error("Data Not Found!");
-        }
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const handleSearch = async () => {
+  //   try {
+  //     if (search.trim()) {
+  //       const res = await dispatch(searchComplaintData({ search }));
+  //       if (res?.payload?.data?.data?.length <= 0) {
+  //         toast.error("Data Not Found!");
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
-  const handleKeyPress = (event) => {
-    if (event.key === "Enter") {
-      handleSearch();
-    }
-  };
+  // const handleKeyPress = (event) => {
+  //   if (event.key === "Enter") {
+  //     handleSearch();
+  //   }
+  // };
 
   const handlePageChange = async (page) => {
     router.push({
@@ -123,13 +123,13 @@ const SpeciesHome = () => {
             <UpdateComplaint existingData={existingData} />
             <div className="app-card p-5 text-center shadow-sm">
               <h3 className="page-title pb-3">All Complaint</h3>
-              <div className="d-flex justify-content-between mb-4">
-                <div className="input-group w-50">
+              <div className="d-flex justify-content-end mb-4">
+                {/* <div className="input-group w-50">
                   <input onChange={(e) => setSearch(e.target.value)} onKeyDown={handleKeyPress} type="search" className="form-control" placeholder="Search by name" />
                   <button onClick={handleSearch} className="btn btn-primary text-white" type="button" id="button-addon2">
                     Search
                   </button>
-                </div>
+                </div> */}
                 <div>
                   <button data-bs-toggle="modal" data-bs-target="#addComplaint" className="btn gap-2 d-flex align-items-center app-btn-primary">
                     <FaPlus /> Add Complaint

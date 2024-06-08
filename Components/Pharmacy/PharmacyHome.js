@@ -106,7 +106,7 @@ const PharmacyHome = () => {
         <div className="d-flex align-items-center justify-content-between mb-4">
           <div className="input-group w-50">
             <input onChange={(e) => setSearch(e.target.value)} onKeyDown={handleKeyPress} type="search" className="form-control" placeholder="Recipient's name, phone, case no" />
-            <button className="btn btn-primary text-white" type="button" id="button-addon2">
+            <button onClick={handleSearch} className="btn btn-primary text-white" type="button" id="button-addon2">
               Search
             </button>
           </div>

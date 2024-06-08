@@ -10,7 +10,7 @@ const initialState = {
 };
 
 export const fetchPrescription = createAsyncThunk("prescription/fetchPrescription", async ({ page, limit }) => {
-  const response = await getPrescriptions(page, limit);
+  const response = await getPrescriptions({ page, limit });
   return response;
 });
 
@@ -35,7 +35,7 @@ export const fetchSinglePrescription = createAsyncThunk("prescription/fetchSingl
 });
 
 export const searchPrescriptionData = createAsyncThunk("patient/searchPrescriptionData", async ({ search, page, limit }) => {
-  const response = await searchPrescription(search, page, limit);
+  const response = await searchPrescription({ search, page, limit });
   return response;
 });
 

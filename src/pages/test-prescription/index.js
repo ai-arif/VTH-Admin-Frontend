@@ -21,7 +21,7 @@ export default function TestPrescription() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchTest({}));
+    dispatch(fetchTest({ limit: 3000 }));
   }, [dispatch]);
 
   // wk

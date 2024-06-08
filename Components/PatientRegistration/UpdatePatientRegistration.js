@@ -117,8 +117,8 @@ const UpdatePatientRegistration = () => {
     if (id) {
       dispatch(fetchSinglePatient(id));
     }
-    dispatch(fetchSpecies({}));
-    dispatch(fetchTest({}));
+    dispatch(fetchSpecies({ limit: 1000 }));
+    dispatch(fetchTest({ limit: 3000 }));
   }, [dispatch, id]);
 
   useEffect(() => {

@@ -75,7 +75,7 @@ export default function TestParameter() {
   console.log(subParameterList);
 
   useEffect(() => {
-    dispatch(fetchTest({}));
+    dispatch(fetchTest({ limit: 3000 }));
   }, [dispatch]);
 
   useEffect(() => {

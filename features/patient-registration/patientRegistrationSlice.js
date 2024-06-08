@@ -9,8 +9,8 @@ const initialState = {
   totalPages: 1,
 };
 
-export const fetchPatient = createAsyncThunk("patient/fetchPatient", async ({ page, limit }) => {
-  const response = await getPatient(page, limit);
+export const fetchPatient = createAsyncThunk("patient/fetchPatient", async ({ page = 1, limit = 15 }) => {
+  const response = await getPatient({ page, limit });
   return response;
 });
 
@@ -34,8 +34,8 @@ export const fetchSinglePatient = createAsyncThunk("patient/fetchSinglePatient",
   return response;
 });
 
-export const searchPatientData = createAsyncThunk("patient/searchPatientData", async ({ search, page, limit }) => {
-  const response = await searchPatient(search, page, limit);
+export const searchPatientData = createAsyncThunk("patient/searchPatientData", async ({ search, page = 1, limit = 40 }) => {
+  const response = await searchPatient({ search, page, limit });
   return response;
 });
 

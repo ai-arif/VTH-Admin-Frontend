@@ -45,7 +45,7 @@ export const fetchParameter = createAsyncThunk("test/fetchParameter", async (id)
   return response;
 });
 
-export const fetchTest = createAsyncThunk("test/fetchTest", async ({ page = 11, limit = 15 }) => {
+export const fetchTest = createAsyncThunk("test/fetchTest", async ({ page = 1, limit = 15 }) => {
   const response = await getTest({ page, limit });
   return response;
 });

@@ -122,8 +122,8 @@ const PrescriptionHome = () => {
   }));
 
   useEffect(() => {
-    dispatch(fetchMedicine({}));
-    dispatch(fetchTest({}));
+    dispatch(fetchMedicine({ limit: 3000 }));
+    dispatch(fetchTest({ limit: 3000 }));
   }, [dispatch]);
 
   return (

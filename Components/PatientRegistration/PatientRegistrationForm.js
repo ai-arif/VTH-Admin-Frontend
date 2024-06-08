@@ -145,8 +145,8 @@ const PatientRegistrationForm = () => {
   }));
 
   useEffect(() => {
-    dispatch(fetchSpecies({}));
-    dispatch(fetchTest({}));
+    dispatch(fetchSpecies({ limit: 1000 }));
+    dispatch(fetchTest({ limit: 3000 }));
   }, [dispatch]);
 
   return (

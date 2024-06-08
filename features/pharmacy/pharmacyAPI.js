@@ -47,7 +47,7 @@ export const deletePharmacy = async (id) => {
 
 export const searchPharmacy = async ({ search, page = 1, limit = 40 }) => {
   try {
-    const response = await axiosInstance.get(`/pharmacy/search?search=${search}&page=${page}&limit=${limit}`);
+    const response = await axiosInstance.get(`/prescription/search/by?search=${search}&page=${page}&limit=${limit}`);
     return response.data;
   } catch (error) {
     return Promise.reject(error);

@@ -78,7 +78,7 @@ const UpdatePrescription = () => {
 
       if (response?.payload?.success) {
         toast.success("Prescription updated successfully!");
-        dispatch(fetchPrescription({}));
+        await dispatch(fetchPrescription({}));
         router.push("/prescription/view");
       } else {
         toast.error("Failed to update prescription! Please try again later.");
@@ -93,8 +93,8 @@ const UpdatePrescription = () => {
     if (id) {
       dispatch(fetchSinglePrescription(id));
     }
-    dispatch(fetchMedicine({}));
-    dispatch(fetchTest({}));
+    dispatch(fetchMedicine({ limit: 3000 }));
+    dispatch(fetchTest({ limit: 3000 }));
   }, [dispatch, id]);
 
   //   loader
