@@ -9,7 +9,7 @@ const initialState = {
   totalPages: 1,
 };
 
-export const fetchComplaint = createAsyncThunk("complaint/fetchComplaint", async ({ page = 1, limit = 3 }) => {
+export const fetchComplaint = createAsyncThunk("complaint/fetchComplaint", async ({ page = 1, limit = 15 }) => {
   const response = await getComplaint({ page, limit });
   return response;
 });

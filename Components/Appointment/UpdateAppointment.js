@@ -27,10 +27,10 @@ const UpdateAppointment = () => {
       const response = await dispatch(updateExistingAppointment(appointmentData));
 
       if (response?.payload?.success) {
-        toast.success("Appointment updated successfully!");
-        dispatch(fetchApprovedAppointments());
-        dispatch(fetchPendingAppointments());
+        await dispatch(fetchApprovedAppointments({}));
+        await dispatch(fetchPendingAppointments({}));
         router.push("/appointment/view");
+        toast.success("Appointment updated successfully!");
       } else {
         toast.error("Failed to update appointment! Please try again later.");
       }

@@ -66,7 +66,7 @@ const AppointmentHome = () => {
         toast.error("Failed to add appointment! Please try again later.");
       }
     } catch (error) {
-      console.error("An error occurred while adding appointment:", error);
+      console.error(error);
       toast.error("An error occurred while adding appointment. Please try again later.");
     }
   };

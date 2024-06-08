@@ -6,7 +6,7 @@ import { RiDeleteBinLine, RiImageLine } from "react-icons/ri";
 import { TiEdit } from "react-icons/ti";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
-import { deleteExistingAppointment, fetchPendingAppointments, searchPendingAppointmentsData, setCurrentPage } from "../../features/appointment/appointmentSlice";
+import { deleteExistingAppointment, fetchPendingAppointments, searchPendingAppointmentsData } from "../../features/appointment/appointmentSlice";
 import axiosInstance from "../../utils/axiosInstance";
 import { formatDate } from "../../utils/formatDate";
 import TestPaymentModal from "../IncomingTest/TestPaymentModal";
@@ -21,7 +21,8 @@ const PendingAppointment = () => {
   const [amount, setAmount] = useState(null);
   const router = useRouter();
   const dispatch = useDispatch();
-  const { pendingAppointments, status, currentPage, totalPages } = useSelector((state) => state.appointment);
+  const { pendingAppointments, status, totalPages } = useSelector((state) => state.appointment);
+  const currentPage = parseInt(router.query.page) || 1;
 
   // handling delete single appointment
   const handleDeleteAppointment = async (caseNo) => {
@@ -40,7 +41,7 @@ const PendingAppointment = () => {
         try {
           const response = await dispatch(deleteExistingAppointment(caseNo));
           if (response?.payload?.success) {
-            await dispatch(fetchPendingAppointments({}));
+            await dispatch(fetchPendingAppointments({ page: currentPage }));
 
             Swal.fire({
               icon: "success",
@@ -74,10 +75,22 @@ const PendingAppointment = () => {
     });
   };
 
+  const handlePaymentAndStatus = (amount) => {
+    axiosInstance.patch(`/appointment/${appointmentId}`, { payment: "paid", amount: amount }).then((res) => {
+      let result = res.data;
+
+      if (result.success) {
+        setAmount(null);
+        dispatch(fetchPendingAppointments());
+        toast.success("Payment and status updated successfully!");
+      }
+    });
+  };
+
   const handleSearch = async () => {
     try {
       if (search.trim()) {
-        const res = await dispatch(searchPendingAppointmentsData({ search, status: "pending" }));
+        const res = await dispatch(searchPendingAppointmentsData({ search }));
         if (res?.payload?.data?.appointments?.length <= 0) {
           toast.error("Data Not Found!");
         }
@@ -93,40 +106,21 @@ const PendingAppointment = () => {
     }
   };
 
-  const handlePaymentAndStatus = (amount) => {
-    axiosInstance.patch(`/appointment/${appointmentId}`, { payment: "paid", amount: amount }).then((res) => {
-      let result = res.data;
-
-      if (result.success) {
-        setAmount(null);
-        dispatch(fetchPendingAppointments());
-        toast.success("Payment and status updated successfully!");
-      }
-    });
-  };
-
   const handlePageChange = async (page) => {
     router.push({
       pathname: router.pathname,
       query: { ...router.query, page },
     });
-    await dispatch(setCurrentPage(page));
   };
 
   useEffect(() => {
-    const page = parseInt(router.query.page) || 1;
-
-    dispatch(setCurrentPage(page));
-
-    if (search) {
-      dispatch(searchPendingAppointmentsData({ search, status: "pending" }));
-    } else {
-      dispatch(fetchPendingAppointments({ page }));
+    if (router.isReady) {
+      dispatch(fetchPendingAppointments({ page: currentPage }));
     }
-  }, [dispatch, router.query.page]);
+  }, [router.isReady, dispatch, currentPage]);
 
   // loader
-  if (status === "loading" && currentPage < 2) return <Loader />;
+  // if (status === "loading" && currentPage < 2) return <Loader />;
 
   return (
     <div className="container-fluid">

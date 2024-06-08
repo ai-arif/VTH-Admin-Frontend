@@ -150,7 +150,7 @@ const SpeciesHome = () => {
                     <tbody>
                       {complaints?.data?.map((complaint, idx) => (
                         <tr key={complaint._id}>
-                          <td>{(currentPage - 1) * 3 + idx + 1}</td>
+                          <td>{(currentPage - 1) * 15 + idx + 1}</td>
                           <td className="text-capitalize">{complaint?.species?.name}</td>
                           <td className="text-capitalize">{complaint?.complaint}</td>
                           <td className="d-flex gap-3 justify-content-center align-items-center">

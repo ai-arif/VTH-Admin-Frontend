@@ -6,7 +6,7 @@ import { RiDeleteBinLine, RiImageLine } from "react-icons/ri";
 import { TiEdit } from "react-icons/ti";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
-import { deleteExistingAppointment, fetchApprovedAppointments, searchApprovedAppointmentsData, setCurrentPage } from "../../features/appointment/appointmentSlice";
+import { deleteExistingAppointment, fetchApprovedAppointments, searchApprovedAppointmentsData } from "../../features/appointment/appointmentSlice";
 import axiosInstance from "../../utils/axiosInstance";
 import { formatDate } from "../../utils/formatDate";
 import TestPaymentModal from "../IncomingTest/TestPaymentModal";
@@ -15,13 +15,14 @@ import Pagination from "../UI/Pagination";
 import AppointmentImagesModal from "./modals/appointmentImagesModal";
 
 const ApprovedAppointment = () => {
+  const [appointmentId, setAppointmentId] = useState("");
+  const [modalImages, setModalImages] = useState([]);
+  const [amount, setAmount] = useState(null);
   const [search, setSearch] = useState("");
   const router = useRouter();
   const dispatch = useDispatch();
-  const { appointments, status, currentPage, totalPages } = useSelector((state) => state.appointment);
-  const [modalImages, setModalImages] = useState([]);
-  const [amount, setAmount] = useState(null);
-  const [appointmentId, setAppointmentId] = useState("");
+  const { appointments, status, totalPages } = useSelector((state) => state.appointment);
+  const currentPage = parseInt(router.query.page) || 1;
 
   // handling delete single appointment
   const handleDeleteAppointment = async (caseNo) => {
@@ -40,7 +41,7 @@ const ApprovedAppointment = () => {
         try {
           const response = await dispatch(deleteExistingAppointment(caseNo));
           if (response?.payload?.success) {
-            await dispatch(fetchApprovedAppointments({}));
+            await dispatch(fetchApprovedAppointments({ page: currentPage }));
 
             Swal.fire({
               icon: "success",
@@ -74,10 +75,22 @@ const ApprovedAppointment = () => {
     });
   };
 
+  const handlePaymentAndStatus = (amount) => {
+    axiosInstance.patch(`/appointment/${appointmentId}`, { payment: "paid", amount: amount }).then((res) => {
+      let result = res.data;
+
+      if (result.success) {
+        setAmount(null);
+        dispatch(fetchApprovedAppointments());
+        toast.success("Payment and status updated successfully!");
+      }
+    });
+  };
+
   const handleSearch = async () => {
     try {
       if (search.trim()) {
-        const res = await dispatch(searchApprovedAppointmentsData({ search, status: "approved" }));
+        const res = await dispatch(searchApprovedAppointmentsData({ search }));
         if (res?.payload?.data?.appointments?.length <= 0) {
           toast.error("Data Not Found!");
         }
@@ -93,40 +106,21 @@ const ApprovedAppointment = () => {
     }
   };
 
-  const handlePaymentAndStatus = (amount) => {
-    axiosInstance.patch(`/appointment/${appointmentId}`, { payment: "paid", amount: amount }).then((res) => {
-      let result = res.data;
-
-      if (result.success) {
-        setAmount(null);
-        dispatch(fetchApprovedAppointments());
-        toast.success("Payment and status updated successfully!");
-      }
-    });
-  };
-
   const handlePageChange = async (page) => {
     router.push({
       pathname: router.pathname,
       query: { ...router.query, page },
     });
-    await dispatch(setCurrentPage(page));
   };
 
   useEffect(() => {
-    const page = parseInt(router.query.page) || 1;
-
-    dispatch(setCurrentPage(page));
-
-    if (search) {
-      dispatch(searchApprovedAppointmentsData({ search, status: "approved" }));
-    } else {
-      dispatch(fetchApprovedAppointments({ page }));
+    if (router.isReady) {
+      dispatch(fetchApprovedAppointments({ page: currentPage }));
     }
-  }, [dispatch, router.query.page]);
+  }, [router.isReady, dispatch, currentPage]);
 
   // loader
-  if (status === "loading" && currentPage < 2) return <Loader />;
+  // if (status === "loading" && currentPage < 2) return <Loader />;
 
   return (
     <div className="container-fluid">
@@ -157,7 +151,7 @@ const ApprovedAppointment = () => {
               <tbody>
                 {appointments?.appointments?.map((appointment, idx) => (
                   <tr key={appointment._id}>
-                    <td>{(currentPage - 1) * 5 + idx + 1}</td>
+                    <td>{(currentPage - 1) * 15 + idx + 1}</td>
                     <td>{appointment.caseNo}</td>
                     <td>{appointment.ownerName}</td>
                     <td>{appointment.phone}</td>
