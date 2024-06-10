@@ -63,6 +63,8 @@ const UpdatePrescription = () => {
   const matchingMedicines = medicineOptions?.filter((data) => selectedMedicines?.includes(data.value));
   const matchingTests = testOptions?.filter((data) => selectedTests?.includes(data.value));
 
+  console.log(matchingMedicines);
+
   // convert date string to a Date object and Format the date
   const nextVisitDate = prescription?.data?.nextVisit ? new Date(prescription.data.nextVisit).toISOString().split("T")[0] : "";
 

@@ -65,6 +65,17 @@ const UpdatePatientRegistration = () => {
   const selectedTests = patient?.tests;
   const matchingTests = testOptions?.filter((data) => selectedTests?.includes(data.value));
 
+  const fetchComplaints = async (speciesId) => {
+    try {
+      if (!speciesId) return;
+
+      const response = await axiosInstance.get(`/complaint/species/${speciesId}`);
+      setSpeciesByComplaint(response?.data?.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const {
     handleSubmit,
     register,
@@ -99,17 +110,6 @@ const UpdatePatientRegistration = () => {
       setActiveTab(tab);
     } else {
       toast.error("Please fill in all required fields.");
-    }
-  };
-
-  const fetchComplaints = async (speciesId) => {
-    try {
-      if (!speciesId) return;
-
-      const response = await axiosInstance.get(`/complaint/species/${speciesId}`);
-      setSpeciesByComplaint(response?.data?.data);
-    } catch (error) {
-      console.error(error);
     }
   };
 
