@@ -81,8 +81,28 @@ const UpdatePatientRegistration = () => {
     register,
     trigger,
     control,
+    setValue,
+    watch,
     formState: { errors },
   } = useForm({ values: { ...patient, date, dop, doo, tests: matchingTests } });
+
+  const totalAnimals = watch("totalAnimals");
+  const totalSickAnimals = watch("totalSickAnimals");
+  const totalDeadAnimals = watch("totalDeadAnimals");
+
+  useEffect(() => {
+    if (totalAnimals > 0 && totalSickAnimals >= 0) {
+      const totalMortality = (totalSickAnimals / totalAnimals) * 100;
+      setValue("totalMortality", Number(totalMortality));
+    }
+  }, [totalAnimals, totalSickAnimals, setValue]);
+
+  useEffect(() => {
+    if (totalSickAnimals > 0 && totalDeadAnimals >= 0) {
+      const totalFatality = (totalDeadAnimals / totalSickAnimals) * 100;
+      setValue("totalFatality", Number(totalFatality));
+    }
+  }, [totalSickAnimals, totalDeadAnimals, setValue]);
 
   const onSubmit = async (patientData) => {
     try {
@@ -231,10 +251,13 @@ const UpdatePatientRegistration = () => {
                       <h6 className="text-center text-decoration-underline py-2">Patient Information</h6>
                       <div className="row">
                         <div className="mb-3 col-md-6">
-                          <label className="form-label">
-                            Species (Animal Type) <small>(optional)</small>
-                          </label>
-                          <select {...register("species")} onChange={(e) => fetchComplaints(e.target.value)} className="form-select" aria-label="Default select example">
+                          <label className="form-label">Species (Animal Type)</label>
+                          <select
+                            {...register("species", { required: true })}
+                            onChange={(e) => fetchComplaints(e.target.value)}
+                            className={`form-select ${errors.species && "border-danger"}`}
+                            aria-label="Default select example"
+                          >
                             <option value="">Select</option>
                             {species?.data?.map((specie) => (
                               <option key={specie._id} value={specie._id}>
@@ -242,45 +265,42 @@ const UpdatePatientRegistration = () => {
                               </option>
                             ))}
                           </select>
+                          {errors.species && <small className="text-danger">Please select an species</small>}
                         </div>
                         <div className="mb-3 col-md-6">
-                          <label className="form-label">
-                            Owner Complaints <small>(optional)</small>
-                          </label>
-                          <select {...register("complaints")} className="form-select" aria-label="Default select example">
-                            <option value="">Select</option>
+                          <label className="form-label">Owner Complaints</label>
+                          <select {...register("complaints", { required: true })} className={`form-select ${errors.complaints && "border-danger"}`} aria-label="Default select example">
+                            {/* <option value="">Select</option> */}
                             {speciesByComplaints?.map((complaint) => (
                               <option key={complaint._id} value={complaint._id}>
                                 {complaint.complaint}
                               </option>
                             ))}
                           </select>
+                          {errors.complaints && <small className="text-danger">Please select an complaints</small>}
                         </div>
                       </div>
                       <div className="row">
                         <div className="mb-3 col-md-6">
-                          <label className="form-label">
-                            Age <small>(optional)</small>
-                          </label>
-                          <input type="text" {...register("age")} className="form-control" />
+                          <label className="form-label">Age</label>
+                          <input type="text" {...register("age", { required: true })} className={`form-control ${errors.age && "border-danger"}`} />
+                          {errors.age && <small className="text-danger">Please write age</small>}
                         </div>
                         <div className="mb-3 col-md-6">
-                          <label className="form-label">
-                            Sex (M/F) <small>(optional)</small>
-                          </label>
-                          <select {...register("sex")} className="form-select" aria-label="Default select example">
+                          <label className="form-label">Sex (M/F)</label>
+                          <select {...register("sex", { required: true })} className={`form-select ${errors.sex && "border-danger"}`} aria-label="Default select example">
                             <option value="">Select</option>
                             <option value="male">Male</option>
                             <option value="female">Female</option>
                           </select>
+                          {errors.sex && <small className="text-danger">Please select an sex</small>}
                         </div>
                       </div>
                       <div className="row">
                         <div className="mb-3 col-md-6">
-                          <label className="form-label">
-                            Weight (kg) <small>(optional)</small>
-                          </label>
-                          <input type="text" {...register("weight")} className="form-control" />
+                          <label className="form-label">Weight (kg)</label>
+                          <input type="text" {...register("weight", { required: true })} className={`form-control ${errors.weight && "border-danger"}`} />
+                          {errors.weight && <small className="text-danger">Please write weight</small>}
                         </div>
                         <div className="mb-3 col-md-6">
                           <label className="form-label">
@@ -330,7 +350,8 @@ const UpdatePatientRegistration = () => {
                         </div>
                         <div className="mb-3 col-md-6">
                           <label className="form-label">Breed</label>
-                          <input type="text" {...register("breed")} className="form-control" />
+                          <input type="text" {...register("breed", { required: true })} className={`form-control ${errors.breed && "border-danger"}`} />
+                          {errors.breed && <small className="text-danger">Please write breed</small>}
                         </div>
                       </div>
                     </div>
@@ -343,82 +364,94 @@ const UpdatePatientRegistration = () => {
                       <h6 className="text-center text-decoration-underline pb-2">Disease History</h6>
                       <div className="row">
                         <div className="mb-3 col-md-6">
-                          <label className="form-label">
-                            Duration of Illness <small>(optional)</small>
-                          </label>
-                          <input type="text" {...register("illnessDuration")} className="form-control" />
+                          <label className="form-label">Duration of Illness</label>
+                          <input type="text" {...register("illnessDuration", { required: true })} className={`form-control ${errors.illnessDuration && "border-danger"}`} />
+                          {errors.illnessDuration && <small className="text-danger">Please write illness duration</small>}
                         </div>
                         <div className="mb-3 col-md-6">
-                          <label className="form-label">
-                            Total number of animals <small>(optional)</small>
-                          </label>
-                          <input type="number" {...register("totalAnimals", { valueAsNumber: true })} className="form-control" />
+                          <label className="form-label">Total number of animals</label>
+                          <input type="number" {...register("totalAnimals", { required: true, valueAsNumber: true })} className={`form-control ${errors.totalAnimals && "border-danger"}`} />
+                          {errors.totalAnimals && <small className="text-danger">Please write total animals</small>}
                         </div>
                       </div>
                       <div className="row">
                         <div className="mb-3 col-md-6">
-                          <label className="form-label">
-                            Total number of sick animals <small>(optional)</small>
-                          </label>
-                          <input type="number" {...register("totalSickAnimals", { valueAsNumber: true })} className="form-control" />
+                          <label className="form-label">Total number of sick animals</label>
+                          <input type="number" {...register("totalSickAnimals", { required: true, valueAsNumber: true })} className={`form-control ${errors.totalSickAnimals && "border-danger"}`} />
+                          {errors.totalSickAnimals && <small className="text-danger">Please write total sick animals</small>}
                         </div>
                         <div className="mb-3 col-md-6">
                           <label className="form-label">
-                            Total number of deed animals <small>(optional)</small>
+                            Total of mortality <small>(readonly)</small>
                           </label>
-                          <input type="number" {...register("totalDeedAnimals", { valueAsNumber: true })} className="form-control" />
+                          <Controller
+                            name="totalMortality"
+                            control={control}
+                            render={({ field }) => <input type="number" {...field} readOnly className={`form-control ${errors.totalMortality && "border-danger"}`} />}
+                          />
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="mb-3 col-md-6">
+                          <label className="form-label">Total number of dead animals</label>
+                          <input type="number" {...register("totalDeadAnimals", { required: true, valueAsNumber: true })} className={`form-control ${errors.totalDeadAnimals && "border-danger"}`} />
+                          {errors.totalDeadAnimals && <small className="text-danger">Please write total dead animals</small>}
+                        </div>
+                        <div className="mb-3 col-md-6">
+                          <label className="form-label">
+                            Total of case fatality <small>(readonly)</small>
+                          </label>
+                          <Controller
+                            name="totalFatality"
+                            control={control}
+                            render={({ field }) => <input type="number" {...field} readOnly className={`form-control ${errors.totalFatality && "border-danger"}`} />}
+                          />
                         </div>
                       </div>
                       <h6 className="text-center text-decoration-underline py-2">Treatment History</h6>
                       <div className="row">
                         <div className="mb-3 col-md-6">
-                          <label className="form-label">
-                            Treated before <small>(optional)</small>
-                          </label>
-                          <select {...register("treatedBefore")} className="form-select" aria-label="Default select example">
+                          <label className="form-label">Treated before</label>
+                          <select {...register("treatedBefore", { required: true })} className={`form-select ${errors.treatedBefore && "border-danger"}`} aria-label="Default select example">
                             <option value="">Select</option>
                             <option value="yes">Yes</option>
                             <option value="no">No</option>
                           </select>
+                          {errors.treatedBefore && <small className="text-danger">Please select treated before</small>}
                         </div>
                         <div className="mb-3 col-md-6">
-                          <label className="form-label">
-                            Drags <small>(optional)</small>
-                          </label>
-                          <input type="text" {...register("drags")} className="form-control" />
+                          <label className="form-label">Drags</label>
+                          <input type="text" {...register("drags", { required: true })} className={`form-control ${errors.drags && "border-danger"}`} />
+                          {errors.drags && <small className="text-danger">Please write drags</small>}
                         </div>
                       </div>
                       <h6 className="text-center text-decoration-underline py-2">Management History</h6>
                       <div className="row">
                         <div className="mb-3 col-md-6">
-                          <label className="form-label">
-                            Breading <small>(optional)</small>
-                          </label>
-                          <input type="text" {...register("breading")} className="form-control" />
+                          <label className="form-label">Breading</label>
+                          <input type="text" {...register("breading", { required: true })} className={`form-control ${errors.breading && "border-danger"}`} />
+                          {errors.breading && <small className="text-danger">Please write breading</small>}
                         </div>
                         <div className="mb-3 col-md-6">
-                          <label className="form-label">
-                            Feed provided <small>(optional)</small>
-                          </label>
-                          <input type="text" {...register("feedProvided")} className="form-control" />
+                          <label className="form-label">Feed provided</label>
+                          <input type="text" {...register("feedProvided", { required: true })} className={`form-control ${errors.feedProvided && "border-danger"}`} />
+                          {errors.feedProvided && <small className="text-danger">Please write feed provided</small>}
                         </div>
                       </div>
                       <div className="row">
                         <div className="mb-3 col-md-6">
-                          <label className="form-label">
-                            Vaccinations <small>(optional)</small>
-                          </label>
-                          <input type="text" {...register("vaccinations")} className="form-control" />
+                          <label className="form-label">Vaccinations</label>
+                          <input type="text" {...register("vaccinations", { required: true })} className={`form-control ${errors.vaccinations && "border-danger"}`} />
+                          {errors.vaccinations && <small className="text-danger">Please write vaccinations</small>}
                         </div>
                         <div className="mb-3 col-md-6">
-                          <label className="form-label text-danger">
-                            Confusion words <small>(optional)</small>
-                          </label>
-                          <select {...register("confusionWords")} className="form-select" aria-label="Default select example">
+                          <label className="form-label text-danger">Confusion words</label>
+                          <select {...register("confusionWords", { required: true })} className={`form-select ${errors.confusionWords && "border-danger"}`} aria-label="Default select example">
                             <option value="">Select</option>
                             <option value="yes">Yes</option>
                             <option value="no">No</option>
                           </select>
+                          {errors.confusionWords && <small className="text-danger">Please select confusionWords</small>}
                         </div>
                       </div>
                     </div>
@@ -431,62 +464,72 @@ const UpdatePatientRegistration = () => {
                       <h6 className="text-center text-decoration-underline pb-2">Presenting signs</h6>
                       <div className="row">
                         <div className="mb-3 col-md-6">
-                          <label className="form-label">
-                            Appetite <small>(optional)</small>
-                          </label>
-                          <input type="text" {...register("appetite")} className="form-control" />
+                          <label className="form-label">Appetite</label>
+                          <input type="text" {...register("appetite", { required: true })} className={`form-control ${errors.appetite && "border-danger"}`} />
+                          {errors.appetite && <small className="text-danger">Please write appetite</small>}
                         </div>
                         <div className="mb-3 col-md-6">
-                          <label className="form-label">
-                            Demeanour <small>(optional)</small>
-                          </label>
-                          <select {...register("demeanour")} className="form-select" aria-label="Default select example">
+                          <label className="form-label">Demeanour</label>
+                          <select {...register("demeanour", { required: true })} className={`form-select ${errors.demeanour && "border-danger"}`} aria-label="Default select example">
                             <option value="">Select</option>
                             <option value="dull">Dull</option>
                             <option value="bright">Bright</option>
                             <option value="excited">Excited</option>
                           </select>
+                          {errors.demeanour && <small className="text-danger">Please select demeanour</small>}
                         </div>
                       </div>
                       <div className="row">
                         <div className="mb-3 col-md-6">
-                          <label className="form-label">
-                            Physical Condition <small>(optional)</small>
-                          </label>
-                          <select {...register("physicalCondition")} className="form-select" aria-label="Default select example">
+                          <label className="form-label">Physical Condition</label>
+                          <select {...register("physicalCondition", { required: true })} className={`form-select ${errors.physicalCondition && "border-danger"}`} aria-label="Default select example">
                             <option value="">Select</option>
                             <option value="thin">Thin</option>
                             <option value="normal">Normal</option>
                             <option value="obese">Obese</option>
                           </select>
+                          {errors.physicalCondition && <small className="text-danger">Please select physical condition</small>}
                         </div>
                         <div className="mb-3 col-md-6">
                           <label className="form-label">
                             Rumination: P/A <small>(optional)</small>
                           </label>
-                          <input type="text" {...register("rumination")} className="form-control" />
+                          <select {...register("rumination")} className="form-select" aria-label="Default select example">
+                            <option value="">Select</option>
+                            <option value="present">Present</option>
+                            <option value="absent">Absent</option>
+                          </select>
                         </div>
                       </div>
                       <div className="row">
                         <div className="mb-3 col-md-6">
-                          <label className="form-label">
-                            Salvation: P/A <small>(optional)</small>
-                          </label>
-                          <input type="text" {...register("salvation")} className="form-control" />
+                          <label className="form-label">Salvation: P/A</label>
+                          <select {...register("salvation", { required: true })} className={`form-select ${errors.salvation && "border-danger"}`} aria-label="Default select example">
+                            <option value="">Select</option>
+                            <option value="present">Present</option>
+                            <option value="absent">Absent</option>
+                          </select>
+                          {errors.salvation && <small className="text-danger">Please select salvation</small>}
                         </div>
                         <div className="mb-3 col-md-6">
-                          <label className="form-label">
-                            Lacrimation: P/A <small>(optional)</small>
-                          </label>
-                          <input type="text" {...register("lacrimation")} className="form-control" />
+                          <label className="form-label">Lacrimation: P/A</label>
+                          <select {...register("lacrimation", { required: true })} className={`form-select ${errors.lacrimation && "border-danger"}`} aria-label="Default select example">
+                            <option value="">Select</option>
+                            <option value="present">Present</option>
+                            <option value="absent">Absent</option>
+                          </select>
+                          {errors.lacrimation && <small className="text-danger">Please select lacrimation</small>}
                         </div>
                       </div>
                       <div className="row">
                         <div className="mb-3 col-md-6">
-                          <label className="form-label">
-                            Nasal Discharge: P/A <small>(optional)</small>
-                          </label>
-                          <input type="text" {...register("nasalDischarge")} className="form-control" />
+                          <label className="form-label">Nasal Discharge: P/A</label>
+                          <select {...register("nasalDischarge", { required: true })} className={`form-select ${errors.nasalDischarge && "border-danger"}`} aria-label="Default select example">
+                            <option value="">Select</option>
+                            <option value="present">Present</option>
+                            <option value="absent">Absent</option>
+                          </select>
+                          {errors.nasalDischarge && <small className="text-danger">Please select nasal discharge</small>}
                         </div>
                       </div>
                       <h6 className="text-center text-decoration-underline py-2">Physical signs</h6>
@@ -498,42 +541,31 @@ const UpdatePatientRegistration = () => {
                           <input type="text" {...register("dehydration")} className="form-control" />
                         </div>
                         <div className="mb-3 col-md-6">
-                          <label className="form-label">
-                            MM <small>(optional)</small>
-                          </label>
-                          <input type="text" {...register("mm")} className="form-control" />
+                          <label className="form-label">Resp. Rate/Minute</label>
+                          <input type="text" {...register("respRate", { required: true })} className={`form-control ${errors.respRate && "border-danger"}`} />
+                          {errors.respRate && <small className="text-danger">Please write resp. rate</small>}
                         </div>
                       </div>
                       <div className="row">
                         <div className="mb-3 col-md-6">
-                          <label className="form-label">
-                            Resp. Rate/Minute <small>(optional)</small>
-                          </label>
-                          <input type="text" {...register("respRate")} className="form-control" />
+                          <label className="form-label">Temp (°F)</label>
+                          <input type="text" {...register("temp", { required: true })} className={`form-control ${errors.temp && "border-danger"}`} />
+                          {errors.temp && <small className="text-danger">Please write temp</small>}
                         </div>
                         <div className="mb-3 col-md-6">
-                          <label className="form-label">
-                            Pulse Rate/Minute <small>(optional)</small>
-                          </label>
-                          <input type="text" {...register("pulseRate")} className="form-control" />
+                          <label className="form-label">Pulse Rate/Minute</label>
+                          <input type="text" {...register("pulseRate", { required: true })} className={`form-control ${errors.pulseRate && "border-danger"}`} />
+                          {errors.pulseRate && <small className="text-danger">Please write pulse rate</small>}
                         </div>
                       </div>
                       <div className="row">
-                        <div className="mb-3 col-md-6">
-                          <label className="form-label">
-                            Temp (°F) <small>(optional)</small>
-                          </label>
-                          <input type="text" {...register("temp")} className="form-control" />
-                        </div>
                         <div className="mb-3 col-md-6">
                           <label className="form-label">
                             Rumen, Motility <small>(optional)</small>
                           </label>
                           <input type="text" {...register("rumenMotility")} className="form-control" />
                         </div>
-                      </div>
-                      <div className="row">
-                        <div className="mb-3 ">
+                        <div className="mb-3 col-md-6">
                           <label className="form-label">
                             Others <small>(optional)</small>
                           </label>
@@ -546,13 +578,15 @@ const UpdatePatientRegistration = () => {
                     <>
                       <div className="row info-group">
                         <div className="mb-3">
-                          <label className="form-label">Tests</label>
+                          <label className="form-label">
+                            Tests <small>(optional)</small>
+                          </label>
                           <Controller name="tests" control={control} defaultValue={matchingTests} render={({ field }) => <Select options={testOptions} isMulti {...field} styles={customStyles} />} />
                         </div>
                       </div>
                       <div className="d-flex justify-content-center my-3">
                         <button type="submit" className="btn btn-primary text-white">
-                          Submit
+                          Update
                         </button>
                       </div>
                     </>

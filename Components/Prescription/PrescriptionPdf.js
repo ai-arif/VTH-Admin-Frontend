@@ -1,7 +1,7 @@
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 
-export const handleDownloadPrescription = async (prescription, medicines, tests) => {
+export const handleDownloadPrescription = async (prescription, medicines) => {
   const doc = new jsPDF();
 
   // Extract owner information from appointment
@@ -26,7 +26,7 @@ export const handleDownloadPrescription = async (prescription, medicines, tests)
 
   // Extract patient prescription data from prescription
   const matchingMedicines = medicines?.filter((data) => prescription?.medicines?.includes(data._id)) || [];
-  const matchingTests = tests?.filter((data) => prescription?.tests?.includes(data._id)) || [];
+  // const matchingTests = tests?.filter((data) => prescription?.tests?.includes(data._id)) || [];
   const therapeutics = prescription?.therapeutics || "N/A";
   const diagnosis = prescription?.diagnosis || "N/A";
   const prognosis = prescription?.prognosis || "N/A";
@@ -88,12 +88,12 @@ export const handleDownloadPrescription = async (prescription, medicines, tests)
   });
 
   // Add tests table
-  doc.autoTable({
-    startY: doc.autoTable.previous.finalY + 9,
-    head: [["Test Name", "Description"]],
-    body: matchingTests.map((test) => [test.testName, test.testDetails || "N/A"]),
-    theme: "grid",
-  });
+  // doc.autoTable({
+  //   startY: doc.autoTable.previous.finalY + 9,
+  //   head: [["Test Name", "Description"]],
+  //   body: matchingTests.map((test) => [test.testName, test.testDetails || "N/A"]),
+  //   theme: "grid",
+  // });
 
   // Save the PDF
   doc.save(`prescription-${caseNo}.pdf`);

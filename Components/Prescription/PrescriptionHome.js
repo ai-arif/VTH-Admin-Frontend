@@ -48,7 +48,7 @@ const PrescriptionHome = () => {
   const [isPrint, setIsPrint] = useState(false);
   const dispatch = useDispatch();
 
-  const { tests } = useSelector((state) => state.test);
+  // const { tests } = useSelector((state) => state.test);
   const { medicines } = useSelector((state) => state.medicine);
 
   const { handleSubmit, register, control, reset } = useForm();
@@ -88,7 +88,7 @@ const PrescriptionHome = () => {
   const onSubmit = async (prescriptionData) => {
     try {
       prescriptionData.medicines = prescriptionData?.medicines?.map((medicine) => medicine.value);
-      prescriptionData.tests = prescriptionData?.tests?.map((test) => test.value);
+      // prescriptionData.tests = prescriptionData?.tests?.map((test) => test.value);
 
       const response = await dispatch(createPrescription(prescriptionData));
 
@@ -111,10 +111,10 @@ const PrescriptionHome = () => {
   };
 
   // Transforming tests and medicines data
-  const testOptions = tests?.data?.map((test) => ({
-    value: test._id,
-    label: test.testName,
-  }));
+  // const testOptions = tests?.data?.map((test) => ({
+  //   value: test._id,
+  //   label: test.testName,
+  // }));
 
   const medicineOptions = medicines?.data?.map((medicine) => ({
     value: medicine._id,
@@ -123,7 +123,7 @@ const PrescriptionHome = () => {
 
   useEffect(() => {
     dispatch(fetchMedicine({ limit: 3000 }));
-    dispatch(fetchTest({ limit: 3000 }));
+    // dispatch(fetchTest({ limit: 3000 }));
   }, [dispatch]);
 
   return (
@@ -215,12 +215,12 @@ const PrescriptionHome = () => {
                     <input type="text" {...register("therapeutics")} className="form-control" />
                   </div>
                 </div>
-                <div className="row">
+                {/* <div className="row">
                   <div className="mb-3">
                     <label className="form-label">Tests</label>
                     <Controller name="tests" control={control} defaultValue={[]} render={({ field }) => <Select options={testOptions} isMulti {...field} styles={customStyles} />} />
                   </div>
-                </div>
+                </div> */}
                 <div className="row">
                   <div className="mb-3">
                     <label className="form-label">Next Visit</label>
@@ -239,6 +239,34 @@ const PrescriptionHome = () => {
                     <textarea {...register("advice")} className="form-control" rows="5"></textarea>
                   </div>
                 </div>
+                <div className="row">
+                  <h6>Only For Surgery:</h6>
+                  <div className="border rounded-2">
+                    <p className="text-center py-2">
+                      Surgical Note <small>(Mandatory)</small>
+                    </p>
+                    <div className="row mb-3">
+                      <div className="col-md-6">
+                        <label className="form-label">Pre-Anesthetic used</label>
+                        <input type="text" {...register("preAnestheticUsed", { required: true })} className="form-control" />
+                      </div>
+                      <div className="col-md-6">
+                        <label className="form-label">Suture materials used</label>
+                        <input type="text" {...register("sutureMaterialsUsed", { required: true })} className="form-control" />
+                      </div>
+                    </div>
+                    <div className="row mb-3">
+                      <div className="col-md-6">
+                        <label className="form-label">Type of surgery</label>
+                        <input type="text" {...register("typeOfSurgery", { required: true })} className="form-control" />
+                      </div>
+                      <div className="col-md-6">
+                        <label className="form-label">Post operative care</label>
+                        <input type="text" {...register("postOperativeCare", { required: true })} className="form-control" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
                 <div className="my-3 d-flex justify-content-center gap-4">
                   <button type="reset" className="btn btn-danger text-white">
                     Reset
@@ -249,7 +277,7 @@ const PrescriptionHome = () => {
                 </div>
               </form>
               <div className="pb-3 d-flex justify-content-end">
-                <button disabled={!isPrint} onClick={() => handleDownloadPrescription(singlePrescription, medicines?.data, tests?.data)} className="btn btn-info text-white">
+                <button disabled={!isPrint} onClick={() => handleDownloadPrescription(singlePrescription, medicines?.data)} className="btn btn-info text-white">
                   <MdPrint size={18} /> Print
                 </button>
               </div>

@@ -129,9 +129,10 @@ const AddMedicine = () => {
                     {errors.packSize && <small className="text-danger">Please write pack size</small>}
                   </div>
                   <div className="mb-3 col-md-6">
-                    <label className="form-label">Withdrawal Period</label>
-                    <input type="text" {...register("withdrawalPeriod", { required: true })} className={`form-control ${errors.withdrawalPeriod && "border-danger"}`} id="withdrawalPeriod" />
-                    {errors.withdrawalPeriod && <small className="text-danger">Please write withdrawal period</small>}
+                    <label className="form-label">
+                      Withdrawal Period <small>(optional)</small>
+                    </label>
+                    <input type="text" {...register("withdrawalPeriod")} className="form-control" id="withdrawalPeriod" />
                   </div>
                 </div>
 
@@ -150,20 +151,27 @@ const AddMedicine = () => {
 
                 <div className="row">
                   <div className="mb-3 col-md-6">
-                    <label className="form-label">Animal Type</label>
-                    {/* select field */}
-                    <select {...register("animalType", { required: true })} className={`form-select ${errors.animalType && "border-danger"}`} aria-label="Default select example">
+                    <label className="form-label">
+                      Animal Type <small>(optional)</small>
+                    </label>
+                    <select {...register("animalType")} className="form-select" aria-label="Default select example">
                       <option value="">Select</option>
-                      <option value="one">One</option>
-                      <option value="two">Two</option>
-                      <option value="three">Three</option>
+                      <option value="Dog">Dog</option>
+                      <option value="Cat">Cat</option>
+                      <option value="Poultry">Poultry</option>
+                      <option value="Pet Bird">Pet Bird</option>
+                      <option value="Cattle">Cattle</option>
+                      <option value="Buffalo">Buffalo</option>
+                      <option value="Sheep">Sheep</option>
+                      <option value="Goats">Goats</option>
+                      <option value="Horse">Horse</option>
                     </select>
-                    {errors.animalType && <small className="text-danger">Please select any animal type</small>}
                   </div>
                   <div className="mb-3 col-md-6">
-                    <label className="form-label">Description</label>
-                    <textarea type="text" {...register("description", { required: true })} className={`form-control ${errors.description && "border-danger"}`} id="description" />
-                    {errors.description && <small className="text-danger">Please write description</small>}
+                    <label className="form-label">
+                      Description <small>(optional)</small>
+                    </label>
+                    <textarea type="text" {...register("description")} className="form-control" id="description" />
                   </div>
                 </div>
 

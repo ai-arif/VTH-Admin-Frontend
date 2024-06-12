@@ -44,7 +44,7 @@ const UpdatePrescription = () => {
   const { id } = router.query;
   const dispatch = useDispatch();
   const { prescription, status } = useSelector((state) => state.prescription);
-  const { tests } = useSelector((state) => state.test);
+  // const { tests } = useSelector((state) => state.test);
   const { medicines } = useSelector((state) => state.medicine);
 
   // transforming tests and medicines data
@@ -52,29 +52,28 @@ const UpdatePrescription = () => {
     value: medicine._id,
     label: medicine.name,
   }));
-  const testOptions = tests?.data?.map((test) => ({
-    value: test._id,
-    label: test.testName,
-  }));
+
+  // const testOptions = tests?.data?.map((test) => ({
+  //   value: test._id,
+  //   label: test.testName,
+  // }));
 
   // find selected medicines and tests then matching
   const selectedMedicines = prescription?.data?.medicines;
-  const selectedTests = prescription?.data?.tests;
+  // const selectedTests = prescription?.data?.tests;
   const matchingMedicines = medicineOptions?.filter((data) => selectedMedicines?.includes(data.value));
-  const matchingTests = testOptions?.filter((data) => selectedTests?.includes(data.value));
-
-  console.log(matchingMedicines);
+  // const matchingTests = testOptions?.filter((data) => selectedTests?.includes(data.value));
 
   // convert date string to a Date object and Format the date
   const nextVisitDate = prescription?.data?.nextVisit ? new Date(prescription.data.nextVisit).toISOString().split("T")[0] : "";
 
-  const { handleSubmit, register, reset, control } = useForm({ values: { ...prescription?.data, medicines: matchingMedicines, tests: matchingTests, nextVisit: nextVisitDate } });
+  const { handleSubmit, register, control } = useForm({ values: { ...prescription?.data, medicines: matchingMedicines, nextVisit: nextVisitDate } });
 
   const onSubmit = async (prescriptionData) => {
     try {
       prescriptionData.id = id;
       prescriptionData.medicines = prescriptionData?.medicines?.map((medicine) => medicine.value);
-      prescriptionData.tests = prescriptionData?.tests?.map((test) => test.value);
+      // prescriptionData.tests = prescriptionData?.tests?.map((test) => test.value);
 
       const response = await dispatch(updatePrescriptionData(prescriptionData));
 
@@ -96,7 +95,7 @@ const UpdatePrescription = () => {
       dispatch(fetchSinglePrescription(id));
     }
     dispatch(fetchMedicine({ limit: 3000 }));
-    dispatch(fetchTest({ limit: 3000 }));
+    // dispatch(fetchTest({ limit: 3000 }));
   }, [dispatch, id]);
 
   //   loader
@@ -175,12 +174,12 @@ const UpdatePrescription = () => {
                     <input type="text" {...register("therapeutics")} className="form-control" />
                   </div>
                 </div>
-                <div className="row">
+                {/* <div className="row">
                   <div className="mb-3">
                     <label className="form-label">Tests</label>
                     <Controller name="tests" control={control} defaultValue={matchingTests} render={({ field }) => <Select options={testOptions} isMulti {...field} styles={customStyles} />} />
                   </div>
-                </div>
+                </div> */}
                 <div className="row">
                   <div className="mb-3">
                     <label className="form-label">Next Visit</label>
@@ -197,6 +196,34 @@ const UpdatePrescription = () => {
                   <div className="mb-3">
                     <label className="form-label">Advice</label>
                     <textarea {...register("advice")} className="form-control" rows="5"></textarea>
+                  </div>
+                </div>
+                <div className="row">
+                  <h6>Only For Surgery:</h6>
+                  <div className="border rounded-2">
+                    <p className="text-center py-2">
+                      Surgical Note <small>(Mandatory)</small>
+                    </p>
+                    <div className="row mb-3">
+                      <div className="col-md-6">
+                        <label className="form-label">Pre-Anesthetic used</label>
+                        <input type="text" {...register("preAnestheticUsed", { required: true })} className="form-control" />
+                      </div>
+                      <div className="col-md-6">
+                        <label className="form-label">Suture materials used</label>
+                        <input type="text" {...register("sutureMaterialsUsed", { required: true })} className="form-control" />
+                      </div>
+                    </div>
+                    <div className="row mb-3">
+                      <div className="col-md-6">
+                        <label className="form-label">Type of surgery</label>
+                        <input type="text" {...register("typeOfSurgery", { required: true })} className="form-control" />
+                      </div>
+                      <div className="col-md-6">
+                        <label className="form-label">Post operative care</label>
+                        <input type="text" {...register("postOperativeCare", { required: true })} className="form-control" />
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div className="my-3 d-flex justify-content-center">
