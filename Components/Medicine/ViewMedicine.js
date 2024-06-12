@@ -124,7 +124,6 @@ const ViewMedicine = () => {
                   <th>SL.No</th>
                   <th>Medicine Name</th>
                   <th>Brand Name</th>
-                  <th>Withdrawal Period</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -134,7 +133,6 @@ const ViewMedicine = () => {
                     <td>{(currentPage - 1) * 15 + idx + 1}</td>
                     <td className="text-nowrap">{medicine.name}</td>
                     <td className="">{medicine.brandName}</td>
-                    <td className="">{medicine.withdrawalPeriod}</td>
                     <td className="d-flex gap-3 justify-content-center">
                       <Link href={`/medicine/${medicine._id}`}>
                         <TiEdit type="button" title="edit" className="edit-icon" />
