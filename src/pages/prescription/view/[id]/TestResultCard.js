@@ -8,14 +8,24 @@ const TestResultCard = ({ name, data }) => {
           <h5 className="">{name}</h5>
         </div>
         <div className="col-10 p-2 d-flex align-items-center flex-wrap">
-          {data.map((item, idx) => (
+          {data?.map((item, idx) => (
             <div key={idx} className="d-flex align-items-center px-2">
-              {Object.entries(item).map(([key, value], subIdx) => (
-                <div key={subIdx} className="parameter-subitem d-flex align-items-center px-2">
+              {Object.entries(item)?.map(([key, value], subIdx) => (
+                <div
+                  key={subIdx}
+                  className="parameter-subitem d-flex align-items-center px-2"
+                >
                   {Array.isArray(value) ? (
                     <div className="m-0 d-flex align-items-center gap-2">
                       <div class="form-check d-flex align-items-center gap-2">
-                        <input checked={value.some((item) => Object.values(item).some((value) => Boolean(value)))} class="form-check-input" type="checkbox" value="" />
+                        <input
+                          checked={value.some((item) =>
+                            Object.values(item).some((value) => Boolean(value))
+                          )}
+                          class="form-check-input"
+                          type="checkbox"
+                          value=""
+                        />
                         <label class="form-check-label" for={`${key}-ak`}>
                           {key} ;
                         </label>
@@ -27,8 +37,18 @@ const TestResultCard = ({ name, data }) => {
                       {/* {value == true || value == false ?  */}
                       {typeof value === "boolean" ? (
                         <div class="form-check d-flex align-items-center gap-2">
-                          <input checked={value} readOnly class="form-check-input" type="checkbox" value="" id={`${key}-${value}`} />
-                          <label class="form-check-label" for={`${key}-${value}`}>
+                          <input
+                            checked={value}
+                            readOnly
+                            class="form-check-input"
+                            type="checkbox"
+                            value=""
+                            id={`${key}-${value}`}
+                          />
+                          <label
+                            class="form-check-label"
+                            for={`${key}-${value}`}
+                          >
                             {key}
                           </label>
                         </div>
@@ -37,7 +57,13 @@ const TestResultCard = ({ name, data }) => {
                           <label class="block" for={`sub-text-${idx}`}>
                             {key} :
                           </label>
-                          <input value={value} className="w-25 form-control" type="text" id={`sub-text-${value}`} placeholder={value} />
+                          <input
+                            value={value}
+                            className="w-25 form-control"
+                            type="text"
+                            id={`sub-text-${value}`}
+                            placeholder={value}
+                          />
                         </div>
                         // <div className="k">{key}</div>
                       )}
@@ -47,27 +73,51 @@ const TestResultCard = ({ name, data }) => {
                     <div className=" d-flex align-items-center px-2">
                       {value.map((nestedItem, nestedIdx) => (
                         <div key={nestedIdx}>
-                          {Object.entries(nestedItem).map(([nestedKey, nestedValue]) => (
-                            <div key={nestedKey} className="d-flex align-items-center gap-2">
-                              {typeof nestedValue === "boolean" ? (
-                                // nestedValue.toString()
-                                <div class="form-check d-flex align-items-center gap-2 mx-1">
-                                  <input checked={nestedValue} readOnly class="form-check-input" type="checkbox" value="" id={`${nestedValue}-${nestedKey}`} />
-                                  <label class="form-check-label" for={`${nestedValue}-${nestedKey}`}>
-                                    {nestedKey}
-                                  </label>
-                                </div>
-                              ) : (
-                                //  nestedValue
-                                <div className="d-flex align-items-center gap-2">
-                                  <label class="block" for={`sub-text-${nestedValue}`}>
-                                    {nestedKey} :
-                                  </label>
-                                  <input value={nestedValue} className="w-25 form-control" type="text" id={`sub-text-${nestedValue}`} placeholder={nestedValue} />
-                                </div>
-                              )}
-                            </div>
-                          ))}
+                          {Object.entries(nestedItem).map(
+                            ([nestedKey, nestedValue]) => (
+                              <div
+                                key={nestedKey}
+                                className="d-flex align-items-center gap-2"
+                              >
+                                {typeof nestedValue === "boolean" ? (
+                                  // nestedValue.toString()
+                                  <div class="form-check d-flex align-items-center gap-2 mx-1">
+                                    <input
+                                      checked={nestedValue}
+                                      readOnly
+                                      class="form-check-input"
+                                      type="checkbox"
+                                      value=""
+                                      id={`${nestedValue}-${nestedKey}`}
+                                    />
+                                    <label
+                                      class="form-check-label"
+                                      for={`${nestedValue}-${nestedKey}`}
+                                    >
+                                      {nestedKey}
+                                    </label>
+                                  </div>
+                                ) : (
+                                  //  nestedValue
+                                  <div className="d-flex align-items-center gap-2">
+                                    <label
+                                      class="block"
+                                      for={`sub-text-${nestedValue}`}
+                                    >
+                                      {nestedKey} :
+                                    </label>
+                                    <input
+                                      value={nestedValue}
+                                      className="w-25 form-control"
+                                      type="text"
+                                      id={`sub-text-${nestedValue}`}
+                                      placeholder={nestedValue}
+                                    />
+                                  </div>
+                                )}
+                              </div>
+                            )
+                          )}
                         </div>
                       ))}
                     </div>
