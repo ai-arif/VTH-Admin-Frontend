@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import appointmentSlice from "../features/appointment/appointmentSlice";
+import breedSlice from "../features/breed/breedSlice";
 import complaintSlice from "../features/complaint/complaintSlice";
 import departmentSlice from "../features/department/departmentSlice";
 import incomingTestSlice from "../features/incoming-test/incomingTestSlice";
@@ -24,6 +25,7 @@ const store = configureStore({
     patient: patientRegistrationSlice,
     userPatient: userPatientSlice,
     specie: speciesSlice,
+    breed: breedSlice,
     complaint: complaintSlice,
     pharmacy: pharmacySlice,
     loggedInUser: loggedInUserDataReducer,
