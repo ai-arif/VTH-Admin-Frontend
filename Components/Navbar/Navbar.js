@@ -91,8 +91,10 @@ const Navbar = () => {
           hrefParent={item.hrefParent}
           hrefOne={item.hrefOne}
           hrefTwo={item.hrefTwo}
-          hrefNameOne={item.labelOne}
-          hrefNameTwo={item.labelTwo}
+          hrefThree={item.hrefThree}
+          labelOne={item.labelOne}
+          labelTwo={item.labelTwo}
+          labelThree={item.labelThree}
           submenuNumber={item.submenuNumber}
         >
           <span className="nav-icon">{item.icon}</span>
@@ -122,9 +124,6 @@ const Navbar = () => {
                     <path stroke="currentColor" strokeLinecap="10" strokeWidth="2" d="M4 7h22M4 15h22M4 23h22"></path>
                   </svg>
                 </a>
-              </div>
-              <div className="search-mobile-trigger d-sm-none col">
-                <i className="search-mobile-trigger-icon fa-solid fa-magnifying-glass"></i>
               </div>
               <div className="col">
                 <div style={{ color: "#eaeaea", opacity: "0.7" }} className="d-flex flex-column">

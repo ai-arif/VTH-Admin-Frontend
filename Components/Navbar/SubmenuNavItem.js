@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-const SubmenuNavItem = ({ hrefParent, hrefOne, hrefTwo, hrefNameOne, hrefNameTwo, children, submenuNumber }) => {
+const SubmenuNavItem = ({ hrefParent, hrefOne, hrefTwo, hrefThree, labelOne, labelTwo, labelThree, children, submenuNumber }) => {
   const router = useRouter();
   const isActiveOne = router.pathname === hrefParent || router.pathname === hrefOne;
   const isActiveTwo = router.pathname === hrefParent || router.pathname === hrefTwo;
+  const isActiveThree = router.pathname === hrefParent || router.pathname === hrefThree;
 
   return (
     <li className="nav-item has-submenu">
@@ -12,7 +13,7 @@ const SubmenuNavItem = ({ hrefParent, hrefOne, hrefTwo, hrefNameOne, hrefNameTwo
         style={{
           cursor: "pointer",
         }}
-        className={`nav-link ${isActiveOne || isActiveTwo ? "active" : ""}`}
+        className={`nav-link ${isActiveOne || isActiveTwo || isActiveThree ? "active" : ""}`}
         data-bs-toggle="collapse"
         data-bs-target={`#${submenuNumber}`}
         aria-expanded="false"
@@ -29,14 +30,21 @@ const SubmenuNavItem = ({ hrefParent, hrefOne, hrefTwo, hrefNameOne, hrefNameTwo
         <ul className="submenu-list list-unstyled">
           <li className="submenu-item">
             <Link className={`submenu-link ${isActiveOne ? "active" : ""}`} href={hrefOne}>
-              {hrefNameOne}
+              {labelOne}
             </Link>
           </li>
           <li className="submenu-item">
             <Link className={`submenu-link ${isActiveTwo ? "active" : ""}`} href={hrefTwo}>
-              {hrefNameTwo}
+              {labelTwo}
             </Link>
           </li>
+          {hrefThree && (
+            <li className="submenu-item">
+              <Link className={`submenu-link ${isActiveThree ? "active" : ""}`} href={hrefThree}>
+                {labelThree}
+              </Link>
+            </li>
+          )}
         </ul>
       </div>
     </li>

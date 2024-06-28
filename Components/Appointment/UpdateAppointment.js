@@ -10,7 +10,7 @@ import axiosInstance from "../../utils/axiosInstance";
 import Loader from "../UI/Loader";
 
 const UpdateAppointment = () => {
-  const [speciesByComplaints, setSpeciesByComplaint] = useState([]);
+  const [speciesByBreeds, setSpeciesByBreeds] = useState([]);
   const router = useRouter();
   const { id } = router.query;
   const dispatch = useDispatch();
@@ -18,12 +18,12 @@ const UpdateAppointment = () => {
   const { departments } = useSelector((state) => state.department);
   const { species } = useSelector((state) => state.specie);
 
-  const fetchComplaints = async (speciesId) => {
+  const fetchBreeds = async (speciesId) => {
     try {
       if (!speciesId) return;
 
-      const response = await axiosInstance.get(`/complaint/species/${speciesId}`);
-      setSpeciesByComplaint(response?.data?.data);
+      const response = await axiosInstance.get(`/breed/species/${speciesId}`);
+      setSpeciesByBreeds(response?.data?.data);
     } catch (error) {
       console.error(error);
     }
@@ -82,7 +82,7 @@ const UpdateAppointment = () => {
 
   useEffect(() => {
     if (appointment && appointment.species) {
-      fetchComplaints(appointment.species);
+      fetchBreeds(appointment.species);
     }
   }, [appointment]);
 
@@ -147,36 +147,36 @@ const UpdateAppointment = () => {
                     <textarea type="text" {...register("address", { required: true })} className={`form-control ${errors.address && "border-danger"}`}></textarea>
                     {errors.address && <small className="text-danger">Please write address</small>}
                   </div>
-                  <div className="row">
-                    <div className="mb-3 col-md-6">
-                      <label className="form-label">Species (Animal Type)</label>
-                      <select
-                        {...register("species", { required: true })}
-                        onChange={(e) => fetchComplaints(e.target.value)}
-                        className={`form-select ${errors.species && "border-danger"}`}
-                        aria-label="Default select example"
-                      >
-                        <option value="">Select</option>
-                        {species?.data?.map((specie) => (
-                          <option key={specie._id} value={specie._id}>
-                            {specie.name}
-                          </option>
-                        ))}
-                      </select>
-                      {errors.species && <small className="text-danger">Please select any species</small>}
-                    </div>
-                    <div className="mb-3 col-md-6">
-                      <label className="form-label">Breed</label>
-                      <select {...register("breed")} className="form-select" aria-label="Default select example">
-                        {/* <option value="">Select</option> */}
-                        {speciesByComplaints?.map((complaint) => (
-                          <option key={complaint._id} value={complaint._id}>
-                            {complaint.complaint}
-                          </option>
-                        ))}
-                      </select>
-                      {errors.breed && <small className="text-danger">Please select any breed</small>}
-                    </div>
+                </div>
+                <div className="row">
+                  <div className="mb-3 col-md-6">
+                    <label className="form-label">Species (Animal Type)</label>
+                    <select
+                      {...register("species", { required: true })}
+                      onChange={(e) => fetchBreeds(e.target.value)}
+                      className={`form-select ${errors.species && "border-danger"}`}
+                      aria-label="Default select example"
+                    >
+                      <option value="">Select</option>
+                      {species?.data?.map((specie) => (
+                        <option key={specie._id} value={specie._id}>
+                          {specie.name}
+                        </option>
+                      ))}
+                    </select>
+                    {errors.species && <small className="text-danger">Please select any species</small>}
+                  </div>
+                  <div className="mb-3 col-md-6">
+                    <label className="form-label">Breed</label>
+                    <select {...register("breed")} className="form-select" aria-label="Default select example">
+                      <option value="">Select</option>
+                      {speciesByBreeds?.map((breed) => (
+                        <option key={breed._id} value={breed._id}>
+                          {breed.breed}
+                        </option>
+                      ))}
+                    </select>
+                    {errors.breed && <small className="text-danger">Please select any breed</small>}
                   </div>
                 </div>
                 <div className="row">

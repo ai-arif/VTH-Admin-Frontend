@@ -1,38 +1,34 @@
-import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchComplaint, updateComplaintData } from "../../../features/complaint/complaintSlice";
+import { createBreed, fetchBreed } from "../../../features/breed/breedSlice";
 import { fetchSpecies } from "../../../features/specie/speciesSlice";
-
-const UpdateComplaint = ({ existingData }) => {
-  const router = useRouter();
+const AddBreed = () => {
   const dispatch = useDispatch();
   const { species } = useSelector((state) => state.specie);
-  const currentPage = parseInt(router.query.page) || 1;
 
   const {
     handleSubmit,
     register,
+    reset,
     formState: { errors },
-  } = useForm({ values: { ...existingData, species: existingData?.species?._id } });
+  } = useForm();
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (breed) => {
     try {
-      data.id = existingData._id;
-
-      const response = await dispatch(updateComplaintData(data));
+      const response = await dispatch(createBreed(breed));
 
       if (response?.payload?.success) {
-        await dispatch(fetchComplaint({ page: currentPage }));
-        toast.success("Complaint updated successfully!");
-        document.getElementById("closeUpdateModal").click();
+        await dispatch(fetchBreed({}));
+        reset();
+        toast.success("breed added successfully!");
+        document.getElementById("closeModal").click();
       } else {
-        toast.error("Failed to update complaint! Please try again later.");
+        toast.error("Failed to add breed! Please try again later.");
       }
     } catch (error) {
-      toast.error("An error occurred while updating complaint. Please try again later.");
+      toast.error("An error occurred while adding breed. Please try again later.");
       console.error(error);
     }
   };
@@ -43,21 +39,22 @@ const UpdateComplaint = ({ existingData }) => {
 
   return (
     <div>
-      <div className="modal fade" id="updateComplaint" tabIndex="-1" aria-labelledby="updateComplaintLabel" aria-hidden="true">
+      <div className="modal fade" id="addBreed" tabIndex="-1" aria-labelledby="addBreedLabel" aria-hidden="true">
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content">
             <div className="modal-header">
-              <h2 className="modal-title fs-5" id="updateComplaintLabel">
-                Update Complaints
+              <h2 className="modal-title fs-5" id="addBreedLabel">
+                Add Breed
               </h2>
-              <button id="closeUpdateModal" type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              <button id="closeModal" type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form onSubmit={handleSubmit(onSubmit)} className="modal-body">
               <div className="pb-4">
                 <label className="form-label pb-2">Species (Animal Type)</label>
                 <select type="text" {...register("species", { required: true })} className={`form-select ${errors.species && "border-danger"}`}>
-                  {species?.data?.map((specie, idx) => (
-                    <option key={idx} value={specie._id}>
+                  <option value="">Select</option>
+                  {species?.data?.map((specie) => (
+                    <option key={specie._id} value={specie._id}>
                       {specie.name}
                     </option>
                   ))}
@@ -66,16 +63,16 @@ const UpdateComplaint = ({ existingData }) => {
               </div>
 
               <div className="pb-4">
-                <label className="form-label pb-2">Complaint</label>
-                <textarea type="text" {...register("complaint", { required: true })} className={`form-control ${errors.complaint && "border-danger"}`} />
-                {errors.complaint && <small className="text-danger">Please write complaint</small>}
+                <label className="form-label pb-2">Breed</label>
+                <textarea {...register("breed", { required: true })} className={`form-control ${errors.breed && "border-danger"}`} />
+                {errors.breed && <small className="text-danger">Please write breed</small>}
               </div>
 
               <div className="modal-footer">
                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
                   Close
                 </button>
-                <button type="submit" id="closeUpdateModal" className="btn app-btn-primary">
+                <button type="submit" id="closeModal" className="btn app-btn-primary">
                   Submit
                 </button>
               </div>
@@ -87,4 +84,4 @@ const UpdateComplaint = ({ existingData }) => {
   );
 };
 
-export default UpdateComplaint;
+export default AddBreed;
