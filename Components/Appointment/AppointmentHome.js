@@ -11,7 +11,7 @@ const AppointmentHome = () => {
   const [searchPhone, setSearchPhone] = useState("");
   const [oldPatent, setOldPatent] = useState(false);
   const [oldPatentData, setOldPatentData] = useState({});
-  const [speciesByComplaints, setSpeciesByComplaint] = useState([]);
+  const [speciesByBreeds, setSpeciesByBreeds] = useState([]);
   const dispatch = useDispatch();
 
   const { departments } = useSelector((state) => state.department);
@@ -46,16 +46,16 @@ const AppointmentHome = () => {
     }
   };
 
-  const getSpeciesById = async (speciesId) => {
+  const fetchBreeds = async (speciesId) => {
     try {
       if (!speciesId) return;
 
-      const response = await axiosInstance.get(`/complaint/species/${speciesId}`);
+      const response = await axiosInstance.get(`/breed/species/${speciesId}`);
       const data = response?.data?.data;
       if (data.length > 0) {
-        setSpeciesByComplaint(data);
+        setSpeciesByBreeds(data);
       } else {
-        setSpeciesByComplaint([]);
+        setSpeciesByBreeds([]);
       }
     } catch (error) {
       return Promise.reject(error);
@@ -75,7 +75,6 @@ const AppointmentHome = () => {
       if (oldPatent) {
         appointmentData.owner = oldPatentData._id;
       }
-      console.log(appointmentData);
       const response = await dispatch(addNewAppointment(appointmentData));
 
       if (response?.payload?.success) {
@@ -179,7 +178,7 @@ const AppointmentHome = () => {
                     <label className="form-label">Species (Animal Type)</label>
                     <select
                       {...register("species", { required: true })}
-                      onChange={(e) => getSpeciesById(e.target.value)}
+                      onChange={(e) => fetchBreeds(e.target.value)}
                       className={`form-select ${errors.species && "border-danger"}`}
                       aria-label="Default select example"
                     >
@@ -197,9 +196,9 @@ const AppointmentHome = () => {
                     <label className="form-label">Breed</label>
                     <select {...register("breed")} className="form-select" aria-label="Default select example">
                       <option value="">Select</option>
-                      {speciesByComplaints?.map((complaint) => (
-                        <option key={complaint._id} value={complaint._id}>
-                          {complaint.complaint}
+                      {speciesByBreeds?.map((breed) => (
+                        <option key={breed._id} value={breed._id}>
+                          {breed.breed}
                         </option>
                       ))}
                     </select>

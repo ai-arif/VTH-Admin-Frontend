@@ -48,12 +48,12 @@ const UpdateComplaint = ({ existingData }) => {
           <div className="modal-content">
             <div className="modal-header">
               <h2 className="modal-title fs-5" id="updateComplaintLabel">
-                Update Species
+                Update Complaints
               </h2>
               <button id="closeUpdateModal" type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form onSubmit={handleSubmit(onSubmit)} className="modal-body">
-              <div className="pb-5">
+              <div className="pb-4">
                 <label className="form-label pb-2">Species (Animal Type)</label>
                 <select type="text" {...register("species", { required: true })} className={`form-select ${errors.species && "border-danger"}`}>
                   {species?.data?.map((specie, idx) => (
@@ -65,7 +65,7 @@ const UpdateComplaint = ({ existingData }) => {
                 {errors.species && <small className="text-danger">Please select species</small>}
               </div>
 
-              <div className="pb-5">
+              <div className="pb-4">
                 <label className="form-label pb-2">Complaint</label>
                 <textarea type="text" {...register("complaint", { required: true })} className={`form-control ${errors.complaint && "border-danger"}`} />
                 {errors.complaint && <small className="text-danger">Please write complaint</small>}
