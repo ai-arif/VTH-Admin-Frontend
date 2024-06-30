@@ -143,6 +143,7 @@ const SpeciesHome = () => {
                       <tr>
                         <th>SL. No.</th>
                         <th>Name</th>
+                        <th>Fee</th>
                         <th>Actions</th>
                       </tr>
                     </thead>
@@ -151,6 +152,7 @@ const SpeciesHome = () => {
                         <tr key={specie._id}>
                           <td>{(currentPage - 1) * 15 + idx + 1}</td>
                           <td className="text-capitalize">{specie.name}</td>
+                          <td className="text-capitalize">{specie.fee}</td>
                           <td className="d-flex gap-3 justify-content-center align-items-center">
                             <TiEdit type="button" onClick={() => handleGetSpecies(specie)} data-bs-toggle="modal" data-bs-target="#updateSpecies" title="edit" className="edit-icon" />
                             <RiDeleteBinLine type="button" onClick={() => handleDeleteSpecies(specie._id)} title="delete" className="delete-icon" />
