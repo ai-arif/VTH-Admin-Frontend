@@ -43,12 +43,28 @@ const AddSpecies = () => {
               <button id="closeModal" type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form onSubmit={handleSubmit(onSubmit)} className="modal-body">
-              <div className="pb-5">
+              <div className="pb-4">
                 <label htmlFor="speciesName" className="form-label pb-2">
                   Species Name
                 </label>
                 <input type="text" {...register("name", { required: true })} className={`form-control ${errors.name && "border-danger"}`} />
                 {errors.name && <small className="text-danger">Please write species</small>}
+              </div>
+
+              <div className="pb-4">
+                <label htmlFor="speciesName" className="form-label pb-2">
+                  Fee
+                </label>
+                <input
+                  type="text"
+                  {...register("fee", {
+                    required: true,
+                    valueAsNumber: true,
+                  })}
+                  className={`form-control ${errors.fee && "border-danger"}`}
+                  id="fee"
+                />
+                {errors.fee && <small className="text-danger">Please write fee</small>}
               </div>
 
               <div className="modal-footer">
