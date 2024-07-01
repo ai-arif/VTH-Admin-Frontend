@@ -11691,10 +11691,11 @@ button.close:focus {
   position: fixed;
   min-height: 100vh;
   height: 100%;
-  left: 0;
+  left: -400px;
   top: 0;
   font-size: 0.875rem;
   border-right: 1px solid #64748b;
+  transition: left 0.3s ease;
 }
 .app-sidepanel .panel-drop {
   display: none;
@@ -11716,12 +11717,29 @@ button.close:focus {
   color: #fff;
   font-size: 2rem;
 }
-.app-sidepanel.sidepanel-hidden {
-  left: -400px;
+
+/* Styles for smaller screens */
+@media (max-width: 1199px) {
+  .sidepanel-visible {
+    left: 0 !important;
+  }
+
+  .sidepanel-hidden {
+    left: -400px !important;
+  }
 }
-.app-sidepanel.sidepanel-visible {
-  left: 0;
+/* Styles for larger screens */
+@media (min-width: 1200px) {
+  .app-sidepanel {
+    left: 0;
+  }
+
+  .sidepanel-hidden,
+  .sidepanel-visible {
+    left: 0 !important;
+  }
 }
+
 .app-sidepanel .app-nav-main {
   overflow-y: auto;
 }
