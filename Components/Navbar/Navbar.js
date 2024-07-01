@@ -3,6 +3,7 @@ import { jwtDecode } from "jwt-decode";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import { IoMdMenu } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
 import { setLoggedInUserData } from "../../features/loggedInUser/loggedInUserAPI";
 import axiosInstance from "../../utils/axiosInstance";
@@ -15,9 +16,14 @@ const Navbar = () => {
   const [unseenNotifications, setUnseenNotifications] = useState(0);
   const [reFetch, setRefetch] = useState(0);
   const [menuItems, setMenuItems] = useState([]);
+  const [sidePanelVisible, setSidePanelVisible] = useState(false);
   const router = useRouter();
   const dispatch = useDispatch();
   const { data } = useSelector((state) => state.loggedInUser);
+
+  const toggleSidePanel = () => {
+    setSidePanelVisible(!sidePanelVisible);
+  };
 
   function timeAgo(dateString) {
     const now = new Date();
@@ -118,12 +124,9 @@ const Navbar = () => {
           <div className="app-header-content">
             <div className="row justify-content-between align-items-center">
               <div className="col-auto">
-                <a id="sidepanel-toggler" className="sidepanel-toggler d-inline-block d-xl-none" href="#">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" role="img">
-                    <title>Menu</title>
-                    <path stroke="currentColor" strokeLinecap="10" strokeWidth="2" d="M4 7h22M4 15h22M4 23h22"></path>
-                  </svg>
-                </a>
+                <div style={{ cursor: "pointer", color: "#15a362" }} id="sidepanel-toggler" className="sidepanel-toggler d-inline-block d-xl-none" onClick={toggleSidePanel}>
+                  <IoMdMenu size={28} />
+                </div>
               </div>
               <div className="col">
                 <div style={{ color: "#eaeaea", opacity: "0.7" }} className="d-flex flex-column">
@@ -223,12 +226,13 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-      <div id="app-sidepanel" className="app-sidepanel">
-        <div id="sidepanel-drop" className="sidepanel-drop"></div>
+      {/* navbar side panel */}
+      <div id="app-sidepanel" className={`app-sidepanel ${sidePanelVisible ? "sidepanel-visible" : "sidepanel-hidden"}`}>
+        <div id="sidepanel-drop" className="sidepanel-drop" onClick={toggleSidePanel}></div>
         <div className="sidepanel-inner d-flex flex-column">
-          <a href="#" id="sidepanel-close" className="sidepanel-close d-xl-none">
+          <div style={{ cursor: "pointer", color: "#eaeaea" }} id="sidepanel-close" className="sidepanel-close d-xl-none" onClick={toggleSidePanel}>
             &times;
-          </a>
+          </div>
           <div className="app-branding">
             <Link className="app-logo" href="/">
               <img className="logo-icon me-2" src="/assets/images/app-logo.svg" alt="logo" />
