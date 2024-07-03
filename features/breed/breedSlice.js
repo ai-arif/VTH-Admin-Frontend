@@ -1,9 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { addBreed, deleteBreed, getBreed, updateBreed } from "./breedAPI";
+import { addBreed, deleteBreed, getBreed, getBreedsBySpecies, updateBreed } from "./breedAPI";
 
 const initialState = {
   breed: {},
   breeds: [],
+  breedsBySpecies: [],
   status: "idle",
   error: null,
   totalPages: 1,
@@ -34,6 +35,11 @@ export const searchBreedData = createAsyncThunk("breed/searchBreedData", async (
   return response;
 });
 
+export const fetchBreedBySpecies = createAsyncThunk("breed/fetchBreedBySpecies", async (speciesId) => {
+  const response = await getBreedsBySpecies(speciesId);
+  return response;
+});
+
 export const speciesSlice = createSlice({
   name: "breed",
   initialState,
@@ -53,6 +59,17 @@ export const speciesSlice = createSlice({
         state.totalPages = action.payload.data.totalPages;
       })
       .addCase(fetchBreed.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(fetchBreedBySpecies.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchBreedBySpecies.fulfilled, (state, action) => {
+        state.status = "success";
+        state.breedsBySpecies = action.payload.data;
+      })
+      .addCase(fetchBreedBySpecies.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       })
