@@ -138,6 +138,16 @@ export const menuConfig = {
   ],
   pharmacy: [
     { href: "/", icon: <AiOutlineHome size={22} />, label: "Home" },
+    {
+      hrefParent: "/medicine",
+      hrefOne: "/medicine/add",
+      hrefTwo: "/medicine/view",
+      icon: <AiOutlineMedicineBox size={22} />,
+      label: "Medicine",
+      labelOne: "Add Medicine",
+      labelTwo: "View Medicine",
+      submenuNumber: "submenu-4",
+    },
     { href: "/pharmacy", icon: <MdOutlineLocalPharmacy size={22} />, label: "Pharmacy" },
   ],
   receptionist: [

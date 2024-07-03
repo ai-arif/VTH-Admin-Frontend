@@ -137,10 +137,9 @@ const Navbar = () => {
 
               <div className="col">
                 <div style={{ color: "#eaeaea", opacity: "0.7" }}>
-                  <h6 className="text-uppercase">{data?.role}</h6>
+                  <h6 className="text-uppercase">{data?.role === "admin" ? "Director" : data?.role}</h6>
                 </div>
               </div>
-
               <div className="app-utilities col-auto">
                 <div className="app-utility-item app-notifications-dropdown dropdown">
                   <a
