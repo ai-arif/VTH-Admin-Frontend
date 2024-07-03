@@ -123,6 +123,7 @@ const ViewMedicine = () => {
                 <tr>
                   <th>SL.No</th>
                   <th>Medicine Name</th>
+                  <th>Medicine Class</th>
                   <th>Brand Name</th>
                   <th>Actions</th>
                 </tr>
@@ -132,6 +133,7 @@ const ViewMedicine = () => {
                   <tr key={medicine._id}>
                     <td>{(currentPage - 1) * 15 + idx + 1}</td>
                     <td className="text-nowrap">{medicine.name}</td>
+                    <td className="">{medicine.class}</td>
                     <td className="">{medicine.brandName}</td>
                     <td className="d-flex gap-3 justify-content-center">
                       <Link href={`/medicine/${medicine._id}`}>
