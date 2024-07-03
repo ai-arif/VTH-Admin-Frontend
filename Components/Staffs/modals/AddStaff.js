@@ -110,7 +110,7 @@ const AddStaff = () => {
                     aria-label="Default select example"
                   >
                     <option value="">Open this select menu</option>
-                    <option value="admin">Admin</option>
+                    <option value="admin">Director</option>
                     <option value="doctor">Doctor</option>
                     <option value="lab">Lab</option>
                     <option value="pharmacy">Pharmacy</option>

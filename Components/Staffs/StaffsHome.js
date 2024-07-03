@@ -154,7 +154,7 @@ const StaffsHome = () => {
                           <td>{(currentPage - 1) * 15 + idx + 1}</td>
                           <td>{staff.fullName}</td>
                           <td>{staff.phone}</td>
-                          <td className="text-capitalize">{staff.role}</td>
+                          <td className="text-capitalize">{staff.role === "admin" ? "Director" : staff.role}</td>
                           <td className="d-flex gap-3 justify-content-center">
                             <TiEdit type="button" onClick={() => handleGetStaff(staff)} data-bs-toggle="modal" data-bs-target="#updateUser" title="edit" className="edit-icon" />
                             <RiDeleteBinLine type="button" onClick={() => handleDeleteStaff(staff._id)} title="delete" className="delete-icon" />
