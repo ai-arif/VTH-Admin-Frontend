@@ -23,11 +23,24 @@ const UpdateAppointment = () => {
       if (!speciesId) return;
 
       const response = await axiosInstance.get(`/breed/species/${speciesId}`);
+      // console.log(response?.data?.data);
       setSpeciesByBreeds(response?.data?.data);
     } catch (error) {
       console.error(error);
     }
   };
+
+  // useEffect(() => {
+  //   if (appointment && speciesByBreeds) {
+  //     console.log("Appointment:", appointment);
+  //     console.log("Species by breeds:", speciesByBreeds);
+  //     const selectedBreed = speciesByBreeds?.find((breed) => {
+  //       console.log("Comparing:", breed, appointment?.breed);
+  //       return breed == appointment?.breed;
+  //     });
+  //     console.log("Selected breed:", selectedBreed);
+  //   }
+  // }, [appointment, speciesByBreeds]);
 
   const {
     handleSubmit,

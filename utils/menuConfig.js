@@ -1,5 +1,6 @@
 import { AiOutlineHome, AiOutlineMedicineBox } from "react-icons/ai";
 import { BsBarChartLine, BsCardList, BsColumnsGap, BsFolder } from "react-icons/bs";
+import { FaPhotoVideo } from "react-icons/fa";
 import { FaHospitalUser } from "react-icons/fa6";
 import { GiCow } from "react-icons/gi";
 import { GrTest, GrTestDesktop } from "react-icons/gr";
@@ -68,6 +69,16 @@ export const menuConfig = {
       labelTwo: "Complaints",
       labelThree: "Breeds",
       submenuNumber: "submenu-5",
+    },
+    {
+      hrefParent: "/frontend-management",
+      hrefOne: "/frontend-management/logo",
+      hrefTwo: "/frontend-management/content",
+      icon: <FaPhotoVideo size={20} />,
+      label: "Frontend Management",
+      labelOne: "Logo",
+      labelTwo: "Content",
+      submenuNumber: "submenu-6",
     },
   ],
   doctor: [
