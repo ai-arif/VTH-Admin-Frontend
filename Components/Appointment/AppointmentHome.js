@@ -21,7 +21,7 @@ const AppointmentHome = () => {
     try {
       if (searchPhone === "") return;
 
-      const res = await axiosInstance.get(`/admin/user/${searchPhone}`);
+      const res = await axiosInstance.get(`/staffs/user/${searchPhone}`);
       const existingPatentData = res?.data?.data;
       if (existingPatentData) {
         setOldPatent(true);
