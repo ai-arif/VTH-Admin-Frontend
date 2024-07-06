@@ -6,8 +6,8 @@ import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 import { fetchAppointmentsByPhone } from "../../features/appointment/appointmentSlice";
 import { fetchMedicine } from "../../features/medicine/medicineSlice";
+import { fetchMedicineParams } from "../../features/medicineParam/MedicineParamsSlice";
 import { createPrescription } from "../../features/prescription/prescriptionSlice";
-import { fetchTest } from "../../features/test/testSlice";
 import { formatDate } from "../../utils/formatDate";
 import { handleDownloadPrescription } from "./PrescriptionPdf";
 
@@ -46,10 +46,11 @@ const PrescriptionHome = () => {
   const [singlePrescription, setSinglePrescription] = useState({});
   const [selectedPatentInfo, setSelectedPatentInfo] = useState({});
   const [isPrint, setIsPrint] = useState(false);
+  const [selectedMedicines, setSelectedMedicines] = useState([]);
   const dispatch = useDispatch();
 
-  // const { tests } = useSelector((state) => state.test);
   const { medicines } = useSelector((state) => state.medicine);
+  const { medicineParams } = useSelector((state) => state.medicineParam);
 
   const { handleSubmit, register, control, reset } = useForm();
 
@@ -74,6 +75,7 @@ const PrescriptionHome = () => {
       console.error(error);
     }
   };
+
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
       getPatentByPhone();
@@ -85,21 +87,32 @@ const PrescriptionHome = () => {
     setSelectedPatentInfo(selectedPatent);
   };
 
-  const onSubmit = async (prescriptionData) => {
+  const onSubmit = async (data) => {
     try {
-      prescriptionData.medicines = prescriptionData?.medicines?.map((medicine) => medicine.value);
-      // prescriptionData.tests = prescriptionData?.tests?.map((test) => test.value);
+      const therapeutics = selectedMedicines?.map((medicine, index) => ({
+        medicine_name: medicine.label,
+        medicine_id: medicine.value,
+        first: data[`first_${index}`],
+        second: data[`second_${index}`],
+        third: data[`third_${index}`],
+      }));
+
+      const prescriptionData = {
+        ...data,
+        medicines: data?.medicines?.map((medicine) => medicine.value),
+        therapeutics,
+      };
 
       const response = await dispatch(createPrescription(prescriptionData));
 
       if (response?.payload?.success) {
         toast.success("Prescription added successfully!");
-        // single prescription data
         setSinglePrescription(response?.payload?.data?.data);
         setIsPrint(true);
         setSearchPhone("");
         setSelectedPatentInfo({});
         setPatentInfo([]);
+        setSelectedMedicines([]);
         reset();
       } else {
         toast.error("Failed to add prescription! Please try again later.");
@@ -110,12 +123,7 @@ const PrescriptionHome = () => {
     }
   };
 
-  // Transforming tests and medicines data
-  // const testOptions = tests?.data?.map((test) => ({
-  //   value: test._id,
-  //   label: test.testName,
-  // }));
-
+  // Transforming medicines data
   const medicineOptions = medicines?.data?.map((medicine) => ({
     value: medicine._id,
     label: medicine.name,
@@ -123,7 +131,7 @@ const PrescriptionHome = () => {
 
   useEffect(() => {
     dispatch(fetchMedicine({ limit: 3000 }));
-    // dispatch(fetchTest({ limit: 3000 }));
+    dispatch(fetchMedicineParams());
   }, [dispatch]);
 
   return (
@@ -206,21 +214,77 @@ const PrescriptionHome = () => {
                 <div className="row">
                   <div className="mb-3">
                     <label className="form-label">Medicine</label>
-                    <Controller name="medicines" control={control} defaultValue={[]} render={({ field }) => <Select options={medicineOptions} isMulti {...field} styles={customStyles} />} />
+                    <Controller
+                      name="medicines"
+                      control={control}
+                      defaultValue={[]}
+                      render={({ field }) => (
+                        <Select
+                          options={medicineOptions}
+                          isMulti
+                          {...field}
+                          styles={customStyles}
+                          onChange={(selected) => {
+                            field.onChange(selected);
+                            setSelectedMedicines(selected);
+                          }}
+                        />
+                      )}
+                    />
                   </div>
                 </div>
-                <div className="row">
-                  <div className="mb-3">
-                    <label className="form-label">Therapeutics</label>
-                    <input type="text" {...register("therapeutics")} className="form-control" />
-                  </div>
-                </div>
-                {/* <div className="row">
-                  <div className="mb-3">
-                    <label className="form-label">Tests</label>
-                    <Controller name="tests" control={control} defaultValue={[]} render={({ field }) => <Select options={testOptions} isMulti {...field} styles={customStyles} />} />
-                  </div>
-                </div> */}
+                {/* here show dynamic params based on select medicine name */}
+                {selectedMedicines.length > 0 &&
+                  selectedMedicines.map((medicine, index) => (
+                    <div className="row g-2 mb-3" id="therapeutics" key={medicine.value}>
+                      <div className="col-12 col-md-3 border rounded-1 p-2">
+                        <div className="mb-3">
+                          <label className="form-label">Medicine Name</label>
+                          <input readOnly type="text" {...register("medicine_name")} value={medicine.label} className="form-control"></input>
+                        </div>
+                      </div>
+                      {/* example parameter inputs */}
+                      <div className="col-12 col-md-3 border rounded-1 p-2">
+                        <div>
+                          <label className="form-label pb-1">First Params</label>
+                          <select type="text" {...register(`first_${index}`)} className="form-select">
+                            <option value="">Select</option>
+                            {medicineParams?.first?.map((param) => (
+                              <option key={param._id} value={param.param_name}>
+                                {param.param_name}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+                      <div className="col-12 col-md-3 border rounded-1 p-2">
+                        <div>
+                          <label className="form-label pb-1">Second Params</label>
+                          <select type="text" {...register(`second_${index}`)} className="form-select">
+                            <option value="">Select</option>
+                            {medicineParams?.second?.map((param) => (
+                              <option key={param._id} value={param.param_name}>
+                                {param.param_name}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+                      <div className="col-12 col-md-3 border rounded-1 p-2">
+                        <div>
+                          <label className="form-label pb-1">Third Params</label>
+                          <select type="text" {...register(`third_${index}`)} className="form-select">
+                            <option value="">Select</option>
+                            {medicineParams?.third?.map((param) => (
+                              <option key={param._id} value={param.param_name}>
+                                {param.param_name}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 <div className="row">
                   <div className="mb-3">
                     <label className="form-label">Next Visit</label>
@@ -268,9 +332,9 @@ const PrescriptionHome = () => {
                   </div>
                 </div>
                 <div className="my-3 d-flex justify-content-center gap-4">
-                  <button type="reset" className="btn btn-danger text-white">
+                  {/* <button type="reset" className="btn btn-danger text-white">
                     Reset
-                  </button>
+                  </button> */}
                   <button type="submit" className="btn app-btn-primary">
                     Submit
                   </button>
