@@ -99,9 +99,7 @@ const UpdateStaff = ({ existingData }) => {
                 <label htmlFor="password" className="form-label">
                   Password
                 </label>
-                <input type={showPassword ? "text" : "password"} {...register("password", { required: true })} className={`form-control ${errors.password && "border-danger"}`} />
-                {errors.password && <small className="text-danger">Please write password</small>}
-
+                <input type={showPassword ? "text" : "password"} {...register("password")} className="form-control" />
                 <div onClick={handleTogglePassword} type="button" className="position-absolute" id="user-eye">
                   {showPassword ? <AiFillEye size={18} /> : <AiFillEyeInvisible size={18} />}
                 </div>

@@ -2,10 +2,13 @@ import { configureStore } from "@reduxjs/toolkit";
 import appointmentSlice from "../features/appointment/appointmentSlice";
 import breedSlice from "../features/breed/breedSlice";
 import complaintSlice from "../features/complaint/complaintSlice";
+import contentSlice from "../features/content/contentSlice";
 import departmentSlice from "../features/department/departmentSlice";
 import incomingTestSlice from "../features/incoming-test/incomingTestSlice";
 import loggedInUserDataReducer from "../features/loggedInUser/loggedInUserSlice";
+import logoSlice from "../features/logo/logoSlice";
 import medicineSlice from "../features/medicine/medicineSlice";
+import MedicineParamsSlice from "../features/medicineParam/MedicineParamsSlice";
 import patientRegistrationSlice from "../features/patient-registration/patientRegistrationSlice";
 import pharmacySlice from "../features/pharmacy/pharmacySlice";
 import prescriptionSlice from "../features/prescription/prescriptionSlice";
@@ -30,6 +33,9 @@ const store = configureStore({
     pharmacy: pharmacySlice,
     loggedInUser: loggedInUserDataReducer,
     incomingTest: incomingTestSlice,
+    logo: logoSlice,
+    content: contentSlice,
+    medicineParam: MedicineParamsSlice,
   },
 });
 

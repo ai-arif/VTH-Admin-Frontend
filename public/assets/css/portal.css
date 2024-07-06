@@ -2018,6 +2018,7 @@ progress {
 }
 .form-control[type="file"]:not(:disabled):not([readonly]) {
   cursor: pointer;
+  height: fit-content;
 }
 .form-control:focus {
   color: var(--vth-light);

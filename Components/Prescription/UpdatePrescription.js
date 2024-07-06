@@ -1,12 +1,12 @@
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 import { fetchMedicine } from "../../features/medicine/medicineSlice";
+import { fetchMedicineParams } from "../../features/medicineParam/MedicineParamsSlice";
 import { fetchPrescription, fetchSinglePrescription, updatePrescriptionData } from "../../features/prescription/prescriptionSlice";
-import { fetchTest } from "../../features/test/testSlice";
 import { formatDate } from "../../utils/formatDate";
 import Loader from "../UI/Loader";
 
@@ -43,9 +43,14 @@ const UpdatePrescription = () => {
   const router = useRouter();
   const { id } = router.query;
   const dispatch = useDispatch();
+
   const { prescription, status } = useSelector((state) => state.prescription);
-  // const { tests } = useSelector((state) => state.test);
   const { medicines } = useSelector((state) => state.medicine);
+  const { medicineParams } = useSelector((state) => state.medicineParam);
+
+  // console.log(prescription?.data?.therapeutics);
+  // const [selectedMedicines, setSelectedMedicines] = useState([]);
+  const [selectedMedicines, setSelectedMedicines] = useState(prescription?.data?.therapeutics);
 
   // transforming tests and medicines data
   const medicineOptions = medicines?.data?.map((medicine) => ({
@@ -53,27 +58,31 @@ const UpdatePrescription = () => {
     label: medicine.name,
   }));
 
-  // const testOptions = tests?.data?.map((test) => ({
-  //   value: test._id,
-  //   label: test.testName,
-  // }));
-
-  // find selected medicines and tests then matching
-  const selectedMedicines = prescription?.data?.medicines;
-  // const selectedTests = prescription?.data?.tests;
-  const matchingMedicines = medicineOptions?.filter((data) => selectedMedicines?.includes(data.value));
-  // const matchingTests = testOptions?.filter((data) => selectedTests?.includes(data.value));
+  // find selected medicines then matching
+  const selectedAllMedicines = prescription?.data?.medicines;
+  const matchingMedicines = medicineOptions?.filter((data) => selectedAllMedicines?.includes(data.value));
 
   // convert date string to a Date object and Format the date
   const nextVisitDate = prescription?.data?.nextVisit ? new Date(prescription.data.nextVisit).toISOString().split("T")[0] : "";
 
-  const { handleSubmit, register, control } = useForm({ values: { ...prescription?.data, medicines: matchingMedicines, nextVisit: nextVisitDate } });
+  const { handleSubmit, register, control, reset, setValue } = useForm({ values: { ...prescription?.data, medicines: matchingMedicines, nextVisit: nextVisitDate } });
 
-  const onSubmit = async (prescriptionData) => {
+  const onSubmit = async (data) => {
     try {
-      prescriptionData.id = id;
-      prescriptionData.medicines = prescriptionData?.medicines?.map((medicine) => medicine.value);
-      // prescriptionData.tests = prescriptionData?.tests?.map((test) => test.value);
+      const therapeutics = selectedMedicines.map((medicine, index) => ({
+        medicine_name: medicine.label,
+        medicine_id: medicine.value,
+        first: data[`first_${index}`],
+        second: data[`second_${index}`],
+        third: data[`third_${index}`],
+      }));
+
+      const prescriptionData = {
+        ...data,
+        id: id,
+        medicines: data?.medicines?.map((medicine) => medicine.value),
+        therapeutics,
+      };
 
       const response = await dispatch(updatePrescriptionData(prescriptionData));
 
@@ -90,16 +99,33 @@ const UpdatePrescription = () => {
     }
   };
 
+  // useEffect(() => {
+  //   if (prescription?.data?.therapeutic) {
+  //     setSelectedMedicines(prescription?.data?.therapeutic);
+  //   }
+  // }, [prescription]);
+
   useEffect(() => {
     if (id) {
       dispatch(fetchSinglePrescription(id));
     }
     dispatch(fetchMedicine({ limit: 3000 }));
-    // dispatch(fetchTest({ limit: 3000 }));
+    dispatch(fetchMedicineParams());
   }, [dispatch, id]);
 
+  useEffect(() => {
+    if (prescription?.data?.therapeutics) {
+      prescription?.data?.therapeutics?.forEach((therapeutic, index) => {
+        setValue("medicine_name", therapeutic.medicine_name);
+        setValue(`first_${index}`, therapeutic.first);
+        setValue(`second_${index}`, therapeutic.second);
+        setValue(`third_${index}`, therapeutic.third);
+      });
+    }
+  }, [prescription, setValue]);
+
   //   loader
-  if (status === "loading") return <Loader />;
+  // if (status === "loading") return <Loader />;
 
   return (
     <div className="container-fluid">
@@ -164,22 +190,73 @@ const UpdatePrescription = () => {
                       name="medicines"
                       control={control}
                       defaultValue={matchingMedicines}
-                      render={({ field }) => <Select options={medicineOptions} isMulti {...field} styles={customStyles} />}
+                      render={({ field }) => (
+                        <Select
+                          options={medicineOptions}
+                          isMulti
+                          {...field}
+                          styles={customStyles}
+                          onChange={(selected) => {
+                            field.onChange(selected);
+                            setSelectedMedicines(selected);
+                          }}
+                        />
+                      )}
                     />
                   </div>
                 </div>
-                <div className="row">
-                  <div className="mb-3">
-                    <label className="form-label">Therapeutics</label>
-                    <input type="text" {...register("therapeutics")} className="form-control" />
-                  </div>
-                </div>
-                {/* <div className="row">
-                  <div className="mb-3">
-                    <label className="form-label">Tests</label>
-                    <Controller name="tests" control={control} defaultValue={matchingTests} render={({ field }) => <Select options={testOptions} isMulti {...field} styles={customStyles} />} />
-                  </div>
-                </div> */}
+                {/* here show dynamic params based on select medicine name */}
+                {selectedMedicines?.length > 0 &&
+                  selectedMedicines?.map((medicine, index) => (
+                    <div className="row g-2 mb-3" id="therapeutics" key={medicine.value}>
+                      <div className="col-12 col-md-3 border rounded-1 p-2">
+                        <div className="mb-3">
+                          <label className="form-label">Medicine Name</label>
+                          <input readOnly type="text" name="medicine_name" value={medicine.label} className="form-control"></input>
+                        </div>
+                      </div>
+                      {/* example parameter inputs */}
+                      <div className="col-12 col-md-3 border rounded-1 p-2">
+                        <div>
+                          <label className="form-label pb-1">First Params</label>
+                          <select type="text" {...register(`first_${index}`)} className="form-select">
+                            <option value="">Select</option>
+                            {medicineParams?.first?.map((param) => (
+                              <option key={param._id} value={param.param_name}>
+                                {param.param_name}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+                      <div className="col-12 col-md-3 border rounded-1 p-2">
+                        <div>
+                          <label className="form-label pb-1">Second Params</label>
+                          <select type="text" {...register(`second_${index}`)} className="form-select">
+                            <option value="">Select</option>
+                            {medicineParams?.second?.map((param) => (
+                              <option key={param._id} value={param.param_name}>
+                                {param.param_name}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+                      <div className="col-12 col-md-3 border rounded-1 p-2">
+                        <div>
+                          <label className="form-label pb-1">Third Params</label>
+                          <select type="text" {...register(`third_${index}`)} className="form-select">
+                            <option value="">Select</option>
+                            {medicineParams?.third?.map((param) => (
+                              <option key={param._id} value={param.param_name}>
+                                {param.param_name}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 <div className="row">
                   <div className="mb-3">
                     <label className="form-label">Next Visit</label>
@@ -222,6 +299,12 @@ const UpdatePrescription = () => {
                       <div className="col-md-6">
                         <label className="form-label">Post operative care</label>
                         <input type="text" {...register("postOperativeCare", { required: true })} className="form-control" />
+                      </div>
+                    </div>
+                    <div className="row mb-3">
+                      <div className="">
+                        <label className="form-label">Brief Surgical Procedure</label>
+                        <input type="text" {...register("briefSurgical", { required: true })} className="form-control" />
                       </div>
                     </div>
                   </div>
