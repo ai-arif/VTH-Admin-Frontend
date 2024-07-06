@@ -301,6 +301,12 @@ const UpdatePrescription = () => {
                         <input type="text" {...register("postOperativeCare", { required: true })} className="form-control" />
                       </div>
                     </div>
+                    <div className="row mb-3">
+                      <div className="">
+                        <label className="form-label">Brief Surgical Procedure</label>
+                        <input type="text" {...register("briefSurgical", { required: true })} className="form-control" />
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div className="my-3 d-flex justify-content-center">

@@ -304,12 +304,6 @@ const PrescriptionHome = () => {
                   </div>
                 </div>
                 <div className="row">
-                  <div className="mb-3">
-                    <label className="form-label">Ambulatory Hospital & Consultation</label>
-                    <textarea {...register("ambulatoryConsultation")} className="form-control" rows="5"></textarea>
-                  </div>
-                </div>
-                <div className="row">
                   <h6>Only For Surgery:</h6>
                   <div className="border rounded-2">
                     <p className="text-center py-2">
