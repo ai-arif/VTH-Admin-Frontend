@@ -48,7 +48,8 @@ const UpdatePrescription = () => {
   const { medicines } = useSelector((state) => state.medicine);
   const { medicineParams } = useSelector((state) => state.medicineParam);
 
-  console.log(prescription?.data?.therapeutics);
+  // console.log(prescription?.data?.therapeutics);
+  // const [selectedMedicines, setSelectedMedicines] = useState([]);
   const [selectedMedicines, setSelectedMedicines] = useState(prescription?.data?.therapeutics);
 
   // transforming tests and medicines data
@@ -97,6 +98,12 @@ const UpdatePrescription = () => {
       console.error(error);
     }
   };
+
+  // useEffect(() => {
+  //   if (prescription?.data?.therapeutic) {
+  //     setSelectedMedicines(prescription?.data?.therapeutic);
+  //   }
+  // }, [prescription]);
 
   useEffect(() => {
     if (id) {

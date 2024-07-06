@@ -240,7 +240,7 @@ const PrescriptionHome = () => {
                       <div className="col-12 col-md-3 border rounded-1 p-2">
                         <div className="mb-3">
                           <label className="form-label">Medicine Name</label>
-                          <input readOnly type="text" {...register("medicine_name")} value={medicine.label} className="form-control"></input>
+                          <input readOnly type="text" value={medicine.label} className="form-control"></input>
                         </div>
                       </div>
                       {/* example parameter inputs */}
@@ -304,6 +304,12 @@ const PrescriptionHome = () => {
                   </div>
                 </div>
                 <div className="row">
+                  <div className="mb-3">
+                    <label className="form-label">Ambulatory Hospital & Consultation</label>
+                    <textarea {...register("ambulatoryConsultation")} className="form-control" rows="5"></textarea>
+                  </div>
+                </div>
+                <div className="row">
                   <h6>Only For Surgery:</h6>
                   <div className="border rounded-2">
                     <p className="text-center py-2">
@@ -327,6 +333,12 @@ const PrescriptionHome = () => {
                       <div className="col-md-6">
                         <label className="form-label">Post operative care</label>
                         <input type="text" {...register("postOperativeCare", { required: true })} className="form-control" />
+                      </div>
+                    </div>
+                    <div className="row mb-3">
+                      <div className="">
+                        <label className="form-label">Brief Surgical Procedure</label>
+                        <input type="text" {...register("briefSurgical", { required: true })} className="form-control" />
                       </div>
                     </div>
                   </div>
