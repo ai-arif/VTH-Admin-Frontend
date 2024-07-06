@@ -1,8 +1,8 @@
 import axiosInstance from "../../utils/axiosInstance";
 
-export const getContents = async ({ page = 1, limit = 15 }) => {
+export const getContents = async () => {
   try {
-    const response = await axiosInstance.get(`/content?page=${page}&limit=${limit}`);
+    const response = await axiosInstance.get("/content");
     return response.data;
   } catch (error) {
     return Promise.reject(error);

@@ -8,6 +8,7 @@ import incomingTestSlice from "../features/incoming-test/incomingTestSlice";
 import loggedInUserDataReducer from "../features/loggedInUser/loggedInUserSlice";
 import logoSlice from "../features/logo/logoSlice";
 import medicineSlice from "../features/medicine/medicineSlice";
+import MedicineParamsSlice from "../features/medicineParam/MedicineParamsSlice";
 import patientRegistrationSlice from "../features/patient-registration/patientRegistrationSlice";
 import pharmacySlice from "../features/pharmacy/pharmacySlice";
 import prescriptionSlice from "../features/prescription/prescriptionSlice";
@@ -34,6 +35,7 @@ const store = configureStore({
     incomingTest: incomingTestSlice,
     logo: logoSlice,
     content: contentSlice,
+    medicineParam: MedicineParamsSlice,
   },
 });
 

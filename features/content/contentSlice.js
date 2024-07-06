@@ -6,11 +6,10 @@ const initialState = {
   contents: [],
   status: "idle",
   error: null,
-  totalPages: 1,
 };
 
-export const fetchContents = createAsyncThunk("content/fetchContents", async ({ page = 1, limit = 15 }) => {
-  const response = await getContents({ page, limit });
+export const fetchContents = createAsyncThunk("content/fetchContents", async () => {
+  const response = await getContents();
   return response;
 });
 
@@ -45,7 +44,6 @@ export const speciesSlice = createSlice({
       .addCase(fetchContents.fulfilled, (state, action) => {
         state.status = "success";
         state.contents = action.payload.data;
-        state.totalPages = action.payload.data.totalPages;
       })
       .addCase(fetchContents.rejected, (state, action) => {
         state.status = "failed";
