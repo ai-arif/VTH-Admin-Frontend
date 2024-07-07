@@ -50,7 +50,9 @@ const AddStaff = () => {
         toast.error("Failed to create account! Please try again later.");
       }
     } catch (error) {
-      toast.error("An error occurred while crating account. Please try again later.");
+      toast.error(
+        "An error occurred while crating account. Please try again later."
+      );
       console.error(error);
     }
   };
@@ -63,14 +65,26 @@ const AddStaff = () => {
 
   return (
     <div>
-      <div className="modal fade" id="addUser" tabIndex="-1" aria-labelledby="addUserLabel" aria-hidden="true">
+      <div
+        className="modal fade"
+        id="addUser"
+        tabIndex="-1"
+        aria-labelledby="addUserLabel"
+        aria-hidden="true"
+      >
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
               <h1 className="modal-title fs-5" id="addUserLabel">
                 Create Staff Account
               </h1>
-              <button id="closeModal" type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              <button
+                id="closeModal"
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
             </div>
             <div className="modal-body">
               <form onSubmit={handleSubmit(onSubmit)}>
@@ -78,25 +92,60 @@ const AddStaff = () => {
                   <label htmlFor="fullName" className="form-label">
                     Full Name
                   </label>
-                  <input type="text" {...register("fullName", { required: true })} className={`form-control ${errors.fullName && "border-danger"}`} />
-                  {errors.fullName && <small className="text-danger">Please write full name</small>}
+                  <input
+                    type="text"
+                    {...register("fullName", { required: true })}
+                    className={`form-control ${
+                      errors.fullName && "border-danger"
+                    }`}
+                  />
+                  {errors.fullName && (
+                    <small className="text-danger">
+                      Please write full name
+                    </small>
+                  )}
                 </div>
                 <div className="mb-3">
                   <label htmlFor="phone" className="form-label">
                     Phone
                   </label>
-                  <input type="text" {...register("phone", { required: true })} className={`form-control ${errors.phone && "border-danger"}`} />
-                  {errors.phone && <small className="text-danger">Please write phone</small>}
+                  <input
+                    type="text"
+                    {...register("phone", { required: true })}
+                    className={`form-control ${
+                      errors.phone && "border-danger"
+                    }`}
+                  />
+                  {errors.phone && (
+                    <small className="text-danger">Please write phone</small>
+                  )}
                 </div>
                 <div className="mb-3 position-relative">
                   <label htmlFor="password" className="form-label">
                     Password
                   </label>
-                  <input type={showPassword ? "text" : "password"} {...register("password", { required: true })} className={`form-control ${errors.password && "border-danger"}`} />
-                  {errors.password && <small className="text-danger">Please write password</small>}
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    {...register("password", { required: true })}
+                    className={`form-control ${
+                      errors.password && "border-danger"
+                    }`}
+                  />
+                  {errors.password && (
+                    <small className="text-danger">Please write password</small>
+                  )}
 
-                  <div onClick={handleTogglePassword} type="button" className="position-absolute" id="user-eye">
-                    {showPassword ? <AiFillEye size={18} /> : <AiFillEyeInvisible size={18} />}
+                  <div
+                    onClick={handleTogglePassword}
+                    type="button"
+                    className="position-absolute"
+                    id="user-eye"
+                  >
+                    {showPassword ? (
+                      <AiFillEye size={18} />
+                    ) : (
+                      <AiFillEyeInvisible size={18} />
+                    )}
                   </div>
                 </div>
                 <div className="mb-3">
@@ -111,19 +160,30 @@ const AddStaff = () => {
                   >
                     <option value="">Open this select menu</option>
                     <option value="admin">Director</option>
+                    <option value="consultant">Consultant</option>
                     <option value="doctor">Doctor</option>
                     <option value="lab">Lab</option>
                     <option value="pharmacy">Pharmacy</option>
                     <option value="receptionist">Receptionist</option>
                   </select>
-                  {errors.role && <small className="text-danger">Please select any role</small>}
+                  {errors.role && (
+                    <small className="text-danger">
+                      Please select any role
+                    </small>
+                  )}
                 </div>
                 {isDoctor && (
                   <div className="mb-3">
                     <label htmlFor="department" className="form-label">
                       Department
                     </label>
-                    <select {...register("department", { required: true })} className={`form-select ${errors.department && "border-danger"}`} aria-label="Default select example">
+                    <select
+                      {...register("department", { required: true })}
+                      className={`form-select ${
+                        errors.department && "border-danger"
+                      }`}
+                      aria-label="Default select example"
+                    >
                       <option value="">Select</option>
                       {departments?.data?.map((department) => (
                         <option key={department._id} value={department._id}>
@@ -131,14 +191,26 @@ const AddStaff = () => {
                         </option>
                       ))}
                     </select>
-                    {errors.department && <small className="text-danger">Please select any department</small>}
+                    {errors.department && (
+                      <small className="text-danger">
+                        Please select any department
+                      </small>
+                    )}
                   </div>
                 )}
                 <div className="d-flex gap-4 justify-content-end">
-                  <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                  >
                     Close
                   </button>
-                  <button type="submit" id="closeModal" className="btn app-btn-primary">
+                  <button
+                    type="submit"
+                    id="closeModal"
+                    className="btn app-btn-primary"
+                  >
                     Submit
                   </button>
                 </div>
