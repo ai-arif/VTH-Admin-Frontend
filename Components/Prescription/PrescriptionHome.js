@@ -309,9 +309,7 @@ const PrescriptionHome = () => {
                       {/* example parameter inputs */}
                       <div className="col-12 col-md-3 border rounded-1 p-2">
                         <div>
-                          <label className="form-label pb-1">
-                            First Params
-                          </label>
+                          <label className="form-label pb-1">Dose</label>
                           <select
                             type="text"
                             {...register(`first_${index}`)}
@@ -328,9 +326,7 @@ const PrescriptionHome = () => {
                       </div>
                       <div className="col-12 col-md-3 border rounded-1 p-2">
                         <div>
-                          <label className="form-label pb-1">
-                            Second Params
-                          </label>
+                          <label className="form-label pb-1">Route</label>
                           <select
                             type="text"
                             {...register(`second_${index}`)}
@@ -347,9 +343,7 @@ const PrescriptionHome = () => {
                       </div>
                       <div className="col-12 col-md-3 border rounded-1 p-2">
                         <div>
-                          <label className="form-label pb-1">
-                            Third Params
-                          </label>
+                          <label className="form-label pb-1">Frequency</label>
                           <select
                             type="text"
                             {...register(`third_${index}`)}

@@ -455,7 +455,7 @@ const PatientRegistrationForm = () => {
                         <div className="mb-3 col-md-6">
                           <label className="form-label">Owner Complaints</label>
                           <select
-                            {...register("complaints", { required: true })}
+                            {...register("complaints", { required: false })}
                             className={`form-select ${
                               errors.complaints && "border-danger"
                             }`}
