@@ -43,6 +43,7 @@ const PatientRegistrationForm = () => {
   const [activeTab, setActiveTab] = useState("ownerInfo");
   const [searchPhone, setSearchPhone] = useState("");
   const [patientInfo, setPatientInfo] = useState([]);
+  const [breeds, setBreeds] = useState([]);
   const [selectedPatientInfo, setSelectedPatientInfo] = useState({});
   const dispatch = useDispatch();
   const [speciesByComplaints, setSpeciesByComplaint] = useState([]);
@@ -164,6 +165,15 @@ const PatientRegistrationForm = () => {
         setSpeciesByComplaint(data);
       } else {
         setSpeciesByComplaint([]);
+      }
+      // /api/v1/breed/species/:speciesId
+      const breedResponse = await axiosInstance.get(
+        `/breed/species/${speciesId}`
+      );
+      const breedData = breedResponse?.data?.data;
+      console.log(breedData, "breedData");
+      if (breedData.length > 0) {
+        setBreeds(breedData);
       }
     } catch (error) {
       return Promise.reject(error);
@@ -599,13 +609,19 @@ const PatientRegistrationForm = () => {
                         </div>
                         <div className="mb-3 col-md-6">
                           <label className="form-label">Breed</label>
-                          <input
-                            type="text"
-                            {...register("breed", { required: true })}
+                          <select
+                            {...register("breed", { required: false })}
                             className={`form-control ${
                               errors.breed && "border-danger"
                             }`}
-                          />
+                          >
+                            <option value="">Select</option>
+                            {breeds?.map((breed) => (
+                              <option key={breed._id} value={breed.breed}>
+                                {breed.breed}
+                              </option>
+                            ))}
+                          </select>
                           {errors.breed && (
                             <small className="text-danger">
                               Please write breed

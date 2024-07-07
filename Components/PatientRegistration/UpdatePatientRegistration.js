@@ -47,6 +47,7 @@ const customStyles = {
 const UpdatePatientRegistration = () => {
   const [activeTab, setActiveTab] = useState("ownerInfo");
   const [speciesByComplaints, setSpeciesByComplaint] = useState([]);
+  const [breeds, setBreeds] = useState([]);
   const router = useRouter();
   const { id } = router.query;
   const dispatch = useDispatch();
@@ -87,6 +88,14 @@ const UpdatePatientRegistration = () => {
       setSpeciesByComplaint(response?.data?.data);
     } catch (error) {
       console.error(error);
+    }
+    const breedResponse = await axiosInstance.get(
+      `/breed/species/${speciesId}`
+    );
+    const breedData = breedResponse?.data?.data;
+    console.log(breedData, "breedData");
+    if (breedData.length > 0) {
+      setBreeds(breedData);
     }
   };
 
@@ -543,13 +552,19 @@ const UpdatePatientRegistration = () => {
                         </div>
                         <div className="mb-3 col-md-6">
                           <label className="form-label">Breed</label>
-                          <input
-                            type="text"
-                            {...register("breed", { required: true })}
+                          <select
+                            {...register("breed", { required: false })}
                             className={`form-control ${
                               errors.breed && "border-danger"
                             }`}
-                          />
+                          >
+                            <option value="">Select</option>
+                            {breeds?.map((breed) => (
+                              <option key={breed._id} value={breed.breed}>
+                                {breed.breed}
+                              </option>
+                            ))}
+                          </select>
                           {errors.breed && (
                             <small className="text-danger">
                               Please write breed
