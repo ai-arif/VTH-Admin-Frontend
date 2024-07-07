@@ -17,67 +17,67 @@ import UpdateTest from "./modals/UpdateTest";
 const TestHome = () => {
   const [search, setSearch] = useState("");
   const router = useRouter();
-  const [existingTest, setExistingTest] = useState({});
+  // const [existingTest, setExistingTest] = useState({});
   const dispatch = useDispatch();
   const { tests, status, totalPages } = useSelector((state) => state.test);
   const currentPage = parseInt(router.query.page) || 1;
 
   // handling update single test
-  const handleUpdateTest = async (test) => {
-    setExistingTest(test);
-  };
+  // const handleUpdateTest = async (test) => {
+  //   setExistingTest(test);
+  // };
 
   // handling delete single test
-  const handleDeleteTest = async (id) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#15a362",
-      cancelButtonColor: "#ef4444",
-      confirmButtonText: "Yes, delete it!",
-      color: "#eaeaea",
-      background: "#161719",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          const response = await dispatch(deleteTestData(id));
+  // const handleDeleteTest = async (id) => {
+  //   Swal.fire({
+  //     title: "Are you sure?",
+  //     text: "You won't be able to revert this!",
+  //     icon: "warning",
+  //     showCancelButton: true,
+  //     confirmButtonColor: "#15a362",
+  //     cancelButtonColor: "#ef4444",
+  //     confirmButtonText: "Yes, delete it!",
+  //     color: "#eaeaea",
+  //     background: "#161719",
+  //   }).then(async (result) => {
+  //     if (result.isConfirmed) {
+  //       try {
+  //         const response = await dispatch(deleteTestData(id));
 
-          if (response?.payload?.success) {
-            await dispatch(fetchTest({ page: currentPage }));
+  //         if (response?.payload?.success) {
+  //           await dispatch(fetchTest({ page: currentPage }));
 
-            Swal.fire({
-              icon: "success",
-              title: "Deleted!",
-              text: "Your test has been deleted.",
-              showConfirmButton: false,
-              timer: 1500,
-              color: "#eaeaea",
-              background: "#161719",
-            });
-          } else {
-            Swal.fire({
-              icon: "error",
-              title: "Error!",
-              text: "Failed to delete department. Please try again later.",
-              confirmButtonColor: "#15a362",
-              color: "#eaeaea",
-              background: "#161719",
-            });
-          }
-        } catch (error) {
-          Swal.fire({
-            icon: "error",
-            title: "Something is wrong",
-            text: error,
-            color: "#eaeaea",
-            background: "#161719",
-          });
-        }
-      }
-    });
-  };
+  //           Swal.fire({
+  //             icon: "success",
+  //             title: "Deleted!",
+  //             text: "Your test has been deleted.",
+  //             showConfirmButton: false,
+  //             timer: 1500,
+  //             color: "#eaeaea",
+  //             background: "#161719",
+  //           });
+  //         } else {
+  //           Swal.fire({
+  //             icon: "error",
+  //             title: "Error!",
+  //             text: "Failed to delete department. Please try again later.",
+  //             confirmButtonColor: "#15a362",
+  //             color: "#eaeaea",
+  //             background: "#161719",
+  //           });
+  //         }
+  //       } catch (error) {
+  //         Swal.fire({
+  //           icon: "error",
+  //           title: "Something is wrong",
+  //           text: error,
+  //           color: "#eaeaea",
+  //           background: "#161719",
+  //         });
+  //       }
+  //     }
+  //   });
+  // };
 
   const handleSearch = async () => {
     try {
@@ -120,11 +120,11 @@ const TestHome = () => {
         <div className="row">
           <div className="col-12 col-md-11 col-lg-12 col-xl-12 mx-auto">
             {/* add test modal */}
-            <AddTest />
+            {/* <AddTest /> */}
             {/* update test modal */}
-            <UpdateTest existingTest={existingTest} />
+            {/* <UpdateTest existingTest={existingTest} /> */}
             <div className="app-card p-5 text-center shadow-sm">
-              <h3 className="pb-3">Tests</h3>
+              <h3 className="pb-3">All Tests</h3>
               <div className="d-flex justify-content-between mb-4">
                 <div className="input-group w-50">
                   <input onChange={(e) => setSearch(e.target.value)} onKeyDown={handleKeyPress} type="search" className="form-control" placeholder="Search by test name" />
@@ -133,11 +133,11 @@ const TestHome = () => {
                   </button>
                 </div>
 
-                <div>
+                {/* <div>
                   <button data-bs-toggle="modal" data-bs-target="#addUser" className="btn app-btn-primary">
                     <FaPlus /> Add Test
                   </button>
-                </div>
+                </div> */}
               </div>
               <div className="mb-4">
                 <div className="table-responsive">
@@ -156,12 +156,12 @@ const TestHome = () => {
                           <td>{(currentPage - 1) * 15 + idx + 1}</td>
                           <td className="text-nowrap">{test.testName}</td>
                           <td>{test.testDetails}</td>
-                          <td className="d-flex gap-3">
+                          <td className="">
                             <Link href={`/tests/${test._id}`} className="pay-btn text-white">
-                              <HiOutlineEye size={17} />
+                              <HiOutlineEye size={18} />
                             </Link>
-                            <TiEdit type="button" onClick={() => handleUpdateTest(test)} data-bs-toggle="modal" data-bs-target="#updateTest" title="edit" className="edit-icon" />
-                            <RiDeleteBinLine type="button" onClick={() => handleDeleteTest(test._id)} title="delete" className="delete-icon" />
+                            {/* <TiEdit type="button" onClick={() => handleUpdateTest(test)} data-bs-toggle="modal" data-bs-target="#updateTest" title="edit" className="edit-icon" /> */}
+                            {/* <RiDeleteBinLine type="button" onClick={() => handleDeleteTest(test._id)} title="delete" className="delete-icon" /> */}
                           </td>
                         </tr>
                       ))}

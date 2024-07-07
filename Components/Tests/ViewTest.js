@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchSingleTest, fetchTest } from "../../features/test/testSlice";
+import { fetchSingleTest } from "../../features/test/testSlice";
 import Loader from "../UI/Loader";
 
 const ViewTest = () => {
@@ -12,24 +12,23 @@ const ViewTest = () => {
 
   useEffect(() => {
     if (id) {
-      dispatch(fetchTest({}));
       dispatch(fetchSingleTest(id));
     }
   }, [dispatch, id]);
 
-  console.log(test);
+  //   console.log(test);
 
   //   loader
-  if (status === "loading") return <Loader />;
+  // if (status === "loading") return <Loader />;
 
   return (
     <div className="container-fluid">
-      <div className="app-card text-center shadow-sm">
+      <div className="app-card px-1 text-end shadow-sm">
         <h4 className="page-title text-start py-2">{test?.testName}</h4>
         {test?.tests?.map((test, idx) => (
           <div key={idx} className="table-responsive">
             <h5 className="text-start">{test?.test_subTitle}</h5>
-            <table className="table table-hover table-borderless table-striped table-dark">
+            <table className="table table-striped table-dark">
               <thead>
                 <tr>
                   <th>{test?.parameter_title}</th>
@@ -40,19 +39,39 @@ const ViewTest = () => {
               </thead>
               <tbody>
                 <tr>
-                  <td className="">a</td>
-                  <td className="">res</td>
-                  <td className="">g/dL</td>
-                  <td className="">
-                    {test?.reference_titles?.map((title) => (
-                      <span>{title}</span>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td>
+                    {test?.reference_titles?.map((title, idx) => (
+                      <span key={`title-${idx}`} className="px-2">
+                        {title}
+                      </span>
                     ))}
                   </td>
                 </tr>
+                {test?.params?.map((item, idx) => (
+                  <tr key={`param-${idx}`}>
+                    <td className="">{item?.param}</td>
+                    <td className=""></td>
+                    <td className="">{item?.unit}</td>
+                    <td className="">
+                      {item?.references?.map((ref, idx) => (
+                        <span key={`ref-${idx}`} className="px-2">
+                          {ref}
+                        </span>
+                      ))}
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
         ))}
+        <div className="text-start pb-2">
+          <h6>Interpretation:</h6>
+          <h6 className="pt-2">Name of laboratory technician:</h6>
+        </div>
       </div>
     </div>
   );
