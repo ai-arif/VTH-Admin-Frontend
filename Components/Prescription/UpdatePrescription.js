@@ -6,7 +6,11 @@ import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 import { fetchMedicine } from "../../features/medicine/medicineSlice";
 import { fetchMedicineParams } from "../../features/medicineParam/MedicineParamsSlice";
-import { fetchPrescription, fetchSinglePrescription, updatePrescriptionData } from "../../features/prescription/prescriptionSlice";
+import {
+  fetchPrescription,
+  fetchSinglePrescription,
+  updatePrescriptionData,
+} from "../../features/prescription/prescriptionSlice";
 import { formatDate } from "../../utils/formatDate";
 import Loader from "../UI/Loader";
 
@@ -50,22 +54,34 @@ const UpdatePrescription = () => {
 
   // console.log(prescription?.data?.therapeutics);
   // const [selectedMedicines, setSelectedMedicines] = useState([]);
-  const [selectedMedicines, setSelectedMedicines] = useState(prescription?.data?.therapeutics);
+  const [selectedMedicines, setSelectedMedicines] = useState(
+    prescription?.data?.therapeutics
+  );
 
   // transforming tests and medicines data
   const medicineOptions = medicines?.data?.map((medicine) => ({
     value: medicine._id,
-    label: medicine.name,
+    label: medicine.brandName,
   }));
 
   // find selected medicines then matching
   const selectedAllMedicines = prescription?.data?.medicines;
-  const matchingMedicines = medicineOptions?.filter((data) => selectedAllMedicines?.includes(data.value));
+  const matchingMedicines = medicineOptions?.filter((data) =>
+    selectedAllMedicines?.includes(data.value)
+  );
 
   // convert date string to a Date object and Format the date
-  const nextVisitDate = prescription?.data?.nextVisit ? new Date(prescription.data.nextVisit).toISOString().split("T")[0] : "";
+  const nextVisitDate = prescription?.data?.nextVisit
+    ? new Date(prescription.data.nextVisit).toISOString().split("T")[0]
+    : "";
 
-  const { handleSubmit, register, control, reset, setValue } = useForm({ values: { ...prescription?.data, medicines: matchingMedicines, nextVisit: nextVisitDate } });
+  const { handleSubmit, register, control, reset, setValue } = useForm({
+    values: {
+      ...prescription?.data,
+      medicines: matchingMedicines,
+      nextVisit: nextVisitDate,
+    },
+  });
 
   const onSubmit = async (data) => {
     try {
@@ -94,7 +110,9 @@ const UpdatePrescription = () => {
         toast.error("Failed to update prescription! Please try again later.");
       }
     } catch (error) {
-      toast.error("An error occurred while updating prescription. Please try again later.");
+      toast.error(
+        "An error occurred while updating prescription. Please try again later."
+      );
       console.error(error);
     }
   };
@@ -133,7 +151,9 @@ const UpdatePrescription = () => {
         <div className="col-12">
           <div className="card">
             <div className="card-header">
-              <h4 className="card-header-title text-center">Edit Prescription</h4>
+              <h4 className="card-header-title text-center">
+                Edit Prescription
+              </h4>
             </div>
             <div className="card-body">
               <form onSubmit={handleSubmit(onSubmit)}>
@@ -144,43 +164,84 @@ const UpdatePrescription = () => {
                       type="text"
                       readOnly
                       required
-                      value={`${prescription?.data?.appointment?.caseNo} ${prescription?.data?.appointment?.ownerName} ${formatDate(prescription?.data?.appointment?.date)}`}
+                      value={`${prescription?.data?.appointment?.caseNo} ${
+                        prescription?.data?.appointment?.ownerName
+                      } ${formatDate(prescription?.data?.appointment?.date)}`}
                       className="form-control"
                     />
                   </div>
                   <div className="mb-3 col-md-6">
                     <label className="form-label">CASE NO</label>
-                    <input type="number" readOnly required value={prescription?.data?.appointment?.caseNo} className="form-control" />
+                    <input
+                      type="number"
+                      readOnly
+                      required
+                      value={prescription?.data?.appointment?.caseNo}
+                      className="form-control"
+                    />
                   </div>
                 </div>
                 <div className="row">
                   <div className="mb-3 col-md-6">
                     <label className="form-label">Owner Name</label>
-                    <input type="text" readOnly required value={prescription?.data?.appointment?.ownerName} className="form-control" />
+                    <input
+                      type="text"
+                      readOnly
+                      required
+                      value={prescription?.data?.appointment?.ownerName}
+                      className="form-control"
+                    />
                   </div>
                   <div className="mb-3 col-md-6">
                     <label className="form-label">Phone</label>
-                    <input type="text" readOnly required value={prescription?.data?.appointment?.phone} className="form-control" />
+                    <input
+                      type="text"
+                      readOnly
+                      required
+                      value={prescription?.data?.appointment?.phone}
+                      className="form-control"
+                    />
                   </div>
                 </div>
                 <div className="row">
                   <div className="mb-3 col-md-6">
                     <label className="form-label">District</label>
-                    <input type="text" readOnly required value={prescription?.data?.appointment?.district} className="form-control" />
+                    <input
+                      type="text"
+                      readOnly
+                      required
+                      value={prescription?.data?.appointment?.district}
+                      className="form-control"
+                    />
                   </div>
                   <div className="mb-3 col-md-6">
                     <label className="form-label">Upazila</label>
-                    <input type="text" readOnly required value={prescription?.data?.appointment?.upazila} className="form-control" />
+                    <input
+                      type="text"
+                      readOnly
+                      required
+                      value={prescription?.data?.appointment?.upazila}
+                      className="form-control"
+                    />
                   </div>
                 </div>
                 <div className="mb-3">
                   <label className="form-label">Address</label>
-                  <input readOnly required value={prescription?.data?.appointment?.address} className="form-control"></input>
+                  <input
+                    readOnly
+                    required
+                    value={prescription?.data?.appointment?.address}
+                    className="form-control"
+                  ></input>
                 </div>
                 <div className="row">
                   <div className="mb-3">
                     <label className="form-label">Diagnosis</label>
-                    <textarea type="text" {...register("diagnosis")} className="form-control" />
+                    <textarea
+                      type="text"
+                      {...register("diagnosis")}
+                      className="form-control"
+                    />
                   </div>
                 </div>
                 <div className="row">
@@ -208,18 +269,32 @@ const UpdatePrescription = () => {
                 {/* here show dynamic params based on select medicine name */}
                 {selectedMedicines?.length > 0 &&
                   selectedMedicines?.map((medicine, index) => (
-                    <div className="row g-2 mb-3" id="therapeutics" key={medicine.value}>
+                    <div
+                      className="row g-2 mb-3"
+                      id="therapeutics"
+                      key={medicine.value}
+                    >
                       <div className="col-12 col-md-3 border rounded-1 p-2">
                         <div className="mb-3">
                           <label className="form-label">Medicine Name</label>
-                          <input readOnly type="text" name="medicine_name" value={medicine.label} className="form-control"></input>
+                          <input
+                            readOnly
+                            type="text"
+                            name="medicine_name"
+                            value={medicine.label}
+                            className="form-control"
+                          ></input>
                         </div>
                       </div>
                       {/* example parameter inputs */}
                       <div className="col-12 col-md-3 border rounded-1 p-2">
                         <div>
-                          <label className="form-label pb-1">First Params</label>
-                          <select type="text" {...register(`first_${index}`)} className="form-select">
+                          <label className="form-label pb-1">Dose</label>
+                          <select
+                            type="text"
+                            {...register(`first_${index}`)}
+                            className="form-select"
+                          >
                             <option value="">Select</option>
                             {medicineParams?.first?.map((param) => (
                               <option key={param._id} value={param.param_name}>
@@ -231,8 +306,12 @@ const UpdatePrescription = () => {
                       </div>
                       <div className="col-12 col-md-3 border rounded-1 p-2">
                         <div>
-                          <label className="form-label pb-1">Second Params</label>
-                          <select type="text" {...register(`second_${index}`)} className="form-select">
+                          <label className="form-label pb-1">Route</label>
+                          <select
+                            type="text"
+                            {...register(`second_${index}`)}
+                            className="form-select"
+                          >
                             <option value="">Select</option>
                             {medicineParams?.second?.map((param) => (
                               <option key={param._id} value={param.param_name}>
@@ -244,8 +323,12 @@ const UpdatePrescription = () => {
                       </div>
                       <div className="col-12 col-md-3 border rounded-1 p-2">
                         <div>
-                          <label className="form-label pb-1">Third Params</label>
-                          <select type="text" {...register(`third_${index}`)} className="form-select">
+                          <label className="form-label pb-1">Frequency</label>
+                          <select
+                            type="text"
+                            {...register(`third_${index}`)}
+                            className="form-select"
+                          >
                             <option value="">Select</option>
                             {medicineParams?.third?.map((param) => (
                               <option key={param._id} value={param.param_name}>
@@ -260,19 +343,31 @@ const UpdatePrescription = () => {
                 <div className="row">
                   <div className="mb-3">
                     <label className="form-label">Next Visit</label>
-                    <input type="date" {...register("nextVisit")} className="form-control" />
+                    <input
+                      type="date"
+                      {...register("nextVisit")}
+                      className="form-control"
+                    />
                   </div>
                 </div>
                 <div className="row">
                   <div className="mb-3">
                     <label className="form-label">Prognosis</label>
-                    <textarea type="text" {...register("prognosis")} className="form-control" />
+                    <textarea
+                      type="text"
+                      {...register("prognosis")}
+                      className="form-control"
+                    />
                   </div>
                 </div>
                 <div className="row">
                   <div className="mb-3">
                     <label className="form-label">Advice</label>
-                    <textarea {...register("advice")} className="form-control" rows="5"></textarea>
+                    <textarea
+                      {...register("advice")}
+                      className="form-control"
+                      rows="5"
+                    ></textarea>
                   </div>
                 </div>
                 <div className="row">
@@ -283,28 +378,58 @@ const UpdatePrescription = () => {
                     </p>
                     <div className="row mb-3">
                       <div className="col-md-6">
-                        <label className="form-label">Pre-Anesthetic used</label>
-                        <input type="text" {...register("preAnestheticUsed", { required: true })} className="form-control" />
+                        <label className="form-label">
+                          Pre-Anesthetic used
+                        </label>
+                        <input
+                          type="text"
+                          {...register("preAnestheticUsed", { required: true })}
+                          className="form-control"
+                        />
                       </div>
                       <div className="col-md-6">
-                        <label className="form-label">Suture materials used</label>
-                        <input type="text" {...register("sutureMaterialsUsed", { required: true })} className="form-control" />
+                        <label className="form-label">
+                          Suture materials used
+                        </label>
+                        <input
+                          type="text"
+                          {...register("sutureMaterialsUsed", {
+                            required: true,
+                          })}
+                          className="form-control"
+                        />
                       </div>
                     </div>
                     <div className="row mb-3">
                       <div className="col-md-6">
                         <label className="form-label">Type of surgery</label>
-                        <input type="text" {...register("typeOfSurgery", { required: true })} className="form-control" />
+                        <input
+                          type="text"
+                          {...register("typeOfSurgery", { required: true })}
+                          className="form-control"
+                        />
                       </div>
                       <div className="col-md-6">
-                        <label className="form-label">Post operative care</label>
-                        <input type="text" {...register("postOperativeCare", { required: true })} className="form-control" />
+                        <label className="form-label">
+                          Post operative care
+                        </label>
+                        <input
+                          type="text"
+                          {...register("postOperativeCare", { required: true })}
+                          className="form-control"
+                        />
                       </div>
                     </div>
                     <div className="row mb-3">
                       <div className="">
-                        <label className="form-label">Brief Surgical Procedure</label>
-                        <input type="text" {...register("briefSurgical", { required: true })} className="form-control" />
+                        <label className="form-label">
+                          Brief Surgical Procedure
+                        </label>
+                        <input
+                          type="text"
+                          {...register("briefSurgical", { required: true })}
+                          className="form-control"
+                        />
                       </div>
                     </div>
                   </div>
