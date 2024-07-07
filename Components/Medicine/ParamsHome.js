@@ -4,7 +4,10 @@ import { RiDeleteBinLine } from "react-icons/ri";
 import { TiEdit } from "react-icons/ti";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
-import { deleteMedicineParamsData, fetchMedicineParams } from "../../features/medicineParam/MedicineParamsSlice";
+import {
+  deleteMedicineParamsData,
+  fetchMedicineParams,
+} from "../../features/medicineParam/MedicineParamsSlice";
 import Loader from "../UI/Loader";
 import AddParams from "./modals/AddParams";
 import UpdateParams from "./modals/UpdateParams";
@@ -12,7 +15,9 @@ import UpdateParams from "./modals/UpdateParams";
 const ParamsHome = () => {
   const [existingData, setExistingData] = useState({});
   const dispatch = useDispatch();
-  const { medicineParams, status } = useSelector((state) => state.medicineParam);
+  const { medicineParams, status } = useSelector(
+    (state) => state.medicineParam
+  );
 
   // handle get single param for update
   const handleGetParams = (param) => {
@@ -91,20 +96,24 @@ const ParamsHome = () => {
               <h3 className="page-title pb-3">All Params</h3>
               <div className="d-flex justify-content-end mb-4">
                 <div>
-                  <button data-bs-toggle="modal" data-bs-target="#addParams" className="btn gap-2 d-flex align-items-center app-btn-primary">
+                  <button
+                    data-bs-toggle="modal"
+                    data-bs-target="#addParams"
+                    className="btn gap-2 d-flex align-items-center app-btn-primary"
+                  >
                     <FaPlus /> Add Params
                   </button>
                 </div>
               </div>
               <div className="mb-4">
-                <h5 className="pb-1">First Params</h5>
+                <h5 className="pb-1">Dose</h5>
                 <div className="table-responsive">
                   <table className="table table-hover table-borderless table-striped table-dark">
                     <thead>
                       <tr>
                         <th>SL. No.</th>
                         <th>Params Category</th>
-                        <th>params Name</th>
+                        <th>Params Name</th>
                         <th>Actions</th>
                       </tr>
                     </thead>
@@ -112,11 +121,25 @@ const ParamsHome = () => {
                       {medicineParams?.first?.map((param, idx) => (
                         <tr key={param.id}>
                           <td>{idx + 1}</td>
-                          <td className="text-capitalize">First Params</td>
-                          <td className="text-capitalize">{param?.param_name}</td>
+                          <td className="text-capitalize">Dose</td>
+                          <td className="text-capitalize">
+                            {param?.param_name}
+                          </td>
                           <td className="d-flex gap-3 justify-content-center align-items-center">
-                            <TiEdit type="button" onClick={() => handleGetParams(param)} data-bs-toggle="modal" data-bs-target="#updateParams" title="edit" className="edit-icon" />
-                            <RiDeleteBinLine type="button" onClick={() => handleDeleteParams(param.id)} title="delete" className="delete-icon" />
+                            <TiEdit
+                              type="button"
+                              onClick={() => handleGetParams(param)}
+                              data-bs-toggle="modal"
+                              data-bs-target="#updateParams"
+                              title="edit"
+                              className="edit-icon"
+                            />
+                            <RiDeleteBinLine
+                              type="button"
+                              onClick={() => handleDeleteParams(param.id)}
+                              title="delete"
+                              className="delete-icon"
+                            />
                           </td>
                         </tr>
                       ))}
@@ -125,7 +148,7 @@ const ParamsHome = () => {
                 </div>
               </div>
               <div className="mb-4">
-                <h5 className="pb-1">Second Params</h5>
+                <h5 className="pb-1">Route</h5>
                 <div className="table-responsive">
                   <table className="table table-hover table-borderless table-striped table-dark">
                     <thead>
@@ -140,11 +163,25 @@ const ParamsHome = () => {
                       {medicineParams?.second?.map((param, idx) => (
                         <tr key={param.id}>
                           <td>{idx + 1}</td>
-                          <td className="text-capitalize">Second Params</td>
-                          <td className="text-capitalize">{param?.param_name}</td>
+                          <td className="text-capitalize">Route</td>
+                          <td className="text-capitalize">
+                            {param?.param_name}
+                          </td>
                           <td className="d-flex gap-3 justify-content-center align-items-center">
-                            <TiEdit type="button" onClick={() => handleGetParams(param)} data-bs-toggle="modal" data-bs-target="#updateParams" title="edit" className="edit-icon" />
-                            <RiDeleteBinLine type="button" onClick={() => handleDeleteParams(param.id)} title="delete" className="delete-icon" />
+                            <TiEdit
+                              type="button"
+                              onClick={() => handleGetParams(param)}
+                              data-bs-toggle="modal"
+                              data-bs-target="#updateParams"
+                              title="edit"
+                              className="edit-icon"
+                            />
+                            <RiDeleteBinLine
+                              type="button"
+                              onClick={() => handleDeleteParams(param.id)}
+                              title="delete"
+                              className="delete-icon"
+                            />
                           </td>
                         </tr>
                       ))}
@@ -153,7 +190,7 @@ const ParamsHome = () => {
                 </div>
               </div>
               <div className="mb-4">
-                <h5 className="pb-1">Third Params</h5>
+                <h5 className="pb-1">Frequency</h5>
                 <div className="table-responsive">
                   <table className="table table-hover table-borderless table-striped table-dark">
                     <thead>
@@ -168,11 +205,25 @@ const ParamsHome = () => {
                       {medicineParams?.third?.map((param, idx) => (
                         <tr key={param.id}>
                           <td>{idx + 1}</td>
-                          <td className="text-capitalize">Third Params</td>
-                          <td className="text-capitalize">{param?.param_name}</td>
+                          <td className="text-capitalize">Frequency</td>
+                          <td className="text-capitalize">
+                            {param?.param_name}
+                          </td>
                           <td className="d-flex gap-3 justify-content-center align-items-center">
-                            <TiEdit type="button" onClick={() => handleGetParams(param)} data-bs-toggle="modal" data-bs-target="#updateParams" title="edit" className="edit-icon" />
-                            <RiDeleteBinLine type="button" onClick={() => handleDeleteParams(param.id)} title="delete" className="delete-icon" />
+                            <TiEdit
+                              type="button"
+                              onClick={() => handleGetParams(param)}
+                              data-bs-toggle="modal"
+                              data-bs-target="#updateParams"
+                              title="edit"
+                              className="edit-icon"
+                            />
+                            <RiDeleteBinLine
+                              type="button"
+                              onClick={() => handleDeleteParams(param.id)}
+                              title="delete"
+                              className="delete-icon"
+                            />
                           </td>
                         </tr>
                       ))}
