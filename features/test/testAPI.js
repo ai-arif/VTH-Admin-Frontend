@@ -20,7 +20,19 @@ export const getSubParameter = async (id) => {
 
 export const getTest = async ({ page = 1, limit = 15 }) => {
   try {
-    const response = await axiosInstance.get(`/test?page=${page}&limit=${limit}`);
+    const response = await axiosInstance.get(`/test/get?page=${page}&limit=${limit}`);
+    // const response = await axiosInstance.get(`/test?page=${page}&limit=${limit}`);
+    return response.data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
+// get single test
+export const getSingleTest = async (id) => {
+  try {
+    const response = await axiosInstance.get(`/test/get/${id}`);
+    // const response = await axiosInstance.get(`/test/${id}`);
     return response.data;
   } catch (error) {
     return Promise.reject(error);
@@ -30,7 +42,8 @@ export const getTest = async ({ page = 1, limit = 15 }) => {
 // /test/search?search=a&page=1&limit=10 , take search, page, limit as query params
 export const searchTest = async ({ search, page = 1, limit = 40 }) => {
   try {
-    const response = await axiosInstance.get(`/test/search?search=${search}&page=${page}&limit=${limit}`);
+    const response = await axiosInstance.get(`/test/get/search?search=${search}&page=${page}&limit=${limit}`);
+    // const response = await axiosInstance.get(`/test/search?search=${search}&page=${page}&limit=${limit}`);
     return response.data;
   } catch (error) {
     return Promise.reject(error);
@@ -39,7 +52,8 @@ export const searchTest = async ({ search, page = 1, limit = 40 }) => {
 
 export const addTest = async (test) => {
   try {
-    const response = await axiosInstance.post("/test", test);
+    const response = await axiosInstance.post("/test/get", test);
+    // const response = await axiosInstance.post("/test", test);
     return response.data;
   } catch (error) {
     return Promise.reject(error);
@@ -48,7 +62,8 @@ export const addTest = async (test) => {
 
 export const updateTest = async (test) => {
   try {
-    const response = await axiosInstance.put(`/test/${test.id}`, test);
+    const response = await axiosInstance.put(`/test/get/${test.id}`, test);
+    // const response = await axiosInstance.put(`/test/${test.id}`, test);
     return response.data;
   } catch (error) {
     return Promise.reject(error);
@@ -57,7 +72,8 @@ export const updateTest = async (test) => {
 
 export const deleteTest = async (id) => {
   try {
-    const response = await axiosInstance.delete(`/test/${id}`);
+    const response = await axiosInstance.delete(`/test/get/${id}`);
+    // const response = await axiosInstance.delete(`/test/${id}`);
     return response.data;
   } catch (error) {
     return Promise.reject(error);

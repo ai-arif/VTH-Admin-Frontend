@@ -7,6 +7,7 @@ import {
   getAllAdditionalFields,
   getAllSubParameter,
   getParameter,
+  getSingleTest,
   getSubParameter,
   getTest,
   getTestAllFields,
@@ -47,6 +48,12 @@ export const fetchParameter = createAsyncThunk("test/fetchParameter", async (id)
 
 export const fetchTest = createAsyncThunk("test/fetchTest", async ({ page = 1, limit = 15 }) => {
   const response = await getTest({ page, limit });
+  return response;
+});
+
+// fetch single test
+export const fetchSingleTest = createAsyncThunk("medicine/fetchSingleTest", async (id) => {
+  const response = await getSingleTest(id);
   return response;
 });
 
@@ -127,6 +134,16 @@ export const testSlice = createSlice({
         state.totalPages = action.payload.data.totalPages;
       })
       .addCase(fetchTest.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(fetchSingleTest.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchSingleTest.fulfilled, (state, action) => {
+        (state.status = "success"), (state.test = action.payload.data);
+      })
+      .addCase(fetchSingleTest.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       })

@@ -1,7 +1,9 @@
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FaPlus } from "react-icons/fa6";
+import { HiOutlineEye } from "react-icons/hi2";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { TiEdit } from "react-icons/ti";
 import { useDispatch, useSelector } from "react-redux";
@@ -155,6 +157,9 @@ const TestHome = () => {
                           <td className="text-nowrap">{test.testName}</td>
                           <td>{test.testDetails}</td>
                           <td className="d-flex gap-3">
+                            <Link href={`/tests/${test._id}`} className="pay-btn text-white">
+                              <HiOutlineEye size={17} />
+                            </Link>
                             <TiEdit type="button" onClick={() => handleUpdateTest(test)} data-bs-toggle="modal" data-bs-target="#updateTest" title="edit" className="edit-icon" />
                             <RiDeleteBinLine type="button" onClick={() => handleDeleteTest(test._id)} title="delete" className="delete-icon" />
                           </td>
