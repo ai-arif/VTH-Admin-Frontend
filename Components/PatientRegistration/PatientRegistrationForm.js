@@ -841,9 +841,9 @@ const PatientRegistrationForm = () => {
                             Deworming
                           </label>
                           <select
-                            {...register("confusionWords", { required: true })}
+                            {...register("deworming", { required: true })}
                             className={`form-select ${
-                              errors.confusionWords && "border-danger"
+                              errors.deworming && "border-danger"
                             }`}
                             aria-label="Default select example"
                           >
