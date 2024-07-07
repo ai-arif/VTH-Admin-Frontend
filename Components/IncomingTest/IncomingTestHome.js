@@ -170,9 +170,9 @@ const IncomingTestHome = () => {
                 {incomingTests?.data?.map((sp, idx) => (
                   <tr key={sp._id}>
                     <td>{(currentPage - 1) * 15 + idx + 1}</td>
-                    <td>{sp?.appointment?.caseNo}</td>
-                    <td>{sp?.appointment?.ownerName}</td>
-                    <td className="text-nowrap">{new Date(sp?.appointment?.createdAt).toDateString()}</td>
+                    <td>{sp?.appointmentId?.caseNo}</td>
+                    <td>{sp?.appointmentId?.ownerName}</td>
+                    <td className="text-nowrap">{new Date(sp?.appointmentId?.createdAt).toDateString()}</td>
                     {/* payment */}
                     <td className="text-center">
                       {sp?.totalTestCost ? (

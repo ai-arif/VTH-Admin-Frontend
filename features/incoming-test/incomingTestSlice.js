@@ -1,7 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { deleteIncomingTest, getIncomingTest, searchIncomingTest } from "./incomingTestAPI";
+import { deleteIncomingTest, getIncomingTest, getSingleIncomingTest, searchIncomingTest } from "./incomingTestAPI";
 
 const initialState = {
+  incomingTest: {},
   incomingTests: [],
   status: "idle",
   error: null,
@@ -10,6 +11,12 @@ const initialState = {
 
 export const fetchAllIncomingTest = createAsyncThunk("incomingTest/fetchAllIncomingTest", async ({ page = 1, limit = 15 }) => {
   const response = await getIncomingTest({ page, limit });
+  return response;
+});
+
+// fetch single test
+export const fetchSingleIncomingTest = createAsyncThunk("medicine/fetchSingleIncomingTest", async (id) => {
+  const response = await getSingleIncomingTest(id);
   return response;
 });
 
@@ -42,6 +49,16 @@ export const incomingTestSlice = createSlice({
         state.totalPages = action.payload.data.totalPages;
       })
       .addCase(fetchAllIncomingTest.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(fetchSingleIncomingTest.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchSingleIncomingTest.fulfilled, (state, action) => {
+        (state.status = "success"), (state.incomingTest = action.payload.data);
+      })
+      .addCase(fetchSingleIncomingTest.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       })
