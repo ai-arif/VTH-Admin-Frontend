@@ -120,6 +120,21 @@ const AddStaff = () => {
                     <small className="text-danger">Please write phone</small>
                   )}
                 </div>
+                <div className="mb-3">
+                  <label htmlFor="email" className="form-label">
+                    Email
+                  </label>
+                  <input
+                    type="text"
+                    {...register("email", { required: false })}
+                    className={`form-control ${
+                      errors.email && "border-danger"
+                    }`}
+                  />
+                  {errors.email && (
+                    <small className="text-danger">Please write email</small>
+                  )}
+                </div>
                 <div className="mb-3 position-relative">
                   <label htmlFor="password" className="form-label">
                     Password
