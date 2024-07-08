@@ -186,7 +186,7 @@ const UpdateAppointment = () => {
                   <div className="mb-3 col-md-6">
                     <label className="form-label">Breed</label>
                     <select {...register("breed")} className="form-select" aria-label="Default select example">
-                      <option value="">{appointment.breed || Select}</option>
+                      <option value="">{appointment?.breed || "Select"}</option>
                       {speciesByBreeds?.map((breed) => (
                         <option key={breed._id} value={breed.breed}>
                           {breed.breed}
