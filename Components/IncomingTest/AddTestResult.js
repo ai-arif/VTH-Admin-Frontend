@@ -56,7 +56,6 @@ const AddTestResult = () => {
   const onUpdate = async (data) => {
     try {
       axiosInstance.put(`/test/test-result/${id}`, { data, status: true }).then((res) => {
-        console.log({ "update res": res.data });
         if (res.data?.success) {
           setRefetch(refetch + 1);
           toast.success("Test result updated successfully");
@@ -77,19 +76,10 @@ const AddTestResult = () => {
   const onSubmit = async (data) => {
     try {
       axiosInstance.post(`/test/test-result`, { data, id }).then((res) => {
-        console.log({ res });
         if (res.data?.success) {
-          if (id) {
-            dispatch(fetchSingleIncomingTest(id)).then((data) => {
-              const firstTestId = data?.payload?.data?.data?.tests?.[0]?._id;
-              if (firstTestId) {
-                setActiveTab(firstTestId);
-                setArrIndex(0);
-              }
-            });
-          }
+          setRefetch(refetch + 1);
+          // reset();
           toast.success("Test result added successfully");
-          reset();
         }
       });
     } catch (error) {
@@ -99,7 +89,6 @@ const AddTestResult = () => {
   };
 
   // if (status === "loading") return <Loader />;
-  console.log(incomingTest);
 
   return (
     <div>
@@ -132,7 +121,7 @@ const AddTestResult = () => {
         </div>
         {/* table */}
         {incomingTest?.testId?.tests?.map((test, index) => (
-          <div key={test?.id} className="table-responsive text-end ">
+          <div key={index} className="table-responsive text-end ">
             {incomingTest?.status ? (
               <div>
                 <form onSubmit={handleUpdate(onUpdate)}>
@@ -195,7 +184,7 @@ const AddTestResult = () => {
                     </button>
                   </div>
                 </form>
-                <button type="button" onClick={handleDeleteTestResult} className="btn btn-danger text-white">
+                <button type="button" onClick={handleDeleteTestResult} className="btn mt-3 btn-danger text-white">
                   Delete
                 </button>
               </div>

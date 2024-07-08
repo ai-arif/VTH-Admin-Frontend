@@ -22,7 +22,7 @@ export const getSingleIncomingTest = async (id) => {
 
 export const deleteIncomingTest = async (id) => {
   try {
-    const response = await axiosInstance.delete(`/test/incoming-test/${id}`);
+    const response = await axiosInstance.delete(`/test/test-result/${id}`);
     return response.data;
   } catch (error) {
     return Promise.reject(error);
