@@ -25,7 +25,7 @@ const IncomingTestHome = () => {
   const currentPage = parseInt(router.query.page) || 1;
 
   const handleStatus = (status, id) => {
-    axiosInstance.patch(`/prescription/lab/test/${id}`, { status: status }).then((res) => {
+    axiosInstance.patch(`/test/status/${id}`, { status: status }).then((res) => {
       let result = res.data;
       setRefetch(result);
 
@@ -159,8 +159,8 @@ const IncomingTestHome = () => {
                 <tr>
                   <th className="text-nowrap">SL.No.</th>
                   <th className="text-nowrap">Case No.</th>
-                  <th className="text-nowrap">Owner Name:</th>
-                  <th className="text-nowrap">Date:</th>
+                  <th className="text-nowrap">Owner Name</th>
+                  <th className="text-nowrap">Date</th>
                   <th className="text-nowrap">Test Cost</th>
                   <th className="text-nowrap">Status:</th>
                   <th className="text-nowrap">Actions</th>
@@ -193,7 +193,7 @@ const IncomingTestHome = () => {
                     </td>
 
                     <td className="text-nowrap">
-                      <select defaultValue={sp?.testStatue} onChange={(e) => handleStatus(e.target.value, sp._id)} className="form-select" aria-label="Default select example">
+                      <select defaultValue={sp?.testStatus} onChange={(e) => handleStatus(e.target.value, sp._id)} className="form-select" aria-label="Default select example">
                         <option value={"success"}>Success</option>
                         <option value={"processing"}>Processing</option>
                         <option value={"pending"}>Pending</option>
