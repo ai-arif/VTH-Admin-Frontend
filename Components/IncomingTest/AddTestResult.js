@@ -35,7 +35,7 @@ const AddTestResult = () => {
       background: "#161719",
     }).then((result) => {
       if (result.isConfirmed) {
-        axiosInstance.delete(`/test/test-result/${id}`).then((res) => {
+        axiosInstance.put(`/test/test-result/${id}`, { data: {}, status: false }).then((res) => {
           if (res.data?.success) {
             setRefetch(refetch + 1);
             reset2();
@@ -53,9 +53,9 @@ const AddTestResult = () => {
     reset: reset2,
     formState: { errorsUpdate },
   } = useForm({ values: incomingTest?.data });
-  const onUpdate = async (updatedData) => {
+  const onUpdate = async (data) => {
     try {
-      axiosInstance.put(`/test/test-result/${id}`, updatedData).then((res) => {
+      axiosInstance.put(`/test/test-result/${id}`, { data, status: true }).then((res) => {
         console.log({ "update res": res.data });
         if (res.data?.success) {
           setRefetch(refetch + 1);
