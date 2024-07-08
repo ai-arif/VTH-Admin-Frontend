@@ -1,6 +1,7 @@
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
+import { GoPlay } from "react-icons/go";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { TiEdit } from "react-icons/ti";
 import { useDispatch, useSelector } from "react-redux";
@@ -76,6 +77,7 @@ const ContentManagement = () => {
   useEffect(() => {
     dispatch(fetchContents());
   }, [dispatch]);
+  console.log(contents);
 
   // loader
   // if (status === "loading" && currentPage < 2) return <Loader />;
@@ -107,6 +109,7 @@ const ContentManagement = () => {
                         <th>Image</th>
                         <th>Title</th>
                         <th>Type</th>
+                        <th>Status</th>
                         <th>Actions</th>
                       </tr>
                     </thead>
@@ -114,9 +117,10 @@ const ContentManagement = () => {
                       {contents?.map((content, idx) => (
                         <tr key={content._id}>
                           <td>{idx + 1}</td>
-                          <td>{content?.image ? <Image className="rounded-2" width={40} height={40} src={content.image} alt="image" /> : "Video"}</td>
+                          <td>{content?.image ? <Image className="rounded-2" width={40} height={40} src={content.image} alt="image" /> : <GoPlay size={26} />}</td>
                           <td>{content.title}</td>
                           <td className="text-capitalize">{content.type}</td>
+                          <td className={`text-capitalize ${content.enable ? "text-success" : "text-danger"}`}>{content.enable ? "Enable" : "Disable"}</td>
                           <td className="d-flex gap-3 justify-content-center align-items-center">
                             <TiEdit type="button" onClick={() => handleGetContent(content)} data-bs-toggle="modal" data-bs-target="#updateContent" title="edit" className="edit-icon" />
                             <RiDeleteBinLine type="button" onClick={() => handleDeleteContent(content._id)} title="delete" className="delete-icon" />
