@@ -1,4 +1,3 @@
-import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -7,7 +6,7 @@ import { RiDeleteBinLine } from "react-icons/ri";
 import { TiEdit } from "react-icons/ti";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
-import { deleteIncomingTestData, fetchAllIncomingTest, searchIncomingTestData } from "../../features/incoming-test/incomingTestSlice";
+import { deleteIncomingTestData, fetchAllTestResult, searchIncomingTestData } from "../../features/incoming-test/incomingTestSlice";
 import axiosInstance from "../../utils/axiosInstance";
 import Loader from "../UI/Loader";
 import Pagination from "../UI/Pagination";
@@ -21,7 +20,7 @@ const IncomingTestHome = () => {
 
   const router = useRouter();
   const dispatch = useDispatch();
-  const { incomingTests, status, totalPages } = useSelector((state) => state.incomingTest);
+  const { testResults, status, totalPages } = useSelector((state) => state.incomingTest);
   const currentPage = parseInt(router.query.page) || 1;
 
   const handleStatus = (status, id) => {
@@ -71,7 +70,7 @@ const IncomingTestHome = () => {
           const response = await dispatch(deleteIncomingTestData(id));
 
           if (response?.payload?.success) {
-            await dispatch(fetchAllIncomingTest({ page: currentPage }));
+            await dispatch(fetchAllTestResult({ page: currentPage }));
 
             Swal.fire({
               icon: "success",
@@ -133,9 +132,11 @@ const IncomingTestHome = () => {
 
   useEffect(() => {
     if (router.isReady) {
-      dispatch(fetchAllIncomingTest({ page: currentPage }));
+      dispatch(fetchAllTestResult({ page: currentPage }));
     }
   }, [router.isReady, dispatch, currentPage]);
+
+  // console.log({ testResults });
 
   // loader
   // if (status === "loading" && currentPage < 2) return <Loader />;
@@ -161,22 +162,26 @@ const IncomingTestHome = () => {
                   <th className="text-nowrap">Case No.</th>
                   <th className="text-nowrap">Owner Name</th>
                   <th className="text-nowrap">Date</th>
+                  <th className="text-nowrap">Test Name</th>
                   <th className="text-nowrap">Test Cost</th>
-                  <th className="text-nowrap">Status:</th>
+                  <th className="text-nowrap">Status</th>
                   <th className="text-nowrap">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {incomingTests?.data?.map((sp, idx) => (
+                {testResults?.data?.map((sp, idx) => (
                   <tr key={sp._id}>
                     <td>{(currentPage - 1) * 15 + idx + 1}</td>
-                    <td>{sp?.appointmentId?.caseNo}</td>
-                    <td>{sp?.appointmentId?.ownerName}</td>
-                    <td className="text-nowrap">{new Date(sp?.appointmentId?.createdAt).toDateString()}</td>
+                    <td>{sp?.appointmentDetails?.caseNo}</td>
+                    <td>{sp?.appointmentDetails?.ownerName}</td>
+                    <td className="">{new Date(sp?.appointmentDetails?.createdAt).toDateString()}</td>
+                    <td>
+                      <small>{sp?.name}</small>
+                    </td>
                     {/* payment */}
                     <td className="text-center">
-                      {sp?.totalTestCost ? (
-                        sp?.totalTestCost
+                      {sp?.paymentStatus ? (
+                        sp?.amount
                       ) : (
                         <button
                           className="pay-btn"
@@ -192,15 +197,16 @@ const IncomingTestHome = () => {
                       )}
                     </td>
 
-                    <td className="text-nowrap">
+                    {/* <td className="text-nowrap">
                       <select defaultValue={sp?.testStatus} onChange={(e) => handleStatus(e.target.value, sp._id)} className="form-select" aria-label="Default select example">
                         <option value={"success"}>Success</option>
                         <option value={"processing"}>Processing</option>
                         <option value={"pending"}>Pending</option>
                       </select>
-                    </td>
+                    </td> */}
+                    <td className={`${sp?.status ? "text-success" : "text-danger"}`}>{sp?.status ? "Success" : "Pending"}</td>
                     <td className="d-flex gap-3">
-                      <Link href={`/incomming-test/${sp._id}`}>
+                      <Link href={`/incomming-test/${sp?._id}`}>
                         <TiEdit type="button" title="edit" className="edit-icon" />
                       </Link>
                       <RiDeleteBinLine onClick={() => handleDeletePrescription(sp._id)} type="button" title="delete" className="delete-icon" />
