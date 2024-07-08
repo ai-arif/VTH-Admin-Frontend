@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
@@ -66,23 +66,6 @@ const UpdatePatientRegistration = () => {
   const selectedTests = patient?.tests;
   const matchingTests = testOptions?.filter((data) => selectedTests?.includes(data.value));
 
-  const fetchComplaints = async (speciesId) => {
-    try {
-      if (!speciesId) return;
-
-      const response = await axiosInstance.get(`/complaint/species/${speciesId}`);
-      setSpeciesByComplaint(response?.data?.data);
-    } catch (error) {
-      console.error(error);
-    }
-    const breedResponse = await axiosInstance.get(`/breed/species/${speciesId}`);
-    const breedData = breedResponse?.data?.data;
-    console.log(breedData, "breedData");
-    if (breedData.length > 0) {
-      setBreeds(breedData);
-    }
-  };
-
   const {
     handleSubmit,
     register,
@@ -92,6 +75,30 @@ const UpdatePatientRegistration = () => {
     watch,
     formState: { errors },
   } = useForm({ values: { ...patient, date, dop, doo, tests: matchingTests } });
+
+  const fetchComplaints = async (speciesId) => {
+    try {
+      if (!speciesId) return;
+
+      const response = await axiosInstance.get(`/complaint/species/${speciesId}`);
+      const data = response?.data?.data;
+      if (data?.length > 0) {
+        setSpeciesByComplaint(data);
+      } else {
+        setSpeciesByComplaint([]);
+      }
+
+      const breedResponse = await axiosInstance.get(`/breed/species/${speciesId}`);
+      const breedData = breedResponse?.data?.data;
+      if (breedData?.length > 0) {
+        setBreeds(breedData);
+      } else {
+        setBreeds([]);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const totalAnimals = watch("totalAnimals");
   const totalSickAnimals = watch("totalSickAnimals");
@@ -275,16 +282,17 @@ const UpdatePatientRegistration = () => {
                           {errors.species && <small className="text-danger">Please select an species</small>}
                         </div>
                         <div className="mb-3 col-md-6">
-                          <label className="form-label">Owner Complaints</label>
-                          <select {...register("complaints", { required: true })} className={`form-select ${errors.complaints && "border-danger"}`} aria-label="Default select example">
-                            {/* <option value="">Select</option> */}
+                          <label className="form-label">
+                            Owner Complaints <small>(optional)</small>
+                          </label>
+                          <select {...register("complaints")} className="form-select" aria-label="Default select example">
+                            <option value="">{patient?.complaints || "Select"}</option>
                             {speciesByComplaints?.map((complaint) => (
-                              <option key={complaint._id} value={complaint._id}>
+                              <option key={complaint._id} value={complaint.complaint}>
                                 {complaint.complaint}
                               </option>
                             ))}
                           </select>
-                          {errors.complaints && <small className="text-danger">Please select an complaints</small>}
                         </div>
                       </div>
                       <div className="row">
@@ -356,16 +364,17 @@ const UpdatePatientRegistration = () => {
                           <input type="text" {...register("parity")} className="form-control" />
                         </div>
                         <div className="mb-3 col-md-6">
-                          <label className="form-label">Breed</label>
-                          <select {...register("breed", { required: false })} className={`form-control ${errors.breed && "border-danger"}`}>
-                            <option value="">Select</option>
+                          <label className="form-label">
+                            Breed <small>(optional)</small>
+                          </label>
+                          <select {...register("breed")} className="form-select" aria-label="Default select example">
+                            <option value="">{patient?.breed || "Select"}</option>
                             {breeds?.map((breed) => (
                               <option key={breed._id} value={breed.breed}>
                                 {breed.breed}
                               </option>
                             ))}
                           </select>
-                          {errors.breed && <small className="text-danger">Please write breed</small>}
                         </div>
                       </div>
                     </div>
@@ -480,13 +489,13 @@ const UpdatePatientRegistration = () => {
                           {errors.vaccinations && <small className="text-danger">Please write vaccinations</small>}
                         </div>
                         <div className="mb-3 col-md-6">
-                          <label className="form-label text-danger">Deworming</label>
-                          <select {...register("deworming", { required: true })} className={`form-select ${errors.confusionWords && "border-danger"}`} aria-label="Default select example">
+                          <label className="form-label">Deworming</label>
+                          <select {...register("deworming", { required: true })} className={`form-select ${errors.deworming && "border-danger"}`} aria-label="Default select example">
                             <option value="">Select</option>
                             <option value="yes">Yes</option>
                             <option value="no">No</option>
                           </select>
-                          {errors.deworming && <small className="text-danger">Please select confusionWords</small>}
+                          {errors.deworming && <small className="text-danger">Please select deworming</small>}
                         </div>
                       </div>
                     </div>

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { HiOutlineEye } from "react-icons/hi2";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAllTestResult, searchIncomingTestData } from "../../features/incoming-test/incomingTestSlice";
+import { fetchAllIncomingTest, fetchAllTestResult, searchIncomingTestData } from "../../features/incoming-test/incomingTestSlice";
 import Pagination from "../UI/Pagination";
 
 const TestResultHome = () => {
@@ -12,7 +12,7 @@ const TestResultHome = () => {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const { testResults, status, totalPages } = useSelector((state) => state.incomingTest);
+  const { incomingTests, status, totalPages } = useSelector((state) => state.incomingTest);
   const currentPage = parseInt(router.query.page) || 1;
 
   const handleSearch = async () => {
@@ -41,13 +41,12 @@ const TestResultHome = () => {
     });
   };
 
-  console.log(testResults?.data);
-
   useEffect(() => {
     if (router.isReady) {
-      dispatch(fetchAllTestResult({ page: currentPage }));
+      dispatch(fetchAllIncomingTest({ page: currentPage }));
     }
   }, [router.isReady, dispatch, currentPage]);
+
   return (
     <div className="container-fluid">
       <div className="app-card p-5 text-center shadow-sm">
@@ -73,12 +72,12 @@ const TestResultHome = () => {
                 </tr>
               </thead>
               <tbody>
-                {testResults?.data?.map((result, idx) => (
+                {incomingTests?.data?.map((result, idx) => (
                   <tr key={result?._id}>
                     <td>{(currentPage - 1) * 15 + idx + 1}</td>
-                    <td className="text-nowrap">{result?.appointmentId?.caseNo || "25235"}</td>
-                    <td className="">{result?.appointmentId?.OwnerName || "Atikur"}</td>
-                    <td className="">{result?.appointmentId?.phone || "017262015"}</td>
+                    <td className="text-nowrap">{result?.appointmentId?.caseNo}</td>
+                    <td className="">{result?.appointmentId?.ownerName}</td>
+                    <td className="">{result?.appointmentId?.phone}</td>
                     <td className="d-flex gap-3 justify-content-center">
                       <Link href={`/test-result/${result?._id}`} className="pay-btn text-white">
                         <HiOutlineEye size={18} />
