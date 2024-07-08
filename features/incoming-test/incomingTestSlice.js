@@ -1,9 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { deleteIncomingTest, getIncomingTest, getSingleIncomingTest, searchIncomingTest } from "./incomingTestAPI";
+import { deleteIncomingTest, getIncomingTest, getSingleIncomingTest, getSingleTestResult, getTestResult, searchIncomingTest } from "./incomingTestAPI";
 
 const initialState = {
   incomingTest: {},
   incomingTests: [],
+  testResults: [],
   status: "idle",
   error: null,
   totalPages: 1,
@@ -15,7 +16,7 @@ export const fetchAllIncomingTest = createAsyncThunk("incomingTest/fetchAllIncom
 });
 
 // fetch single test
-export const fetchSingleIncomingTest = createAsyncThunk("medicine/fetchSingleIncomingTest", async (id) => {
+export const fetchSingleIncomingTest = createAsyncThunk("incomingTest/fetchSingleIncomingTest", async (id) => {
   const response = await getSingleIncomingTest(id);
   return response;
 });
@@ -27,6 +28,18 @@ export const deleteIncomingTestData = createAsyncThunk("incomingTest/deleteIncom
 
 export const searchIncomingTestData = createAsyncThunk("incomingTest/searchIncomingTestData", async ({ search, page = 1, limit = 40 }) => {
   const response = await searchIncomingTest({ search, page, limit });
+  return response;
+});
+
+// fetch all test results
+export const fetchAllTestResult = createAsyncThunk("incomingTest/fetchAllTestResult", async ({ page = 1, limit = 15 }) => {
+  const response = await getTestResult({ page, limit });
+  return response;
+});
+
+// fetch single test result
+export const fetchSingleTestResult = createAsyncThunk("incomingTest/fetchSingleTestResult", async (id) => {
+  const response = await getSingleTestResult(id);
   return response;
 });
 
@@ -80,6 +93,29 @@ export const incomingTestSlice = createSlice({
         state.totalPages = action.payload.data.totalPages;
       })
       .addCase(searchIncomingTestData.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      // all test result
+      .addCase(fetchAllTestResult.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchAllTestResult.fulfilled, (state, action) => {
+        state.status = "success";
+        state.testResults = action.payload.data;
+        state.totalPages = action.payload.data.totalPages;
+      })
+      .addCase(fetchAllTestResult.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(fetchSingleTestResult.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchSingleTestResult.fulfilled, (state, action) => {
+        (state.status = "success"), (state.incomingTest = action.payload.data);
+      })
+      .addCase(fetchSingleTestResult.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });
