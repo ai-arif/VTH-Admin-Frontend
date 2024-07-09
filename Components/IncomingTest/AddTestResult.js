@@ -22,31 +22,6 @@ const AddTestResult = () => {
     }
   }, [id, refetch]);
 
-  const handleDeleteTestResult = () => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#15a362",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-      color: "#eaeaea",
-      background: "#161719",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        axiosInstance.put(`/test/test-result/${id}`, { data: {}, status: false }).then((res) => {
-          if (res.data?.success) {
-            setRefetch(refetch + 1);
-            reset2();
-            reset();
-            toast.success("Deleted successfully");
-          }
-        });
-      }
-    });
-  };
-
   const {
     handleSubmit: handleUpdate,
     register: register2,
@@ -88,6 +63,31 @@ const AddTestResult = () => {
     }
   };
 
+  const handleDeleteTestResult = () => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#15a362",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+      color: "#eaeaea",
+      background: "#161719",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axiosInstance.put(`/test/test-result/${id}`, { data: {}, status: false }).then((res) => {
+          if (res.data?.success) {
+            setRefetch(refetch + 1);
+            reset2();
+            reset();
+            toast.success("Deleted successfully");
+          }
+        });
+      }
+    });
+  };
+
   // if (status === "loading") return <Loader />;
 
   return (
@@ -120,12 +120,13 @@ const AddTestResult = () => {
           </div>
         </div>
         {/* table */}
-        {incomingTest?.testId?.tests?.map((test, index) => (
-          <div key={index} className="table-responsive text-end ">
-            {incomingTest?.status ? (
-              <div>
-                <form onSubmit={handleUpdate(onUpdate)}>
-                  <div>
+        {/* {incomingTest?.testId?.tests?.map((test, index) => ( */}
+        <div className="table-responsive text-end ">
+          {incomingTest?.status ? (
+            <div>
+              <form onSubmit={handleUpdate(onUpdate)}>
+                {incomingTest?.testId?.tests?.map((test, idx) => (
+                  <div key={idx}>
                     <h5 className="text-start py-2">{test?.test_subTitle}</h5>
                     <table className="table table-hover table-striped table-dark">
                       <thead>
@@ -168,92 +169,93 @@ const AddTestResult = () => {
                       </tbody>
                     </table>
                   </div>
-                  <div className="text-start">
-                    <div>
-                      <h6>Interpretation:</h6>
-                      <input type="text" {...register2("interpretation")} className="form-control w-50" />
-                    </div>
-                    <div className="pt-2">
-                      <h6>Name of laboratory technician: </h6>
-                      <input type="text" {...register2("lab_technician")} className="form-control w-50" />
-                    </div>
-                  </div>
-                  <div className="d-flex justify-content-start gap-3 justify-content-end">
-                    <button type="submit" className="app-btn-primary btn">
-                      Update
-                    </button>
-                  </div>
-                </form>
-                <button type="button" onClick={handleDeleteTestResult} className="btn mt-3 btn-danger text-white">
-                  Delete
-                </button>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit(onSubmit)}>
-                {incomingTest?.testId?.tests?.map((test, idx) => (
-                  <div key={idx}>
-                    <h5 className="text-start py-2">{test?.test_subTitle}</h5>
-                    <table className="table table-hover table-striped table-dark">
-                      <thead>
-                        <tr>
-                          <th>{test?.parameter_title}</th>
-                          <th className="text-center">{test?.result_title}</th>
-                          <th>{test?.unit_title}</th>
-                          <th>{test?.range_title}</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                          <td>
-                            {test?.reference_titles?.map((title, idx) => (
-                              <span key={`title-${idx}`} className="px-2">
-                                {title}
-                              </span>
-                            ))}
-                          </td>
-                        </tr>
-                        {test?.params?.map((item, idx) => (
-                          <tr key={`param-${idx}`}>
-                            <td className="">{item?.param}</td>
-                            <td className="">
-                              <input type="text" {...register(`${test?.test_subTitle}#${item?.param}`)} className="form-control" />
-                            </td>
-                            <td className="">{item?.unit}</td>
-                            <td className="">
-                              {item?.references?.map((ref, idx) => (
-                                <span key={`ref-${idx}`} className="px-2">
-                                  {ref}
-                                </span>
-                              ))}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
                 ))}
                 <div className="text-start">
                   <div>
                     <h6>Interpretation:</h6>
-                    <input type="text" {...register("interpretation")} className="form-control w-50" />
+                    <input type="text" {...register2("interpretation")} className="form-control w-50" />
                   </div>
                   <div className="pt-2">
                     <h6>Name of laboratory technician: </h6>
-                    <input type="text" {...register("lab_technician")} className="form-control w-50" />
+                    <input type="text" {...register2("lab_technician")} className="form-control w-50" />
                   </div>
                 </div>
                 <div className="d-flex justify-content-start justify-content-end">
                   <button type="submit" className="app-btn-primary btn">
-                    Submit
+                    Update
                   </button>
                 </div>
               </form>
-            )}
-          </div>
-        ))}
+              <button type="button" onClick={handleDeleteTestResult} className="btn mt-3 btn-danger text-white">
+                Delete
+              </button>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit(onSubmit)}>
+              {incomingTest?.testId?.tests?.map((test, idx) => (
+                <div key={idx}>
+                  <h5 className="text-start py-2">{test?.test_subTitle}</h5>
+                  <table className="table table-hover table-striped table-dark">
+                    <thead>
+                      <tr>
+                        <th>{test?.parameter_title}</th>
+                        <th className="text-center">{test?.result_title}</th>
+                        <th>{test?.unit_title}</th>
+                        <th>{test?.range_title}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                          {test?.reference_titles?.map((title, idx) => (
+                            <span key={`title-${idx}`} className="px-2">
+                              {title}
+                            </span>
+                          ))}
+                        </td>
+                      </tr>
+                      {test?.params?.map((item, idx) => (
+                        <tr key={`param-${idx}`}>
+                          <td className="">{item?.param}</td>
+                          <td className="">
+                            <input type="text" {...register(`${test?.test_subTitle}#${item?.param}`)} className="form-control" />
+                          </td>
+                          <td className="">{item?.unit}</td>
+                          <td className="">
+                            {item?.references?.map((ref, idx) => (
+                              <span key={`ref-${idx}`} className="px-2">
+                                {ref}
+                              </span>
+                            ))}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ))}
+              <div className="text-start">
+                <div>
+                  <h6>Interpretation:</h6>
+                  <input type="text" {...register("interpretation")} className="form-control w-50" />
+                </div>
+                <div className="pt-2">
+                  <h6>Name of laboratory technician: </h6>
+                  <input type="text" {...register("lab_technician")} className="form-control w-50" />
+                </div>
+              </div>
+              <div className="d-flex justify-content-start justify-content-end">
+                <button type="submit" className="app-btn-primary btn">
+                  Submit
+                </button>
+              </div>
+            </form>
+          )}
+        </div>
+        {/* ))} */}
       </div>
     </div>
   );
