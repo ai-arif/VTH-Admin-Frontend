@@ -48,6 +48,7 @@ const PrescriptionHome = () => {
   const [isPrint, setIsPrint] = useState(false);
   const [selectedMedicines, setSelectedMedicines] = useState([]);
   const dispatch = useDispatch();
+  console.log({ singlePrescription });
 
   const { medicines } = useSelector((state) => state.medicine);
   const { medicineParams } = useSelector((state) => state.medicineParam);
@@ -347,7 +348,7 @@ const PrescriptionHome = () => {
                 </div>
               </form>
               <div className="pb-3 d-flex justify-content-end">
-                <button disabled={!isPrint} onClick={() => handleDownloadPrescription(singlePrescription, medicines?.data)} className="btn btn-info text-white">
+                <button disabled={!isPrint} onClick={() => handleDownloadPrescription(singlePrescription)} className="btn btn-info text-white">
                   <MdPrint size={18} /> Print
                 </button>
               </div>
