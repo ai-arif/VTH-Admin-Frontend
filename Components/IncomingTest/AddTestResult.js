@@ -23,6 +23,7 @@ const AddTestResult = () => {
     setArrIndex(index);
   };
 
+
   // const {
   //   handleSubmit: handleUpdate,
   //   register: register2,
