@@ -77,7 +77,6 @@ const ContentManagement = () => {
   useEffect(() => {
     dispatch(fetchContents());
   }, [dispatch]);
-  console.log(contents);
 
   // loader
   // if (status === "loading" && currentPage < 2) return <Loader />;

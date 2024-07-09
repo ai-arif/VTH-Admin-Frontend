@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { HiOutlineEye } from "react-icons/hi2";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAllIncomingTest, fetchAllTestResult, searchIncomingTestData } from "../../features/incoming-test/incomingTestSlice";
+import { fetchAllIncomingTest, searchIncomingTestData } from "../../features/incoming-test/incomingTestSlice";
 import Pagination from "../UI/Pagination";
 
 const TestResultHome = () => {

@@ -101,7 +101,7 @@ const ViewResult = () => {
                       <thead>
                         <tr>
                           <th>{test?.parameter_title}</th>
-                          <th className="text-center">{test?.result_title}</th>
+                          <th>{test?.result_title}</th>
                           <th>{test?.unit_title}</th>
                           <th>{test?.range_title}</th>
                         </tr>
