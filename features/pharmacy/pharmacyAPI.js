@@ -27,14 +27,14 @@ export const addPharmacy = async (pharmacy) => {
   }
 };
 
-// export const updatePharmacy = async (pharmacy) => {
-//   try {
-//     const response = await axiosInstance.put(`/pharmacy/${pharmacy.id}`, pharmacy);
-//     return response.data;
-//   } catch (error) {
-//     return Promise.reject(error);
-//   }
-// };
+export const updatePharmacy = async (pharmacy) => {
+  try {
+    const response = await axiosInstance.put(`/pharmacy/${pharmacy.id}`, pharmacy);
+    return response.data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
 
 export const deletePharmacy = async (id) => {
   try {

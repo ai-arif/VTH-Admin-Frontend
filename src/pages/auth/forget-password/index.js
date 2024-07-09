@@ -3,7 +3,6 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
-import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import axiosInstance from "../../../../utils/axiosInstance";
 
 export const getServerSideProps = async (context) => {
@@ -23,32 +22,32 @@ export const getServerSideProps = async (context) => {
   };
 };
 
-const index = () => {
-  const [userObj, setUserObj] = useState({ phone: "", password: "" });
+const ForgetPassword = () => {
+  const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
-  const handleChange = (e) => {
-    setUserObj({ ...userObj, [e.target.name]: e.target.value });
-  };
 
-  const handleTogglePassword = () => {
-    setShowPassword(!showPassword);
+  const handleChange = (e) => {
+    setEmail(e.target.value);
   };
 
   const handleSubmit = async (e) => {
-    if (userObj.phone === "" || userObj.password === "") return;
     e.preventDefault();
+    if (email === "") return;
     setLoading(true);
     try {
-      const response = await axiosInstance.post("/staffs/login", userObj);
+      const response = await axiosInstance.post("/staffs/forget-password", {
+        email,
+      });
       if (response.data.success) {
-        Cookies.set("token", response.data?.data?.token);
         toast.success(response.data.message);
-        router.push("/");
+        setLoading(false);
+        router.push("/auth/login");
       }
     } catch (error) {
-      toast.error(error?.response?.data?.message || "Invalid credentials");
+      toast.error(
+        error?.response?.data?.message || "Something went wrong! Try again"
+      );
       console.log(error);
       setLoading(false);
     }
@@ -69,83 +68,32 @@ const index = () => {
                   />
                 </Link>
               </div>
-              <h2 className="auth-heading text-center mb-5">
-                Log in to Portal
-              </h2>
+              <h2 className="auth-heading text-center mb-5">Forget Password</h2>
               <div className="auth-form-container text-start">
-                <form className="auth-form login-form">
-                  <div className="phone mb-3">
+                <form className="auth-form login-form" onSubmit={handleSubmit}>
+                  <div className="email mb-3">
                     <label
                       className="sr-only text-muted pb-1"
-                      htmlFor="signin-phone"
+                      htmlFor="forget-email"
                     >
-                      Phone
+                      Email
                     </label>
                     <input
-                      value={userObj.phone}
+                      value={email}
                       onChange={handleChange}
-                      id="signin-phone"
-                      name="phone"
-                      type="text"
-                      className="form-control signin-phone"
-                      placeholder="Phone number"
+                      id="forget-email"
+                      name="email"
+                      type="email"
+                      className="form-control"
+                      placeholder="Email"
                       required="required"
                     />
                   </div>
-                  <div className="password mb-3 position-relative">
-                    <label
-                      className="sr-only text-muted pb-1"
-                      htmlFor="signin-password"
-                    >
-                      Password
-                    </label>
-                    <input
-                      value={userObj.password}
-                      onChange={handleChange}
-                      id="signin-password"
-                      name="password"
-                      type={showPassword ? "text" : "password"}
-                      className="form-control signin-password"
-                      placeholder="Password"
-                      required="required"
-                    />
-                    <div
-                      onClick={handleTogglePassword}
-                      type="button"
-                      className="position-absolute"
-                      id="auth-eye"
-                    >
-                      {showPassword ? (
-                        <AiFillEye size={18} />
-                      ) : (
-                        <AiFillEyeInvisible size={18} />
-                      )}
-                    </div>
-                  </div>
-                  <div className="extra mt-3 row justify-content-between">
-                    <div className="col-6">
-                      <div className="form-check">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          value=""
-                          id="RememberPassword"
-                        />
-                        <label
-                          className="form-check-label"
-                          htmlFor="RememberPassword"
-                        >
-                          Remember me
-                        </label>
-                      </div>
-                    </div>
-                    <div className="col-6">
-                      <div className="forgot-password text-end">
-                        <Link href="/auth/forget-password">
-                          Forgot password?
-                        </Link>
-                      </div>
-                    </div>
+                  {/* show Have an account ? Login */}
+                  <div className="d-flex justify-content-between mb-3">
+                    <Link href="/auth/login">
+                      <p className="app-link">Have an account? Login</p>
+                    </Link>
                   </div>
                   <div className="text-center">
                     {loading ? (
@@ -158,10 +106,9 @@ const index = () => {
                     ) : (
                       <button
                         type="submit"
-                        onClick={handleSubmit}
                         className="btn app-btn-primary w-100 theme-btn mx-auto"
                       >
-                        Log In
+                        Submit
                       </button>
                     )}
                   </div>
@@ -181,13 +128,11 @@ const index = () => {
           <div className="auth-background-mask"></div>
           <div className="auth-background-overlay p-3 p-lg-5">
             <div className="d-flex flex-column align-content-end h-100">
-              {/* <div className="h-100"> */}
               <img
                 width={"100%"}
                 src="https://cdn.pixabay.com/photo/2023/12/25/03/01/person-8467959_1280.jpg"
                 alt=""
               />
-              {/* </div> */}
               <div className="overlay-content p-3 p-lg-4 rounded">
                 <h5 className="mb-3 overlay-title">
                   Veterinary Doctor Login Portal
@@ -207,4 +152,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default ForgetPassword;

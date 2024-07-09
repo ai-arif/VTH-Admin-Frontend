@@ -5,7 +5,10 @@ import toast from "react-hot-toast";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchDepartment } from "../../../features/department/departmentSlice";
-import { fetchStaffs, updateStaffData } from "../../../features/staff/staffSlice";
+import {
+  fetchStaffs,
+  updateStaffData,
+} from "../../../features/staff/staffSlice";
 
 const UpdateStaff = ({ existingData }) => {
   const [isDoctor, setIsDoctor] = useState(false);
@@ -51,7 +54,9 @@ const UpdateStaff = ({ existingData }) => {
       }
     } catch (error) {
       console.error(error);
-      toast.error("An error occurred while crating account. Please try again later.");
+      toast.error(
+        "An error occurred while crating account. Please try again later."
+      );
     }
   };
 
@@ -70,14 +75,26 @@ const UpdateStaff = ({ existingData }) => {
   }, [existingData]);
 
   return (
-    <div className="modal fade" id="updateUser" tabIndex="-1" aria-labelledby="updateUserLabel" aria-hidden="true">
+    <div
+      className="modal fade"
+      id="updateUser"
+      tabIndex="-1"
+      aria-labelledby="updateUserLabel"
+      aria-hidden="true"
+    >
       <div className="modal-dialog">
         <div className="modal-content">
           <div className="modal-header">
             <h1 className="modal-title fs-5" id="updateUserLabel">
               Edit Staff Account
             </h1>
-            <button id="closeUpdateModal" type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button
+              id="closeUpdateModal"
+              type="button"
+              className="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
           </div>
           <div className="modal-body">
             <form onSubmit={handleSubmit(onSubmit)}>
@@ -85,23 +102,63 @@ const UpdateStaff = ({ existingData }) => {
                 <label htmlFor="fullName" className="form-label">
                   Full Name
                 </label>
-                <input type="text" {...register("fullName", { required: true })} className={`form-control ${errors.fullName && "border-danger"}`} />
-                {errors.fullName && <small className="text-danger">Please write full name</small>}
+                <input
+                  type="text"
+                  {...register("fullName", { required: true })}
+                  className={`form-control ${
+                    errors.fullName && "border-danger"
+                  }`}
+                />
+                {errors.fullName && (
+                  <small className="text-danger">Please write full name</small>
+                )}
               </div>
               <div className="mb-3">
                 <label htmlFor="phone" className="form-label">
                   Phone
                 </label>
-                <input type="text" {...register("phone", { required: true })} className={`form-control ${errors.phone && "border-danger"}`} />
-                {errors.phone && <small className="text-danger">Please write phone</small>}
+                <input
+                  type="text"
+                  {...register("phone", { required: true })}
+                  className={`form-control ${errors.phone && "border-danger"}`}
+                />
+                {errors.phone && (
+                  <small className="text-danger">Please write phone</small>
+                )}
+              </div>
+              <div className="mb-3">
+                <label htmlFor="phone" className="form-label">
+                  Email
+                </label>
+                <input
+                  type="text"
+                  {...register("email", { required: false })}
+                  className={`form-control ${errors.phone && "border-danger"}`}
+                />
+                {errors.phone && (
+                  <small className="text-danger">Please write email</small>
+                )}
               </div>
               <div className="mb-3 position-relative">
                 <label htmlFor="password" className="form-label">
                   Password
                 </label>
-                <input type={showPassword ? "text" : "password"} {...register("password")} className="form-control" />
-                <div onClick={handleTogglePassword} type="button" className="position-absolute" id="user-eye">
-                  {showPassword ? <AiFillEye size={18} /> : <AiFillEyeInvisible size={18} />}
+                <input
+                  type={showPassword ? "text" : "password"}
+                  {...register("password")}
+                  className="form-control"
+                />
+                <div
+                  onClick={handleTogglePassword}
+                  type="button"
+                  className="position-absolute"
+                  id="user-eye"
+                >
+                  {showPassword ? (
+                    <AiFillEye size={18} />
+                  ) : (
+                    <AiFillEyeInvisible size={18} />
+                  )}
                 </div>
               </div>
               <div className="mb-3">
@@ -121,14 +178,22 @@ const UpdateStaff = ({ existingData }) => {
                   <option value="pharmacy">Pharmacy</option>
                   <option value="receptionist">Receptionist</option>
                 </select>
-                {errors.role && <small className="text-danger">Please select any role</small>}
+                {errors.role && (
+                  <small className="text-danger">Please select any role</small>
+                )}
               </div>
               {isDoctor && (
                 <div className="mb-3">
                   <label htmlFor="department" className="form-label">
                     Department
                   </label>
-                  <select {...register("department", { required: true })} className={`form-select ${errors.department && "border-danger"}`} aria-label="Default select example">
+                  <select
+                    {...register("department", { required: true })}
+                    className={`form-select ${
+                      errors.department && "border-danger"
+                    }`}
+                    aria-label="Default select example"
+                  >
                     <option value="">Select</option>
                     {departments?.data?.map((department) => (
                       <option key={department._id} value={department._id}>
@@ -136,14 +201,26 @@ const UpdateStaff = ({ existingData }) => {
                       </option>
                     ))}
                   </select>
-                  {errors.department && <small className="text-danger">Please select any department</small>}
+                  {errors.department && (
+                    <small className="text-danger">
+                      Please select any department
+                    </small>
+                  )}
                 </div>
               )}
               <div className="d-flex gap-4 justify-content-end">
-                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
                   Close
                 </button>
-                <button type="submit" id="closeUpdateModal" className="btn app-btn-primary">
+                <button
+                  type="submit"
+                  id="closeUpdateModal"
+                  className="btn app-btn-primary"
+                >
                   Submit
                 </button>
               </div>

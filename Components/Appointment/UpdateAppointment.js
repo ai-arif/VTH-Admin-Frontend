@@ -23,8 +23,12 @@ const UpdateAppointment = () => {
       if (!speciesId) return;
 
       const response = await axiosInstance.get(`/breed/species/${speciesId}`);
-      // console.log(response?.data?.data);
-      setSpeciesByBreeds(response?.data?.data);
+      const breeds = response?.data?.data;
+      if (breeds?.length > 0) {
+        setSpeciesByBreeds(response?.data?.data);
+      } else {
+        setSpeciesByBreeds([]);
+      }
     } catch (error) {
       console.error(error);
     }
@@ -182,14 +186,13 @@ const UpdateAppointment = () => {
                   <div className="mb-3 col-md-6">
                     <label className="form-label">Breed</label>
                     <select {...register("breed")} className="form-select" aria-label="Default select example">
-                      <option value="">Select</option>
+                      <option value="">{appointment?.breed || "Select"}</option>
                       {speciesByBreeds?.map((breed) => (
-                        <option key={breed._id} value={breed._id}>
+                        <option key={breed._id} value={breed.breed}>
                           {breed.breed}
                         </option>
                       ))}
                     </select>
-                    {errors.breed && <small className="text-danger">Please select any breed</small>}
                   </div>
                 </div>
                 <div className="row">

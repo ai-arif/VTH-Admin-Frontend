@@ -1,10 +1,5 @@
 import { AiOutlineHome, AiOutlineMedicineBox } from "react-icons/ai";
-import {
-  BsBarChartLine,
-  BsCardList,
-  BsColumnsGap,
-  BsFolder,
-} from "react-icons/bs";
+import { BsBarChartLine, BsCardList, BsColumnsGap, BsFolder } from "react-icons/bs";
 import { FaPhotoVideo } from "react-icons/fa";
 import { FaHospitalUser } from "react-icons/fa6";
 import { GiCow } from "react-icons/gi";
@@ -12,6 +7,7 @@ import { GrTest, GrTestDesktop } from "react-icons/gr";
 import { HiOutlineUserGroup } from "react-icons/hi2";
 import { MdOutlineLocalPharmacy } from "react-icons/md";
 import { SlLayers } from "react-icons/sl";
+import { VscOutput } from "react-icons/vsc";
 
 export const menuConfig = {
   admin: [
@@ -48,10 +44,15 @@ export const menuConfig = {
       labelTwo: "View Prescription",
       submenuNumber: "submenu-3",
     },
+    // {
+    //   href: "/test-parameter",
+    //   icon: <BsBarChartLine size={20} />,
+    //   label: "Test Parameter",
+    // },
     {
-      href: "/test-parameter",
-      icon: <BsBarChartLine size={20} />,
-      label: "Test Parameter",
+      href: "/test-result",
+      icon: <VscOutput size={20} />,
+      label: "Test Result",
     },
     {
       href: "/incomming-test",
@@ -136,10 +137,15 @@ export const menuConfig = {
       labelTwo: "View Prescription",
       submenuNumber: "submenu-3",
     },
+    // {
+    //   href: "/test-parameter",
+    //   icon: <BsBarChartLine size={20} />,
+    //   label: "Test Parameter",
+    // },
     {
-      href: "/test-parameter",
-      icon: <BsBarChartLine size={20} />,
-      label: "Test Parameter",
+      href: "/test-result",
+      icon: <VscOutput size={20} />,
+      label: "Test Result",
     },
     {
       href: "/incomming-test",
@@ -214,10 +220,15 @@ export const menuConfig = {
       labelTwo: "View Prescription",
       submenuNumber: "submenu-3",
     },
+    // {
+    //   href: "/test-parameter",
+    //   icon: <BsBarChartLine size={20} />,
+    //   label: "Test Parameter",
+    // },
     {
-      href: "/test-parameter",
-      icon: <BsBarChartLine size={20} />,
-      label: "Test Parameter",
+      href: "/test-result",
+      icon: <VscOutput size={20} />,
+      label: "Test Result",
     },
     {
       href: "/incomming-test",
@@ -262,10 +273,15 @@ export const menuConfig = {
   ],
   lab: [
     { href: "/", icon: <AiOutlineHome size={22} />, label: "Home" },
+    // {
+    //   href: "/test-parameter",
+    //   icon: <BsBarChartLine size={20} />,
+    //   label: "Test Parameter",
+    // },
     {
-      href: "/test-parameter",
-      icon: <BsBarChartLine size={20} />,
-      label: "Test Parameter",
+      href: "/test-result",
+      icon: <VscOutput size={20} />,
+      label: "Test Result",
     },
     {
       href: "/incomming-test",

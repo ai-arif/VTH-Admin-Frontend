@@ -42,8 +42,8 @@ export const getSingleTest = async (id) => {
 // /test/search?search=a&page=1&limit=10 , take search, page, limit as query params
 export const searchTest = async ({ search, page = 1, limit = 40 }) => {
   try {
-    const response = await axiosInstance.get(`/test/get/search?search=${search}&page=${page}&limit=${limit}`);
-    // const response = await axiosInstance.get(`/test/search?search=${search}&page=${page}&limit=${limit}`);
+    const response = await axiosInstance.get(`/test/search?search=${search}&page=${page}&limit=${limit}`);
+    // const response = await axiosInstance.get(`/test/get/search?search=${search}&page=${page}&limit=${limit}`);
     return response.data;
   } catch (error) {
     return Promise.reject(error);
