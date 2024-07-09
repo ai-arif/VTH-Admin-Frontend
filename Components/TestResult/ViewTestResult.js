@@ -121,6 +121,8 @@ const ViewResult = () => {
                           <tr key={`param-${idx}`}>
                             <td className="">{item?.param}</td>
                             <td className="">{testAllResults?.data?.[`${test?.test_subTitle}#${item?.param}`]}</td>
+                            {/* <td className="">{typeof testAllResults?.data?.[`${test?.test_subTitle}#${item?.param}`]}</td> */}
+                            {/* <td className="">{`${test?.test_subTitle}#${item?.param}`}</td> */}
                             <td className="">{item?.unit}</td>
                             <td className="">
                               {item?.references?.map((ref, idx) => (
