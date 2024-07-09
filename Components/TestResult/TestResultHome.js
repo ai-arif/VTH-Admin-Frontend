@@ -52,7 +52,7 @@ const TestResultHome = () => {
       <div className="app-card p-5 text-center shadow-sm">
         <div className="d-flex align-items-center justify-content-between mb-4">
           <div className="input-group w-50">
-            <input onChange={(e) => setSearch(e.target.value)} onKeyDown={handleKeyPress} type="search" className="form-control" placeholder="Search by medicine name or brand" />
+            <input onChange={(e) => setSearch(e.target.value)} onKeyDown={handleKeyPress} type="search" className="form-control" placeholder="Recipient's name or phone" />
             <button onClick={handleSearch} className="btn btn-primary text-white" type="button" id="button-addon2">
               Search
             </button>
