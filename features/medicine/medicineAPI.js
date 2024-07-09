@@ -53,3 +53,12 @@ export const searchMedicine = async ({ search, page = 1, limit = 40 }) => {
     return Promise.reject(error);
   }
 };
+
+export const getMedicinesBrandName = async ({ page = 1, limit = 15 }) => {
+  try {
+    const response = await axiosInstance.get(`/medicine/brand-name?page=${page}&limit=${limit}`);
+    return response.data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};

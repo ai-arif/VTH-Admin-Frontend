@@ -5,7 +5,7 @@ import { MdPrint } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 import { fetchAppointmentsByPhone } from "../../features/appointment/appointmentSlice";
-import { fetchMedicine } from "../../features/medicine/medicineSlice";
+import { fetchMedicineBrandName } from "../../features/medicine/medicineSlice";
 import { fetchMedicineParams } from "../../features/medicineParam/MedicineParamsSlice";
 import { createPrescription } from "../../features/prescription/prescriptionSlice";
 import { formatDate } from "../../utils/formatDate";
@@ -47,10 +47,10 @@ const PrescriptionHome = () => {
   const [selectedPatentInfo, setSelectedPatentInfo] = useState({});
   const [isPrint, setIsPrint] = useState(false);
   const [selectedMedicines, setSelectedMedicines] = useState([]);
-  const dispatch = useDispatch();
-  console.log({ singlePrescription });
 
-  const { medicines } = useSelector((state) => state.medicine);
+  const dispatch = useDispatch();
+
+  const { medicinesBrandName } = useSelector((state) => state.medicine);
   const { medicineParams } = useSelector((state) => state.medicineParam);
 
   const { handleSubmit, register, control, reset } = useForm();
@@ -103,7 +103,7 @@ const PrescriptionHome = () => {
         medicines: data?.medicines?.map((medicine) => medicine.value),
         therapeutics,
       };
-      // console.log({ prescriptionData });
+
       const response = await dispatch(createPrescription(prescriptionData));
 
       if (response?.payload?.success) {
@@ -125,13 +125,13 @@ const PrescriptionHome = () => {
   };
 
   // Transforming medicines data
-  const medicineOptions = medicines?.data?.map((medicine) => ({
+  const medicineOptions = medicinesBrandName?.data?.map((medicine) => ({
     value: medicine._id,
     label: medicine.brandName,
   }));
 
   useEffect(() => {
-    dispatch(fetchMedicine({ limit: 3000 }));
+    dispatch(fetchMedicineBrandName({ limit: 3000 }));
     dispatch(fetchMedicineParams());
   }, [dispatch]);
 
@@ -235,9 +235,9 @@ const PrescriptionHome = () => {
                   </div>
                 </div>
                 {/* here show dynamic params based on select medicine name */}
-                {selectedMedicines.length > 0 &&
-                  selectedMedicines.map((medicine, index) => (
-                    <div className="row g-2 mb-3" id="therapeutics" key={medicine.value}>
+                {selectedMedicines?.length > 0 &&
+                  selectedMedicines?.map((medicine, index) => (
+                    <div className="row g-2 mb-3" id="therapeutics" key={index}>
                       <div className="col-12 col-md-3 border rounded-1 p-2">
                         <div className="mb-3">
                           <label className="form-label">Medicine Name</label>
@@ -250,8 +250,8 @@ const PrescriptionHome = () => {
                           <label className="form-label pb-1">Dose</label>
                           <select type="text" {...register(`first_${index}`)} className="form-select">
                             <option value="">Select</option>
-                            {medicineParams?.first?.map((param) => (
-                              <option key={param._id} value={param.param_name}>
+                            {medicineParams?.first?.map((param, idx) => (
+                              <option key={idx} value={param.param_name}>
                                 {param.param_name}
                               </option>
                             ))}
@@ -263,8 +263,8 @@ const PrescriptionHome = () => {
                           <label className="form-label pb-1">Route</label>
                           <select type="text" {...register(`second_${index}`)} className="form-select">
                             <option value="">Select</option>
-                            {medicineParams?.second?.map((param) => (
-                              <option key={param._id} value={param.param_name}>
+                            {medicineParams?.second?.map((param, idx) => (
+                              <option key={idx} value={param.param_name}>
                                 {param.param_name}
                               </option>
                             ))}
@@ -276,8 +276,8 @@ const PrescriptionHome = () => {
                           <label className="form-label pb-1">Frequency</label>
                           <select type="text" {...register(`third_${index}`)} className="form-select">
                             <option value="">Select</option>
-                            {medicineParams?.third?.map((param) => (
-                              <option key={param._id} value={param.param_name}>
+                            {medicineParams?.third?.map((param, idx) => (
+                              <option key={idx} value={param.param_name}>
                                 {param.param_name}
                               </option>
                             ))}
