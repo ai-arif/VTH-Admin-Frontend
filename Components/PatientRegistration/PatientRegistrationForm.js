@@ -5,9 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 import { fetchAppointmentsByPhone } from "../../features/appointment/appointmentSlice";
 import { createPatient } from "../../features/patient-registration/patientRegistrationSlice";
-import { fetchSpecies } from "../../features/specie/speciesSlice";
 import { fetchTest } from "../../features/test/testSlice";
-import axiosInstance from "../../utils/axiosInstance";
 import { formatDate } from "../../utils/formatDate";
 
 // Define custom styles
@@ -43,12 +41,9 @@ const PatientRegistrationForm = () => {
   const [activeTab, setActiveTab] = useState("ownerInfo");
   const [searchPhone, setSearchPhone] = useState("");
   const [patientInfo, setPatientInfo] = useState([]);
-  const [breeds, setBreeds] = useState([]);
   const [selectedPatientInfo, setSelectedPatientInfo] = useState({});
   const dispatch = useDispatch();
-  const [speciesByComplaints, setSpeciesByComplaint] = useState([]);
 
-  const { species } = useSelector((state) => state.specie);
   const { tests } = useSelector((state) => state.test);
 
   const getPatientByPhone = async () => {
@@ -110,14 +105,14 @@ const PatientRegistrationForm = () => {
   useEffect(() => {
     if (totalAnimals > 0 && totalSickAnimals >= 0) {
       const totalMortality = (totalSickAnimals / totalAnimals) * 100;
-      setValue("totalMortality", Number(totalMortality));
+      setValue("totalMortality", Number(totalMortality).toFixed(2));
     }
   }, [totalAnimals, totalSickAnimals, setValue]);
 
   useEffect(() => {
     if (totalSickAnimals > 0 && totalDeadAnimals >= 0) {
       const totalFatality = (totalDeadAnimals / totalSickAnimals) * 100;
-      setValue("totalFatality", Number(totalFatality));
+      setValue("totalFatality", Number(totalFatality).toFixed(2));
     }
   }, [totalSickAnimals, totalDeadAnimals, setValue]);
 
@@ -150,30 +145,6 @@ const PatientRegistrationForm = () => {
     }
   };
 
-  const getSpeciesById = async (speciesId) => {
-    try {
-      if (!speciesId) return;
-
-      const response = await axiosInstance.get(`/complaint/species/${speciesId}`);
-      const data = response?.data?.data;
-      if (data?.length > 0) {
-        setSpeciesByComplaint(data);
-      } else {
-        setSpeciesByComplaint([]);
-      }
-      // /api/v1/breed/species/:speciesId
-      const breedResponse = await axiosInstance.get(`/breed/species/${speciesId}`);
-      const breedData = breedResponse?.data?.data;
-      if (breedData?.length > 0) {
-        setBreeds(breedData);
-      } else {
-        setBreeds([]);
-      }
-    } catch (error) {
-      return Promise.reject(error);
-    }
-  };
-
   // Transforming tests and medicines data
   const testOptions = tests?.data?.map((test) => ({
     value: test._id,
@@ -181,7 +152,6 @@ const PatientRegistrationForm = () => {
   }));
 
   useEffect(() => {
-    dispatch(fetchSpecies({ limit: 1000 }));
     dispatch(fetchTest({ limit: 3000 }));
   }, [dispatch]);
 
@@ -289,9 +259,7 @@ const PatientRegistrationForm = () => {
                           <input type="text" readOnly required value={selectedPatientInfo?.address} className="form-control"></input>
                         </div>
                         <div className="mb-3 col-md-6">
-                          <label className="form-label">
-                            NID <small>(optional)</small>
-                          </label>
+                          <label className="form-label">NID</label>
                           <input type="text" {...register("nid")} className="form-control" />
                         </div>
                       </div>
@@ -316,40 +284,29 @@ const PatientRegistrationForm = () => {
                       <div className="row">
                         <div className="mb-3 col-md-6">
                           <label className="form-label">Species (Animal Type)</label>
-                          <select
-                            {...register("species", { required: true })}
-                            onChange={(e) => getSpeciesById(e.target.value)}
-                            className={`form-select ${errors.species && "border-danger"}`}
-                            aria-label="Default select example"
-                          >
-                            <option value="">Select</option>
-                            {species?.data?.map((specie) => (
-                              <option key={specie._id} value={specie._id}>
-                                {specie.name}
-                              </option>
-                            ))}
-                          </select>
-                          {errors.species && <small className="text-danger">Please select an species</small>}
+                          <input type="text" readOnly required value={selectedPatientInfo?.species?.name} className="form-control" />
                         </div>
                         <div className="mb-3 col-md-6">
-                          <label className="form-label">
-                            Owner Complaints <small>(optional)</small>
-                          </label>
-                          <select {...register("complaints")} className="form-select" aria-label="Default select example">
-                            <option value="">Select</option>
-                            {speciesByComplaints?.map((complaint) => (
-                              <option key={complaint._id} value={complaint.complaint}>
-                                {complaint.complaint}
-                              </option>
-                            ))}
-                          </select>
+                          <label className="form-label">Breed</label>
+                          <input type="text" readOnly required value={selectedPatientInfo?.breed?.breed} className="form-control" />
                         </div>
                       </div>
                       <div className="row">
                         <div className="mb-3 col-md-6">
+                          <label className="form-label">Owner Complaints</label>
+                          <input type="text" readOnly required value={selectedPatientInfo?.complaint?.complaint} className="form-control" />
+                        </div>
+                        <div className="mb-3 col-md-6">
                           <label className="form-label">Age</label>
                           <input type="text" {...register("age", { required: true })} className={`form-control ${errors.age && "border-danger"}`} />
                           {errors.age && <small className="text-danger">Please write age</small>}
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="mb-3 col-md-6">
+                          <label className="form-label">Weight (kg)</label>
+                          <input type="text" {...register("weight", { required: true })} className={`form-control ${errors.weight && "border-danger"}`} />
+                          {errors.weight && <small className="text-danger">Please write weight</small>}
                         </div>
                         <div className="mb-3 col-md-6">
                           <label className="form-label">Sex (M/F)</label>
@@ -363,42 +320,21 @@ const PatientRegistrationForm = () => {
                       </div>
                       <div className="row">
                         <div className="mb-3 col-md-6">
-                          <label className="form-label">Weight (kg)</label>
-                          <input type="text" {...register("weight", { required: true })} className={`form-control ${errors.weight && "border-danger"}`} />
-                          {errors.weight && <small className="text-danger">Please write weight</small>}
-                        </div>
-                        <div className="mb-3 col-md-6">
-                          <label className="form-label">
-                            BCS <small>(optional)</small>
-                          </label>
-                          <input type="text" {...register("bcs")} className="form-control" />
-                        </div>
-                      </div>
-                      <div className="row">
-                        <div className="mb-3 col-md-6">
-                          <label className="form-label">
-                            Date Of Parturition <small>(optional)</small>
-                          </label>
+                          <label className="form-label">Date Of Parturition</label>
                           <input type="date" {...register("dop")} className="form-control" />
                         </div>
                         <div className="mb-3 col-md-6">
-                          <label className="form-label">
-                            Date Of Oestrus <small>(optional)</small>
-                          </label>
+                          <label className="form-label">Date Of Oestrus</label>
                           <input type="date" {...register("doo")} className="form-control" />
                         </div>
                       </div>
                       <div className="row">
                         <div className="mb-3 col-md-6">
-                          <label className="form-label">
-                            Milk Yield <small>(optional)</small>
-                          </label>
+                          <label className="form-label">Milk Yield</label>
                           <input type="text" {...register("milkYield")} className="form-control" />
                         </div>
                         <div className="mb-3 col-md-6">
-                          <label className="form-label">
-                            Pregnancy Status <small>(optional)</small>
-                          </label>
+                          <label className="form-label">Pregnancy Status</label>
                           <select {...register("pregnancyStatus")} className="form-select" aria-label="Default select example">
                             <option value="">Select</option>
                             <option value="yes">Yes</option>
@@ -408,23 +344,12 @@ const PatientRegistrationForm = () => {
                       </div>
                       <div className="row">
                         <div className="mb-3 col-md-6">
-                          <label className="form-label">
-                            Parity <small>(optional)</small>
-                          </label>
+                          <label className="form-label">Parity</label>
                           <input type="text" {...register("parity")} className="form-control" />
                         </div>
                         <div className="mb-3 col-md-6">
-                          <label className="form-label">
-                            Breed <small>(optional)</small>
-                          </label>
-                          <select {...register("breed")} className="form-select" aria-label="Default select example">
-                            <option value="">Select</option>
-                            {breeds?.map((breed) => (
-                              <option key={breed._id} value={breed.breed}>
-                                {breed.breed}
-                              </option>
-                            ))}
-                          </select>
+                          <label className="form-label">BCS</label>
+                          <input type="text" {...register("bcs")} className="form-control" />
                         </div>
                       </div>
                     </div>
@@ -468,9 +393,7 @@ const PatientRegistrationForm = () => {
                           {errors.totalSickAnimals && <small className="text-danger">Please write total sick animals</small>}
                         </div>
                         <div className="mb-3 col-md-6">
-                          <label className="form-label">
-                            Total of mortality <small>{/* (readonly) */}</small>
-                          </label>
+                          <label className="form-label">Mortality (%)</label>
                           <Controller
                             name="totalMortality"
                             control={control}
@@ -492,9 +415,7 @@ const PatientRegistrationForm = () => {
                           {errors.totalDeadAnimals && <small className="text-danger">Please write total dead animals</small>}
                         </div>
                         <div className="mb-3 col-md-6">
-                          <label className="form-label">
-                            Total of case fatality <small>(readonly)</small>
-                          </label>
+                          <label className="form-label">Case fatality (%)</label>
                           <Controller
                             name="totalFatality"
                             control={control}
@@ -514,17 +435,17 @@ const PatientRegistrationForm = () => {
                           {errors.treatedBefore && <small className="text-danger">Please select treated before</small>}
                         </div>
                         <div className="mb-3 col-md-6">
-                          <label className="form-label">Drags</label>
-                          <input type="text" {...register("drags", { required: true })} className={`form-control ${errors.drags && "border-danger"}`} />
-                          {errors.drags && <small className="text-danger">Please write drags</small>}
+                          <label className="form-label">Drugs</label>
+                          <input type="text" {...register("drugs", { required: true })} className={`form-control ${errors.drugs && "border-danger"}`} />
+                          {errors.drugs && <small className="text-danger">Please write drugs</small>}
                         </div>
                       </div>
                       <h6 className="text-center text-decoration-underline py-2">Management History</h6>
                       <div className="row">
                         <div className="mb-3 col-md-6">
-                          <label className="form-label">Breading</label>
-                          <input type="text" {...register("breading", { required: true })} className={`form-control ${errors.breading && "border-danger"}`} />
-                          {errors.breading && <small className="text-danger">Please write breading</small>}
+                          <label className="form-label">Breeding</label>
+                          <input type="text" {...register("breeding", { required: true })} className={`form-control ${errors.breeding && "border-danger"}`} />
+                          {errors.breeding && <small className="text-danger">Please write breeding</small>}
                         </div>
                         <div className="mb-3 col-md-6">
                           <label className="form-label">Feed provided</label>
@@ -591,9 +512,7 @@ const PatientRegistrationForm = () => {
                           {errors.physicalCondition && <small className="text-danger">Please select physical condition</small>}
                         </div>
                         <div className="mb-3 col-md-6">
-                          <label className="form-label">
-                            Rumination: P/A <small>(optional)</small>
-                          </label>
+                          <label className="form-label">Rumination: P/A</label>
                           <select {...register("rumination")} className="form-select" aria-label="Default select example">
                             <option value="">Select</option>
                             <option value="present">Present</option>
@@ -635,13 +554,11 @@ const PatientRegistrationForm = () => {
                       <h6 className="text-center text-decoration-underline py-2">Physical signs</h6>
                       <div className="row">
                         <div className="mb-3 col-md-6">
-                          <label className="form-label">
-                            Dehydration <small>(optional)</small>
-                          </label>
+                          <label className="form-label">Dehydration</label>
                           <input type="text" {...register("dehydration")} className="form-control" />
                         </div>
                         <div className="mb-3 col-md-6">
-                          <label className="form-label">Resp. Rate/Minute</label>
+                          <label className="form-label">Resp. Rate /minute</label>
                           <input type="text" {...register("respRate", { required: true })} className={`form-control ${errors.respRate && "border-danger"}`} />
                           {errors.respRate && <small className="text-danger">Please write resp. rate</small>}
                         </div>
@@ -653,24 +570,25 @@ const PatientRegistrationForm = () => {
                           {errors.temp && <small className="text-danger">Please write temp</small>}
                         </div>
                         <div className="mb-3 col-md-6">
-                          <label className="form-label">Pulse Rate/Minute</label>
+                          <label className="form-label">Pulse Rate /minute</label>
                           <input type="text" {...register("pulseRate", { required: true })} className={`form-control ${errors.pulseRate && "border-danger"}`} />
                           {errors.pulseRate && <small className="text-danger">Please write pulse rate</small>}
                         </div>
                       </div>
                       <div className="row">
                         <div className="mb-3 col-md-6">
-                          <label className="form-label">
-                            Rumen, Motility <small>(optional)</small>
-                          </label>
+                          <label className="form-label">Rumen, Motility</label>
                           <input type="text" {...register("rumenMotility")} className="form-control" />
                         </div>
                         <div className="mb-3 col-md-6">
-                          <label className="form-label">
-                            Others <small>(optional)</small>
-                          </label>
-                          <textarea {...register("others")} className="form-control" />
+                          <label className="form-label">Heart beat /minute</label>
+                          <input type="text" {...register("heartBeat", { required: true })} className="form-control" />
+                          {errors.heartBeat && <small className="text-danger">Please write heart beat rate</small>}
                         </div>
+                      </div>
+                      <div className="mb-3">
+                        <label className="form-label">Others</label>
+                        <textarea {...register("others")} className="form-control" />
                       </div>
                     </div>
                   )}
@@ -678,9 +596,7 @@ const PatientRegistrationForm = () => {
                     <>
                       <div className="row info-group">
                         <div className="mb-3">
-                          <label className="form-label">
-                            Tests <small>(optional)</small>
-                          </label>
+                          <label className="form-label">Tests</label>
                           <Controller name="tests" control={control} defaultValue={[]} render={({ field }) => <Select options={testOptions} isMulti {...field} styles={customStyles} />} />
                         </div>
                       </div>
