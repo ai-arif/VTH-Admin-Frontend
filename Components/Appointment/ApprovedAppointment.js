@@ -16,7 +16,7 @@ import AppointmentImagesModal from "./modals/appointmentImagesModal";
 
 const ApprovedAppointment = () => {
   const [appointmentId, setAppointmentId] = useState("");
-  const [modalImages, setModalImages] = useState([]);
+  // const [modalImages, setModalImages] = useState([]);
   const [amount, setAmount] = useState(null);
   const [search, setSearch] = useState("");
   const router = useRouter();
@@ -179,7 +179,7 @@ const ApprovedAppointment = () => {
                         <TiEdit type="button" title="edit" className="edit-icon" />
                       </Link>
                       <RiDeleteBinLine type="button" onClick={() => handleDeleteAppointment(appointment.caseNo)} title="delete" className="delete-icon" />
-                      <button
+                      {/* <button
                         disabled={appointment?.images?.length == 0}
                         title={appointment?.images?.length == 0 ? "No image available" : "View images"}
                         className="bg-transparent border-0"
@@ -191,7 +191,7 @@ const ApprovedAppointment = () => {
                         data-bs-target="#showImages"
                       >
                         <RiImageLine className="download-icon" />
-                      </button>
+                      </button> */}
                     </td>
                   </tr>
                 ))}
@@ -203,7 +203,7 @@ const ApprovedAppointment = () => {
         <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
       </div>
       {/* modals  */}
-      <AppointmentImagesModal modalImages={modalImages} />
+      {/* <AppointmentImagesModal modalImages={modalImages} /> */}
       <TestPaymentModal handleTestCost={handlePaymentAndStatus} setAmount={setAmount} amount={amount} title={"appointment"} />
     </div>
   );
