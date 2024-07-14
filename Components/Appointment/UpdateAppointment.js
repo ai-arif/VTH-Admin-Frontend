@@ -232,7 +232,7 @@ const UpdateAppointment = () => {
                   </div>
                   <div className="mb-3 col-md-6">
                     <label className="form-label">Breed</label>
-                    <select {...register("breed")} className="form-select" aria-label="Default select example">
+                    <select {...register("breed", { required: true })} className={`form-select ${errors.breed && "border-danger"}`} aria-label="Default select example">
                       <option value="">Select</option>
                       {speciesByBreeds?.map((breed) => (
                         <option selected={appointment?.breed == breed?._id} key={breed._id} value={breed._id}>
@@ -240,6 +240,7 @@ const UpdateAppointment = () => {
                         </option>
                       ))}
                     </select>
+                    {errors.breed && <small className="text-danger">Please select any breed</small>}
                   </div>
                 </div>
                 <div className="row">
