@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { GrTest } from "react-icons/gr";
+import { MdPrint } from "react-icons/md";
 import { RiDeleteBinLine, RiImageLine } from "react-icons/ri";
 import { TiEdit } from "react-icons/ti";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,10 +13,11 @@ import { formatDate } from "../../utils/formatDate";
 import AppointmentImagesModal from "../Appointment/modals/appointmentImagesModal";
 import Loader from "../UI/Loader";
 import Pagination from "../UI/Pagination";
+import { handleDownloadPrescription } from "./PrescriptionPdf";
 
 const ViewPrescription = () => {
   const [search, setSearch] = useState("");
-  const [modalImages, setModalImages] = useState([]);
+  // const [modalImages, setModalImages] = useState([]);
   const router = useRouter();
   const dispatch = useDispatch();
   const { prescriptions, status, totalPages } = useSelector((state) => state.prescription);
@@ -148,8 +150,9 @@ const ViewPrescription = () => {
                       <Link href={`/prescription/${prescription._id}`}>
                         <TiEdit type="button" title="edit" className="edit-icon" />
                       </Link>
+                      <MdPrint type="button" onClick={() => handleDownloadPrescription(prescription)} className="download-icon" />
                       <RiDeleteBinLine type="button" onClick={() => handleDeletePrescription(prescription._id)} title="delete" className="delete-icon" />
-                      <button
+                      {/* <button
                         disabled={prescription?.appointment?.images?.length == 0}
                         title={prescription?.appointment?.images?.length == 0 ? "No image available" : "View images"}
                         className="bg-transparent border-0"
@@ -161,7 +164,7 @@ const ViewPrescription = () => {
                         data-bs-target="#showImages"
                       >
                         <RiImageLine className="download-icon" />
-                      </button>
+                      </button> */}
                     </td>
                   </tr>
                 ))}
@@ -173,7 +176,7 @@ const ViewPrescription = () => {
         <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
       </div>
       {/* modals  */}
-      <AppointmentImagesModal modalImages={modalImages} />
+      {/* <AppointmentImagesModal modalImages={modalImages} /> */}
     </div>
   );
 };
