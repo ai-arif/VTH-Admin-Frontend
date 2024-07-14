@@ -15,20 +15,30 @@ const AddContent = () => {
   } = useForm();
 
   const onSubmit = async (data) => {
-    const formData = new FormData();
-
-    formData.append("title", data.title);
-    formData.append("description", data.description);
-    formData.append("image", data.image[0]);
-    formData.append("video", data.video);
-    formData.append("enable", data.enable);
-
+    if (data.image.length > 0 && data.video) {
+      return toast.error("Please choose only one: image or video!");
+    }
     try {
+      const formData = new FormData();
+      formData.append("title", data.title);
+      formData.append("description", data.description);
+
+      if (data.image.length > 0) {
+        formData.append("type", "image");
+        formData.append("image", data.image[0]);
+      } else {
+        formData.append("type", "video");
+        formData.append("video", data.video);
+      }
+
+      formData.append("enable", data.enable);
+
       const response = await dispatch(createContent(formData));
+
       if (response?.payload?.success) {
         await dispatch(fetchContents());
-        reset();
         toast.success("Content added successfully!");
+        reset();
         document.getElementById("closeModal").click();
       } else {
         toast.error("Failed to add content! Please try again later.");
@@ -75,7 +85,7 @@ const AddContent = () => {
                 <textarea type="text" {...register("video")} className="form-control" />
               </div>
 
-              <div className="pb-4">
+              {/* <div className="pb-4">
                 <label className="form-label pb-2">Type</label>
                 <select type="text" {...register("type", { required: true })} className={`form-select ${errors.type && "border-danger"}`}>
                   <option value="">Select</option>
@@ -83,7 +93,7 @@ const AddContent = () => {
                   <option value="video">Video</option>
                 </select>
                 {errors.type && <small className="text-danger">Please select type</small>}
-              </div>
+              </div> */}
 
               <div className="pb-4">
                 <label className="form-label pb-2 pe-3">Enable</label>

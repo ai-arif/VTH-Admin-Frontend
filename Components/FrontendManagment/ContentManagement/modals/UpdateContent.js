@@ -63,7 +63,7 @@ const UpdateContent = ({ existingData }) => {
                 <textarea type="text" {...register("video")} className="form-control" />
               </div>
 
-              <div className="pb-4">
+              {/* <div className="pb-4">
                 <label className="form-label pb-2">Type</label>
                 <select type="text" {...register("type", { required: true })} className={`form-select ${errors.type && "border-danger"}`}>
                   <option value="">Select</option>
@@ -71,7 +71,7 @@ const UpdateContent = ({ existingData }) => {
                   <option value="video">Video</option>
                 </select>
                 {errors.type && <small className="text-danger">Please select species</small>}
-              </div>
+              </div> */}
 
               <div className="pb-4">
                 <label htmlFor="logoName" className="form-label pb-2 pe-3">
