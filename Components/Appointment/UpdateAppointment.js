@@ -105,7 +105,7 @@ const UpdateAppointment = () => {
   const onSubmit = async (appointmentData) => {
     try {
       appointmentData.id = Number(id);
-      appointmentData.complaint = appointmentData.complaint.value;
+      appointmentData.complaint = appointmentData?.complaint?.value;
       const response = await dispatch(updateExistingAppointment(appointmentData));
 
       if (response?.payload?.success) {
