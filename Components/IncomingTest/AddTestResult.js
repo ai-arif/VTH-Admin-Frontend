@@ -2,19 +2,19 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
+import { MdPrint } from "react-icons/md";
+import { useDispatch } from "react-redux";
 import Swal from "sweetalert2";
-import { fetchSingleIncomingTest } from "../../features/incoming-test/incomingTestSlice";
 import axiosInstance from "../../utils/axiosInstance";
 import { formatDate } from "../../utils/formatDate";
 import Loader from "../UI/Loader";
+import { handleDownloadTestResult } from "./TestResultPdf";
 
 const AddTestResult = () => {
-  const router = useRouter();
-  const { id } = router.query;
-  const dispatch = useDispatch();
   const [incomingTest, setIncomingTest] = useState({});
   const [refetch, setRefetch] = useState(0);
+  const router = useRouter();
+  const { id } = router.query;
 
   useEffect(() => {
     if (id) {
@@ -89,6 +89,7 @@ const AddTestResult = () => {
   };
 
   // if (status === "loading") return <Loader />;
+  console.log(incomingTest);
 
   return (
     <div>
@@ -120,7 +121,6 @@ const AddTestResult = () => {
           </div>
         </div>
         {/* table */}
-        {/* {incomingTest?.testId?.tests?.map((test, index) => ( */}
         <div className="table-responsive text-end ">
           {incomingTest?.status ? (
             <div>
@@ -255,7 +255,11 @@ const AddTestResult = () => {
             </form>
           )}
         </div>
-        {/* ))} */}
+        <div>
+          <button disabled={!incomingTest?.status} onClick={() => handleDownloadTestResult(incomingTest)} className="btn btn-info text-white">
+            <MdPrint size={18} /> Print
+          </button>
+        </div>
       </div>
     </div>
   );

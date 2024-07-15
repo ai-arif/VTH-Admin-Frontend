@@ -118,7 +118,7 @@ const AppointmentHome = () => {
       if (oldPatent) {
         appointmentData.owner = oldPatentData._id;
       }
-      appointmentData.complaint = appointmentData.complaint.value;
+      appointmentData.complaint = appointmentData?.complaint?.value;
 
       const response = await dispatch(addNewAppointment(appointmentData));
 
