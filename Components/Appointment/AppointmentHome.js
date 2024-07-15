@@ -1,17 +1,44 @@
 import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
+import CreatableSelect from "react-select/creatable";
 import { addNewAppointment } from "../../features/appointment/appointmentSlice";
 import { fetchDepartment } from "../../features/department/departmentSlice";
 import { fetchSpecies } from "../../features/specie/speciesSlice";
 import axiosInstance from "../../utils/axiosInstance";
+
+// Define custom styles
+const customStyles = {
+  control: (provided, state) => ({
+    ...provided,
+    backgroundColor: "#2d323f",
+    borderColor: state.isFocused ? "#15a362" : "white",
+    "&:hover": {
+      borderColor: state.isFocused ? "#15a362" : "white",
+    },
+  }),
+  option: (provided, state) => ({
+    ...provided,
+    color: "#fff",
+    backgroundColor: state.isSelected ? "#15a362" : "#2d323f",
+  }),
+  input: (provided) => ({
+    ...provided,
+    color: "#fff",
+  }),
+  singleValue: (provided) => ({
+    ...provided,
+    color: "#fff",
+  }),
+};
 
 const AppointmentHome = () => {
   const [searchPhone, setSearchPhone] = useState("");
   const [oldPatent, setOldPatent] = useState(false);
   const [oldPatentData, setOldPatentData] = useState({});
   const [speciesByBreeds, setSpeciesByBreeds] = useState([]);
+  const [speciesByComplaints, setSpeciesByComplaint] = useState([]);
   const dispatch = useDispatch();
 
   const { departments } = useSelector((state) => state.department);
@@ -46,7 +73,7 @@ const AppointmentHome = () => {
     }
   };
 
-  const fetchBreeds = async (speciesId) => {
+  const fetchBreedsAndComplaint = async (speciesId) => {
     try {
       if (!speciesId) return;
 
@@ -57,15 +84,31 @@ const AppointmentHome = () => {
       } else {
         setSpeciesByBreeds([]);
       }
+
+      const complaintResponse = await axiosInstance.get(`/complaint/species/${speciesId}`);
+      const data = complaintResponse?.data?.data;
+      if (data?.length > 0) {
+        setSpeciesByComplaint(data);
+      } else {
+        setSpeciesByComplaint([]);
+      }
     } catch (error) {
+      console.log(error);
       return Promise.reject(error);
     }
   };
+
+  // transform complaints data
+  const complaintOptions = speciesByComplaints?.map((complaint) => ({
+    value: complaint._id,
+    label: complaint.complaint,
+  }));
 
   const {
     handleSubmit,
     register,
     setValue,
+    control,
     reset,
     formState: { errors },
   } = useForm();
@@ -75,6 +118,8 @@ const AppointmentHome = () => {
       if (oldPatent) {
         appointmentData.owner = oldPatentData._id;
       }
+      appointmentData.complaint = appointmentData?.complaint?.value;
+
       const response = await dispatch(addNewAppointment(appointmentData));
 
       if (response?.payload?.success) {
@@ -167,18 +212,16 @@ const AppointmentHome = () => {
                   </div>
                 </div>
                 <div className="row">
-                  <div className="mb-3">
+                  <div className="mb-3 col-md-6">
                     <label className="form-label">Address</label>
                     <textarea type="text" {...register("address", { required: true })} className={`form-control ${errors.address && "border-danger"}`}></textarea>
                     {errors.address && <small className="text-danger">Please write address</small>}
                   </div>
-                </div>
-                <div className="row">
                   <div className="mb-3 col-md-6">
                     <label className="form-label">Species (Animal Type)</label>
                     <select
                       {...register("species", { required: true })}
-                      onChange={(e) => fetchBreeds(e.target.value)}
+                      onChange={(e) => fetchBreedsAndComplaint(e.target.value)}
                       className={`form-select ${errors.species && "border-danger"}`}
                       aria-label="Default select example"
                     >
@@ -191,17 +234,36 @@ const AppointmentHome = () => {
                     </select>
                     {errors.species && <small className="text-danger">Please select any species</small>}
                   </div>
-
+                </div>
+                <div className="row">
+                  <div className="mb-3 col-md-6">
+                    <label className="form-label">Owner Complaints</label>
+                    <Controller
+                      name="complaint"
+                      control={control}
+                      defaultValue={[]}
+                      render={({ field }) => <CreatableSelect styles={customStyles} placeholder="Select complaint" isClearable options={complaintOptions} {...field} />}
+                    />
+                    {/* <select {...register("complaint")} className="form-select" aria-label="Default select example">
+                      <option value="">Select</option>
+                      {speciesByComplaints?.map((complaint) => (
+                        <option key={complaint._id} value={complaint._id}>
+                          {complaint.complaint}
+                        </option>
+                      ))}
+                    </select> */}
+                  </div>
                   <div className="mb-3 col-md-6">
                     <label className="form-label">Breed</label>
-                    <select {...register("breed")} className="form-select" aria-label="Default select example">
+                    <select {...register("breed", { required: true })} className={`form-select ${errors.breed && "border-danger"}`} aria-label="Default select example">
                       <option value="">Select</option>
                       {speciesByBreeds?.map((breed) => (
-                        <option key={breed._id} value={breed.breed}>
+                        <option key={breed._id} value={breed._id}>
                           {breed.breed}
                         </option>
                       ))}
                     </select>
+                    {errors.breed && <small className="text-danger">Please select any breed</small>}
                   </div>
                 </div>
                 <div className="row">
@@ -262,6 +324,10 @@ const AppointmentHome = () => {
                     <input type="number" {...register("amount", { required: true, valueAsNumber: true, min: 1 })} className={`form-control ${errors.amount && "border-danger"}`} />
                     {errors.amount && <small className="text-danger">Please write pay amount</small>}
                   </div>
+                </div>
+                <div className="mb-3">
+                  <label className="form-label">Notes</label>
+                  <textarea type="text" {...register("notes")} className="form-control"></textarea>
                 </div>
                 <div className="my-4 d-flex justify-content-center gap-4">
                   <button type="reset" className="btn btn-danger text-white">

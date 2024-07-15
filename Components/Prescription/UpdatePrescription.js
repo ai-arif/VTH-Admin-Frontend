@@ -4,7 +4,7 @@ import { Controller, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
-import { fetchMedicine } from "../../features/medicine/medicineSlice";
+import { fetchMedicineBrandName } from "../../features/medicine/medicineSlice";
 import { fetchMedicineParams } from "../../features/medicineParam/MedicineParamsSlice";
 import { fetchPrescription, fetchSinglePrescription, updatePrescriptionData } from "../../features/prescription/prescriptionSlice";
 import { formatDate } from "../../utils/formatDate";
@@ -40,27 +40,25 @@ const customStyles = {
 };
 
 const UpdatePrescription = () => {
+  const [selectedMedicines, setSelectedMedicines] = useState([]);
   const router = useRouter();
   const { id } = router.query;
   const dispatch = useDispatch();
 
   const { prescription, status } = useSelector((state) => state.prescription);
-  const { medicines } = useSelector((state) => state.medicine);
+  const { medicinesBrandName } = useSelector((state) => state.medicine);
   const { medicineParams } = useSelector((state) => state.medicineParam);
 
-  // console.log(prescription?.data?.therapeutics);
-  // const [selectedMedicines, setSelectedMedicines] = useState([]);
-  const [selectedMedicines, setSelectedMedicines] = useState(prescription?.data?.therapeutics);
-
   // transforming tests and medicines data
-  const medicineOptions = medicines?.data?.map((medicine) => ({
+  const medicineOptions = medicinesBrandName?.data?.map((medicine) => ({
     value: medicine._id,
     label: medicine.brandName,
   }));
 
-  // find selected medicines then matching
-  const selectedAllMedicines = prescription?.data?.medicines;
-  const matchingMedicines = medicineOptions?.filter((data) => selectedAllMedicines?.includes(data.value));
+  const selectedMedicineOptions = prescription?.data?.therapeutics?.map((medicine) => ({
+    value: medicine.medicine_id,
+    label: medicine.medicine_name,
+  }));
 
   // convert date string to a Date object and Format the date
   const nextVisitDate = prescription?.data?.nextVisit ? new Date(prescription.data.nextVisit).toISOString().split("T")[0] : "";
@@ -68,7 +66,7 @@ const UpdatePrescription = () => {
   const { handleSubmit, register, control, reset, setValue } = useForm({
     values: {
       ...prescription?.data,
-      medicines: matchingMedicines,
+      medicines: selectedMedicineOptions,
       nextVisit: nextVisitDate,
     },
   });
@@ -105,24 +103,25 @@ const UpdatePrescription = () => {
     }
   };
 
-  // useEffect(() => {
-  //   if (prescription?.data?.therapeutic) {
-  //     setSelectedMedicines(prescription?.data?.therapeutic);
-  //   }
-  // }, [prescription]);
-
   useEffect(() => {
     if (id) {
-      dispatch(fetchSinglePrescription(id));
+      dispatch(fetchSinglePrescription(id)).then((res) => {
+        const medicinesTherap = res?.payload?.data?.data?.therapeutics;
+        const selectedMedicineOptions = medicinesTherap?.map((medicine) => ({
+          value: medicine.medicine_id,
+          label: medicine.medicine_name,
+        }));
+        setSelectedMedicines(selectedMedicineOptions);
+      });
     }
-    dispatch(fetchMedicine({ limit: 3000 }));
+    dispatch(fetchMedicineBrandName({ limit: 3000 }));
     dispatch(fetchMedicineParams());
   }, [dispatch, id]);
 
   useEffect(() => {
     if (prescription?.data?.therapeutics) {
       prescription?.data?.therapeutics?.forEach((therapeutic, index) => {
-        setValue("medicine_name", therapeutic.medicine_name);
+        // setValue("medicine_name", therapeutic.medicine_name);
         setValue(`first_${index}`, therapeutic.first);
         setValue(`second_${index}`, therapeutic.second);
         setValue(`third_${index}`, therapeutic.third);
@@ -195,7 +194,7 @@ const UpdatePrescription = () => {
                     <Controller
                       name="medicines"
                       control={control}
-                      defaultValue={matchingMedicines}
+                      defaultValue={selectedMedicineOptions}
                       render={({ field }) => (
                         <Select
                           options={medicineOptions}
@@ -214,11 +213,11 @@ const UpdatePrescription = () => {
                 {/* here show dynamic params based on select medicine name */}
                 {selectedMedicines?.length > 0 &&
                   selectedMedicines?.map((medicine, index) => (
-                    <div className="row g-2 mb-3" id="therapeutics" key={medicine.value}>
+                    <div className="row g-2 mb-3" id="therapeutics" key={index}>
                       <div className="col-12 col-md-3 border rounded-1 p-2">
                         <div className="mb-3">
                           <label className="form-label">Medicine Name</label>
-                          <input readOnly type="text" name="medicine_name" value={medicine.label} className="form-control"></input>
+                          <input readOnly type="text" value={medicine.label} className="form-control"></input>
                         </div>
                       </div>
                       {/* example parameter inputs */}
@@ -227,8 +226,8 @@ const UpdatePrescription = () => {
                           <label className="form-label pb-1">Dose</label>
                           <select type="text" {...register(`first_${index}`)} className="form-select">
                             <option value="">Select</option>
-                            {medicineParams?.first?.map((param) => (
-                              <option key={param._id} value={param.param_name}>
+                            {medicineParams?.first?.map((param, idx) => (
+                              <option key={idx} value={param.param_name}>
                                 {param.param_name}
                               </option>
                             ))}
@@ -240,8 +239,8 @@ const UpdatePrescription = () => {
                           <label className="form-label pb-1">Route</label>
                           <select type="text" {...register(`second_${index}`)} className="form-select">
                             <option value="">Select</option>
-                            {medicineParams?.second?.map((param) => (
-                              <option key={param._id} value={param.param_name}>
+                            {medicineParams?.second?.map((param, idx) => (
+                              <option key={idx} value={param.param_name}>
                                 {param.param_name}
                               </option>
                             ))}
@@ -253,8 +252,8 @@ const UpdatePrescription = () => {
                           <label className="form-label pb-1">Frequency</label>
                           <select type="text" {...register(`third_${index}`)} className="form-select">
                             <option value="">Select</option>
-                            {medicineParams?.third?.map((param) => (
-                              <option key={param._id} value={param.param_name}>
+                            {medicineParams?.third?.map((param, idx) => (
+                              <option key={idx} value={param.param_name}>
                                 {param.param_name}
                               </option>
                             ))}

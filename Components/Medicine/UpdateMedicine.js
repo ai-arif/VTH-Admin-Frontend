@@ -76,10 +76,15 @@ const UpdateMedicine = () => {
                     {errors.class && <small className="text-danger">Please write class</small>}
                   </div>
                   <div className="mb-3 col-md-6">
+                    <label className="form-label">Route</label>
+                    <input type="text" {...register("route", { required: true })} className={`form-control ${errors.route && "border-danger"}`} id="route" />
+                    {errors.route && <small className="text-danger">Please write route</small>}
+                  </div>
+                  {/* <div className="mb-3 col-md-6">
                     <label className="form-label">Composition</label>
                     <input type="text" {...register("composition", { required: true })} className={`form-control ${errors.composition && "border-danger"}`} id="composition" />
                     {errors.composition && <small className="text-danger">Please write composition</small>}
-                  </div>
+                  </div> */}
                 </div>
 
                 <div className="row">
@@ -95,7 +100,7 @@ const UpdateMedicine = () => {
                   </div>
                 </div>
 
-                <div className="row">
+                {/* <div className="row">
                   <div className="mb-3 col-md-6">
                     <label className="form-label">Price</label>
                     <input
@@ -111,23 +116,26 @@ const UpdateMedicine = () => {
                   </div>
                   <div className="mb-3 col-md-6">
                     <label className="form-label">Unit Price</label>
-                    <input type="text" {...register("unitPrice", { required: true, valueAsNumber: true })} className={`form-control ${errors.unitPrice && "border-danger"}`} id="unitPrice" />
+                    <input
+                      type="text"
+                      {...register("unitPrice", {
+                        required: true,
+                        valueAsNumber: true,
+                      })}
+                      className={`form-control ${errors.unitPrice && "border-danger"}`}
+                      id="unitPrice"
+                    />
                     {errors.unitPrice && <small className="text-danger">Please write unit price</small>}
                   </div>
-                </div>
+                </div> */}
 
-                <div className="row">
+                {/* <div className="row">
                   <div className="mb-3 col-md-6">
                     <label className="form-label">Quantity</label>
                     <input type="number" {...register("quantity", { required: true, valueAsNumber: true, min: 1 })} className={`form-control ${errors.quantity && "border-danger"}`} id="quantity" />
                     {errors.quantity && <small className="text-danger">Please write quantity</small>}
                   </div>
-                  <div className="mb-3 col-md-6">
-                    <label className="form-label">Dose</label>
-                    <input type="text" {...register("dose", { required: true })} className={`form-control ${errors.dose && "border-danger"}`} id="dose" />
-                    {errors.dose && <small className="text-danger">Please write dose</small>}
-                  </div>
-                </div>
+                </div> */}
 
                 <div className="row">
                   <div className="mb-3 col-md-6">
@@ -144,20 +152,15 @@ const UpdateMedicine = () => {
                 </div>
 
                 <div className="row">
-                  <div className="mb-3 col-md-6">
+                  {/* <div className="mb-3 col-md-6">
                     <label className="form-label">Strength</label>
                     <input type="text" {...register("strength", { required: true })} className={`form-control ${errors.strength && "border-danger"}`} id="strength" />
                     {errors.strength && <small className="text-danger">Please write strength</small>}
-                  </div>
-                  <div className="mb-3 col-md-6">
-                    <label className="form-label">Route</label>
-                    <input type="text" {...register("route", { required: true })} className={`form-control ${errors.route && "border-danger"}`} id="route" />
-                    {errors.route && <small className="text-danger">Please write route</small>}
-                  </div>
+                  </div> */}
                 </div>
 
                 <div className="row">
-                  <div className="mb-3 col-md-6">
+                  {/* <div className="mb-3 col-md-6">
                     <label className="form-label">
                       Animal Type <small>(optional)</small>
                     </label>
@@ -173,8 +176,8 @@ const UpdateMedicine = () => {
                       <option value="Goats">Goats</option>
                       <option value="Horse">Horse</option>
                     </select>
-                  </div>
-                  <div className="mb-3 col-md-6">
+                  </div> */}
+                  <div className="mb-3">
                     <label className="form-label">
                       Description <small>(optional)</small>
                     </label>
@@ -182,9 +185,12 @@ const UpdateMedicine = () => {
                   </div>
                 </div>
 
-                <div className="my-3 d-flex justify-content-center">
+                <div className="my-3 d-flex justify-content-center gap-4">
+                  <button type="reset" className="btn btn-danger text-white">
+                    Reset
+                  </button>
                   <button type="submit" className="btn app-btn-primary">
-                    Update Medicine
+                    Add Medicine
                   </button>
                 </div>
               </form>

@@ -15,6 +15,7 @@ const ViewResult = () => {
   const [arrIndex, setArrIndex] = useState(0);
   const [testAllResults, setTestAllResults] = useState({});
   const [results, setResults] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleTabSwitch = async (testId, index) => {
     setActiveTab(testId);
@@ -45,10 +46,11 @@ const ViewResult = () => {
         setResults(arr);
 
         setTestAllResults(response.data?.data?.data?.find((tr) => tr?.testId === activeTab));
+        setIsLoading(false);
       });
   }, [activeTab, incomingTest?.data]);
 
-  if (status === "loading") return <Loader />;
+  if (isLoading) return <Loader />;
 
   return (
     <div>
@@ -99,7 +101,7 @@ const ViewResult = () => {
                       <thead>
                         <tr>
                           <th>{test?.parameter_title}</th>
-                          <th className="text-center">{test?.result_title}</th>
+                          <th>{test?.result_title}</th>
                           <th>{test?.unit_title}</th>
                           <th>{test?.range_title}</th>
                         </tr>
@@ -120,9 +122,12 @@ const ViewResult = () => {
                         {test?.params?.map((item, idx) => (
                           <tr key={`param-${idx}`}>
                             <td className="">{item?.param}</td>
-                            <td className="">{testAllResults?.data?.[`${test?.test_subTitle}#${item?.param}`]}</td>
-                            {/* <td className="">{typeof testAllResults?.data?.[`${test?.test_subTitle}#${item?.param}`]}</td> */}
-                            {/* <td className="">{`${test?.test_subTitle}#${item?.param}`}</td> */}
+                            <td className="">
+                              {typeof testAllResults?.data?.[`${test?.test_subTitle}#${item?.param}`] === "string"
+                                ? testAllResults?.data?.[`${test?.test_subTitle}#${item?.param}`]
+                                : testAllResults?.data?.[`${test?.test_subTitle}#${(item?.param).split("[")[0]}`]?.[`${(item?.param).split("[")[1].replace("]", "")}`]}
+                            </td>
+                            {/* <td className="">{testAllResults?.data?.[`${test?.test_subTitle}#${item?.param}`]}</td> */}
                             <td className="">{item?.unit}</td>
                             <td className="">
                               {item?.references?.map((ref, idx) => (

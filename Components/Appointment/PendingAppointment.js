@@ -16,7 +16,7 @@ import AppointmentImagesModal from "./modals/appointmentImagesModal";
 
 const PendingAppointment = () => {
   const [search, setSearch] = useState("");
-  const [modalImages, setModalImages] = useState([]);
+  // const [modalImages, setModalImages] = useState([]);
   const [appointmentId, setAppointmentId] = useState("");
   const [amount, setAmount] = useState(null);
   const router = useRouter();
@@ -155,8 +155,7 @@ const PendingAppointment = () => {
                     <td>{appointment.caseNo}</td>
                     <td>{appointment.ownerName}</td>
                     <td>{appointment.phone}</td>
-                    <td>{formatDate(appointment.date)}</td>
-                    {/* <td> */}
+                    <td className={`${!appointment?.date && "text-danger"}`}>{appointment?.date ? formatDate(appointment.date) : "Not Assigned Yet"}</td>
                     <td className="text-center">
                       {appointment?.amount ? (
                         appointment?.amount
@@ -180,7 +179,7 @@ const PendingAppointment = () => {
                         <TiEdit type="button" title="edit" className="edit-icon" />
                       </Link>
                       <RiDeleteBinLine type="button" onClick={() => handleDeleteAppointment(appointment.caseNo)} title="delete" className="delete-icon" />
-                      <button
+                      {/* <button
                         disabled={appointment?.images?.length == 0}
                         title={appointment?.images?.length == 0 ? "No image available" : "View images"}
                         className="bg-transparent border-0"
@@ -192,7 +191,7 @@ const PendingAppointment = () => {
                         data-bs-target="#showImages"
                       >
                         <RiImageLine className="download-icon" />
-                      </button>
+                      </button> */}
                     </td>
                   </tr>
                 ))}
@@ -205,7 +204,7 @@ const PendingAppointment = () => {
       </div>
 
       {/* modals  */}
-      <AppointmentImagesModal modalImages={modalImages} />
+      {/* <AppointmentImagesModal modalImages={modalImages} /> */}
       <TestPaymentModal handleTestCost={handlePaymentAndStatus} setAmount={setAmount} amount={amount} title={"appointment"} />
     </div>
   );

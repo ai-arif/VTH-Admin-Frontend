@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import CreatableSelect from "react-select/creatable";
-import { fetchMedicine } from "../../features/medicine/medicineSlice";
+import { fetchMedicineBrandName } from "../../features/medicine/medicineSlice";
 import { fetchSinglePharmacy } from "../../features/pharmacy/pharmacySlice";
 import FinalSubmission from "./FinalSubmission";
 
@@ -40,7 +40,7 @@ const ProvideMedicine = () => {
   const dispatch = useDispatch();
 
   const { pharmacy, status } = useSelector((state) => state.pharmacy);
-  const { medicines } = useSelector((state) => state.medicine);
+  const { medicinesBrandName } = useSelector((state) => state.medicine);
 
   const { handleSubmit, register, control, reset } = useForm();
   const onSubmit = async (data) => {
@@ -58,7 +58,7 @@ const ProvideMedicine = () => {
   // all prescription medicines
   const selectedMedicines = pharmacy?.data?.medicines;
   const showMedicineList = () => {
-    const prescriptionMedicines = medicines?.data?.filter((medicine) => selectedMedicines?.includes(medicine._id));
+    const prescriptionMedicines = medicinesBrandName?.data?.filter((medicine) => selectedMedicines?.includes(medicine._id));
     setMedicineList(prescriptionMedicines);
   };
 
@@ -67,9 +67,9 @@ const ProvideMedicine = () => {
   const totalPrice = pharmacyMedicines.reduce((total, medicine) => total + medicine.quantity * medicine.unitPrice, 0).toFixed(2);
 
   // Transforming medicines data
-  const medicineOptions = medicines?.data?.map((medicine) => ({
+  const medicineOptions = medicinesBrandName?.data?.map((medicine) => ({
     value: medicine._id,
-    label: medicine.name,
+    label: medicine.brandName,
   }));
 
   const handleRemoveCartItem = (index) => {
@@ -81,12 +81,12 @@ const ProvideMedicine = () => {
     if (id) {
       dispatch(fetchSinglePharmacy(id));
     }
-    dispatch(fetchMedicine({ limit: 3000 }));
+    dispatch(fetchMedicineBrandName({ limit: 3000 }));
   }, [dispatch, id]);
 
   useEffect(() => {
     showMedicineList();
-  }, []);
+  }, [medicinesBrandName?.length]);
 
   return (
     <div className="container-fluid">
@@ -136,7 +136,7 @@ const ProvideMedicine = () => {
                 >
                   <h6>Medicine list from prescription</h6>
                   {medicineList?.map((medicine) => (
-                    <li key={medicine._id}>{medicine.name}</li>
+                    <li key={medicine._id}>{medicine.brandName}</li>
                   ))}
                 </div>
                 <hr />
