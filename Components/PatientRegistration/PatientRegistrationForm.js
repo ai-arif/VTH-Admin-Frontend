@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -42,6 +43,7 @@ const PatientRegistrationForm = () => {
   const [searchPhone, setSearchPhone] = useState("");
   const [patientInfo, setPatientInfo] = useState([]);
   const [selectedPatientInfo, setSelectedPatientInfo] = useState({});
+  const router = useRouter();
   const dispatch = useDispatch();
 
   const { tests } = useSelector((state) => state.test);
@@ -122,6 +124,7 @@ const PatientRegistrationForm = () => {
       const response = await dispatch(createPatient(patientData));
 
       if (response?.payload?.success) {
+        router.push("/patient-registration/view");
         toast.success("Patient registration successfully!");
         setSearchPhone("");
         setSelectedPatientInfo({});

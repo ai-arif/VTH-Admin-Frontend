@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -123,8 +124,8 @@ const AppointmentHome = () => {
       const response = await dispatch(addNewAppointment(appointmentData));
 
       if (response?.payload?.success) {
-        toast.success("Appointment added successfully!");
         reset();
+        toast.success("Appointment added successfully!");
       } else {
         toast.error("Failed to add appointment! Please try again later.");
       }
