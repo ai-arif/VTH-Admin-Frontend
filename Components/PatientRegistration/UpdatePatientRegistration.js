@@ -97,9 +97,9 @@ const UpdatePatientRegistration = () => {
       const response = await dispatch(updatePatientData(patientData));
 
       if (response?.payload?.success) {
-        toast.success("Patient data updated successfully!");
         dispatch(fetchPatient({}));
         router.push("/patient-registration/view");
+        toast.success("Patient data updated successfully!");
       } else {
         toast.error("Failed to update patient data! Please try again later.");
       }

@@ -1,41 +1,16 @@
-import axios from "axios";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import autoTable from "jspdf-autotable";
 
-export const handleDownloadTestResult = async (testResult) => {
+export const handleDownloadDoctorTestResult = async (testResult, resultFormat) => {
   const doc = new jsPDF();
 
   // load images from URLs
-  // const loadImage = async (url) => {
-  //   try {
-  //     const response = await fetch(url);
-  //     console.log(`Fetching image from: ${url}`); // Debug log
-  //     if (!response.ok) throw new Error("Image failed to load");
-  //     const blob = await response.blob();
-  //     const dataUrl = await new Promise((resolve) => {
-  //       const reader = new FileReader();
-  //       reader.onload = () => resolve(reader.result);
-  //       reader.readAsDataURL(blob);
-  //     });
-  //     return dataUrl;
-  //   } catch (error) {
-  //     console.error(`Failed to load image from ${url}:`, error);
-  //     return null;
-  //   }
-  // };
-
-  // Load images from URLs using axios
   const loadImage = async (url) => {
-    console.log(`Attempting to fetch image from: ${url}`); // Debug log
-
     try {
-      const response = await axios.get(url, { responseType: "blob" });
-      console.log("hello");
-      console.log(`Fetching image from: ${url}`); // Debug log
-
+      const response = await fetch(url);
       if (!response.ok) throw new Error("Image failed to load");
-      const blob = response.data;
+      const blob = await response.blob();
       const dataUrl = await new Promise((resolve) => {
         const reader = new FileReader();
         reader.onload = () => resolve(reader.result);
@@ -47,17 +22,10 @@ export const handleDownloadTestResult = async (testResult) => {
       return null;
     }
   };
+
   // images url
-
-  // these url get response in console
-  // const leftImageUrl = "https://i.ibb.co/8BdhH36/left-side.png";
-  // const rightImageUrl = "https://i.ibb.co/Nxhcc4v/right-side.png";
-
-  // these url can't get response in console
-  console.log("Before loading images"); // Debug log
-  const leftImageUrl = "https://storage.googleapis.com/vth-user/logo.png";
-  const rightImageUrl = "https://storage.googleapis.com/vth-user/logo1.png";
-  console.log("After loading images", { leftImageUrl, rightImageUrl }); // Debug log
+  const leftImageUrl = "https://bauvth.com/assets/images/logo/left-side.png";
+  const rightImageUrl = "https://bauvth.com/assets/images/logo1/right-side.png";
 
   const leftImage = await loadImage(leftImageUrl);
   const rightImage = await loadImage(rightImageUrl);
@@ -130,12 +98,12 @@ export const handleDownloadTestResult = async (testResult) => {
   doc.text("Test Name: ", leftColumnX + 3, currentY);
   const testNameWidth = doc.getTextWidth("Test Name: ");
   doc.setFont("helvetica", "normal");
-  doc.text(testResult?.testId?.testName, leftColumnX + testNameWidth + 4, currentY);
+  doc.text(resultFormat?.testName, leftColumnX + testNameWidth + 4, currentY);
 
-  const totalTestNameWidth = testNameWidth + 4 + doc.getTextWidth(testResult?.testId?.testName);
+  const totalTestNameWidth = testNameWidth + 4 + doc.getTextWidth(resultFormat?.testName);
   doc.line(leftColumnX + 3, currentY + 1, leftColumnX + 3 + totalTestNameWidth, currentY + 1);
 
-  testResult?.testId?.tests?.forEach((test, index) => {
+  resultFormat?.tests?.forEach((test, index) => {
     if (index > 0) {
       currentY += lineSpacing;
     }

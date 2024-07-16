@@ -17,8 +17,8 @@ import AppointmentImagesModal from "./modals/appointmentImagesModal";
 const PendingAppointment = () => {
   const [search, setSearch] = useState("");
   // const [modalImages, setModalImages] = useState([]);
+  const [refetch, setRefetch] = useState(0);
   const [appointmentId, setAppointmentId] = useState("");
-  const [amount, setAmount] = useState(null);
   const router = useRouter();
   const dispatch = useDispatch();
   const { pendingAppointments, status, totalPages } = useSelector((state) => state.appointment);
@@ -75,14 +75,18 @@ const PendingAppointment = () => {
     });
   };
 
-  const handlePaymentAndStatus = (amount) => {
-    axiosInstance.patch(`/appointment/${appointmentId}`, { payment: "paid", amount: amount }).then((res) => {
+  const handlePaymentAndStatus = (event) => {
+    event.preventDefault();
+
+    axiosInstance.patch(`/appointment/${appointmentId}`, { payment: "paid", amount: event.target.amount.value }).then((res) => {
       let result = res.data;
 
       if (result.success) {
-        setAmount(null);
+        setRefetch(refetch + 1);
+        event.target.reset();
         dispatch(fetchPendingAppointments());
-        toast.success("Payment and status updated successfully!");
+        document.getElementById("closeModal").click();
+        toast.success("Payment successful!");
       }
     });
   };
@@ -117,7 +121,7 @@ const PendingAppointment = () => {
     if (router.isReady) {
       dispatch(fetchPendingAppointments({ page: currentPage }));
     }
-  }, [router.isReady, dispatch, currentPage]);
+  }, [router.isReady, dispatch, currentPage, refetch]);
 
   // loader
   // if (status === "loading" && currentPage < 2) return <Loader />;
@@ -205,7 +209,7 @@ const PendingAppointment = () => {
 
       {/* modals  */}
       {/* <AppointmentImagesModal modalImages={modalImages} /> */}
-      <TestPaymentModal handleTestCost={handlePaymentAndStatus} setAmount={setAmount} amount={amount} title={"appointment"} />
+      <TestPaymentModal handleTestCost={handlePaymentAndStatus} title={"appointment"} />
     </div>
   );
 };

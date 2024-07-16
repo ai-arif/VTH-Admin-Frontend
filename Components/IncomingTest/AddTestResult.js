@@ -89,7 +89,6 @@ const AddTestResult = () => {
   };
 
   // if (status === "loading") return <Loader />;
-  console.log(incomingTest);
 
   return (
     <div>
