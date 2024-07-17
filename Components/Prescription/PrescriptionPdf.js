@@ -48,6 +48,7 @@ export const handleDownloadPrescription = async (prescription) => {
   const phone = prescription?.appointment?.phone || "N/A";
   const upazila = prescription?.appointment?.upazila || "N/A";
   const address = prescription?.appointment?.address || "N/A";
+
   const formatDate = (date) => {
     if (!date) return "N/A";
     const d = new Date(date);
@@ -57,12 +58,6 @@ export const handleDownloadPrescription = async (prescription) => {
     return `${day}-${month}-${year}`;
   };
 
-  // Extract animal information from appointment
-  const animalAge = prescription?.patient?.age || "N/A";
-  const animalWeight = prescription?.patient?.weight || "N/A";
-  const animalBreed = prescription?.appointment?.breed?.breed || "N/A";
-  const animalGender = prescription?.patient?.sex || "N/A";
-
   const prescriptionWritingDate = formatDate(prescription?.date);
   const nextVisitDate = formatDate(prescription?.nextVisit);
 
@@ -71,6 +66,12 @@ export const handleDownloadPrescription = async (prescription) => {
   const prognosis = prescription?.prognosis || "N/A";
   const advice = prescription?.advice || "N/A";
 
+  // Extract animal information from appointment
+  const animalAge = prescription?.patient?.age || "N/A";
+  const animalWeight = prescription?.patient?.weight || "N/A";
+  const animalBreed = prescription?.appointment?.breed?.breed || "N/A";
+  const animalGender = prescription?.patient?.sex || "N/A";
+
   // Extract surgical notes
   const preAnestheticUsed = prescription?.preAnestheticUsed || "N/A";
   const sutureMaterialsUsed = prescription?.sutureMaterialsUsed || "N/A";
@@ -78,13 +79,10 @@ export const handleDownloadPrescription = async (prescription) => {
   const postOperativeCare = prescription?.postOperativeCare || "N/A";
   const briefSurgical = prescription?.briefSurgical || "N/A";
 
-  // PDF HEADING & BODY
-  // add titles and border
+  // Add titles and border
   doc.setFontSize(16);
   doc.setFont("helvetica", "bold");
-  doc.setTextColor(0, 111, 192);
   doc.text("VETERINARY TEACHING HOSPITAL", doc.internal.pageSize.getWidth() / 2, 20, { align: "center" });
-  doc.setTextColor(0, 0, 0);
   doc.setFontSize(14);
   doc.setFont("helvetica", "normal");
   doc.text("Bangladesh Agriculture University, Mymensingh-2202", doc.internal.pageSize.getWidth() / 2, 30, { align: "center" });
@@ -92,7 +90,9 @@ export const handleDownloadPrescription = async (prescription) => {
   doc.line(10, 35, doc.internal.pageSize.getWidth() - 10, 35);
   doc.setFontSize(12);
   doc.setFont("helvetica", "normal");
-  doc.text("Prescription", doc.internal.pageSize.getWidth() / 2, 45, { align: "center" });
+  doc.text("Prescription", doc.internal.pageSize.getWidth() / 2, 45, {
+    align: "center",
+  });
 
   // Add owner and patient information justified between left and right sides
   doc.setFontSize(10);
@@ -113,7 +113,7 @@ export const handleDownloadPrescription = async (prescription) => {
   doc.text(`Address: ${address}`, rightColumnX, startY + 2 * infoLineSpacing);
 
   //Add animal information
-  doc.text(`Age: ${animalAge}`, leftColumnX, startY + 3 * infoLineSpacing);
+  doc.text(`Age: ${caseNo}`, leftColumnX, startY + 3 * infoLineSpacing);
   doc.text(`Gender: ${animalGender}`, rightColumnX, startY + 3 * infoLineSpacing);
 
   doc.text(`Body Weight: ${animalWeight}`, leftColumnX, startY + 4 * infoLineSpacing);
@@ -132,42 +132,38 @@ export const handleDownloadPrescription = async (prescription) => {
   doc.text("Next Visit: ", leftColumnX, startY + 8 * infoLineSpacing);
   doc.text(nextVisitDate, leftColumnX + 22, startY + 8 * infoLineSpacing);
 
-  let currentY = startY + 9 * infoLineSpacing + 10;
-
   // Add medicines table
   {
     prescription?.therapeutics?.length > 0 &&
       doc.autoTable({
-        startY: currentY,
+        startY: startY + 9 * infoLineSpacing,
         head: [["Medicine Name", "Dose", "Route", "Frequency"]],
         body: prescription?.therapeutics?.map((medicine) => [medicine?.medicine_name || "N/A", medicine?.first || "N/A", medicine?.second || "N/A", medicine?.third || "N/A"]),
         theme: "grid",
       });
   }
 
-  currentY = doc.lastAutoTable.finalY + 10;
-
   // Add surgical notes
+  const surgicalNotesStartY = doc.previousAutoTable ? doc.previousAutoTable.finalY + 10 : startY + 10 * lineSpacing;
+
   doc.setFontSize(11);
-  doc.setFont("helvetica", "bold");
-  doc.text("Surgical Notes:", leftColumnX, currentY);
+  doc.text("Surgical Notes", leftColumnX, surgicalNotesStartY);
 
   doc.setFontSize(10);
-  doc.setFont("helvetica", "normal");
-  doc.text("Pre-Anesthetic used: ", leftColumnX, currentY + infoLineSpacing);
-  doc.text(preAnestheticUsed, leftColumnX + 45, currentY + infoLineSpacing);
+  doc.text("Pre-Anesthetic used: ", leftColumnX, surgicalNotesStartY + lineSpacing);
+  doc.text(preAnestheticUsed, leftColumnX + 45, surgicalNotesStartY + lineSpacing);
 
-  doc.text("Suture materials used: ", leftColumnX, currentY + 2 * infoLineSpacing);
-  doc.text(sutureMaterialsUsed, leftColumnX + 45, currentY + 2 * infoLineSpacing);
+  doc.text("Suture materials used: ", leftColumnX, surgicalNotesStartY + 2 * lineSpacing);
+  doc.text(sutureMaterialsUsed, leftColumnX + 45, surgicalNotesStartY + 2 * lineSpacing);
 
-  doc.text("Type of surgery: ", leftColumnX, currentY + 3 * infoLineSpacing);
-  doc.text(typeOfSurgery, leftColumnX + 45, currentY + 3 * infoLineSpacing);
+  doc.text("Type of surgery: ", leftColumnX, surgicalNotesStartY + 3 * lineSpacing);
+  doc.text(typeOfSurgery, leftColumnX + 45, surgicalNotesStartY + 3 * lineSpacing);
 
-  doc.text("Post operative care: ", leftColumnX, currentY + 4 * infoLineSpacing);
-  doc.text(postOperativeCare, leftColumnX + 45, currentY + 4 * infoLineSpacing);
+  doc.text("Post operative care: ", leftColumnX, surgicalNotesStartY + 4 * lineSpacing);
+  doc.text(postOperativeCare, leftColumnX + 45, surgicalNotesStartY + 4 * lineSpacing);
 
-  doc.text("Brief Surgical Procedure: ", leftColumnX, currentY + 5 * infoLineSpacing);
-  doc.text(briefSurgical, leftColumnX + 45, currentY + 5 * infoLineSpacing);
+  doc.text("Brief Surgical Procedure: ", leftColumnX, surgicalNotesStartY + 5 * lineSpacing);
+  doc.text(briefSurgical, leftColumnX + 45, surgicalNotesStartY + 5 * lineSpacing);
 
   // Save the PDF
   doc.save(`prescription-${caseNo}.pdf`);
