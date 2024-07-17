@@ -10,6 +10,7 @@ const ViewFeedbackModal = ({ existingData }) => {
   const {
     handleSubmit,
     register,
+    reset,
     formState: { errors },
   } = useForm({ defaultValues: existingData });
 
@@ -23,6 +24,7 @@ const ViewFeedbackModal = ({ existingData }) => {
       const response = await dispatch(updateFeedbackData(updatedData));
       if (response?.payload?.success) {
         await dispatch(fetchFeedback({}));
+        reset();
         toast.success("Feedback publish successful!");
         document.getElementById("closeUpdateModal").click();
       } else {

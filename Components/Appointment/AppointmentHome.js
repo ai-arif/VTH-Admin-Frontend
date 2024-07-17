@@ -121,6 +121,9 @@ const AppointmentHome = () => {
       }
       appointmentData.complaint = appointmentData?.complaint?.value;
 
+      // Convert appointment date to UTC
+      appointmentData.date = new Date(appointmentData.date).toISOString();
+
       const response = await dispatch(addNewAppointment(appointmentData));
 
       if (response?.payload?.success) {
