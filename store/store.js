@@ -4,6 +4,7 @@ import breedSlice from "../features/breed/breedSlice";
 import complaintSlice from "../features/complaint/complaintSlice";
 import contentSlice from "../features/content/contentSlice";
 import departmentSlice from "../features/department/departmentSlice";
+import feedbackSlice from "../features/feedback/feedbackSlice";
 import incomingTestSlice from "../features/incoming-test/incomingTestSlice";
 import loggedInUserDataReducer from "../features/loggedInUser/loggedInUserSlice";
 import logoSlice from "../features/logo/logoSlice";
@@ -36,6 +37,7 @@ const store = configureStore({
     logo: logoSlice,
     content: contentSlice,
     medicineParam: MedicineParamsSlice,
+    feedback: feedbackSlice,
   },
 });
 
