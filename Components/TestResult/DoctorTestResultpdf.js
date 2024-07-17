@@ -24,20 +24,23 @@ export const handleDownloadDoctorTestResult = async (testResult, resultFormat) =
   };
 
   // images url
-  const leftImageUrl = "https://bauvth.com/assets/images/logo/left-side.png";
-  const rightImageUrl = "https://bauvth.com/assets/images/logo1/right-side.png";
+  const leftImageUrl = "https://i.ibb.co/y4wyLbJ/logo.png";
+  const rightImageUrl = "https://i.ibb.co/m465Fx5/logo1.png";
 
   const leftImage = await loadImage(leftImageUrl);
   const rightImage = await loadImage(rightImageUrl);
 
   // add images to PDF left and right side
-  const imageHeight = 17;
-  const imageWidth = 19;
+  const LeftImageHeight = 17;
+  const LeftImageWidth = 19;
+  const rightImageHeight = 17;
+  const rightImageWidth = 29;
+
   if (leftImage) {
-    doc.addImage(leftImage, "PNG", 10, 10, imageWidth, imageHeight);
+    doc.addImage(leftImage, "PNG", 10, 10, LeftImageWidth, LeftImageHeight);
   }
   if (rightImage) {
-    doc.addImage(rightImage, "PNG", doc.internal.pageSize.getWidth() - imageWidth - 10, 10, imageWidth, imageHeight);
+    doc.addImage(rightImage, "PNG", doc.internal.pageSize.getWidth() - rightImageWidth - 10, 10, rightImageWidth, rightImageHeight);
   }
 
   // extract owner information from appointment
@@ -57,6 +60,12 @@ export const handleDownloadDoctorTestResult = async (testResult, resultFormat) =
   };
   const appointmentDate = formatDate(testResult?.appointmentId?.date);
 
+  // extract animal information from appointment
+  const animalAge = testResult?.registrationId?.age || "N/A";
+  const animalWeight = testResult?.registrationId?.weight || "N/A";
+  const animalBreed = testResult?.appointmentId?.breed?.breed || "N/A";
+  const animalGender = testResult?.registrationId?.sex || "N/A";
+
   // PDF HEADING & BODY
   // add titles and border
   doc.setFontSize(16);
@@ -73,7 +82,7 @@ export const handleDownloadDoctorTestResult = async (testResult, resultFormat) =
   doc.setFont("helvetica", "normal");
   doc.text("Test Result", doc.internal.pageSize.getWidth() / 2, 45, { align: "center" });
 
-  // add owner and patient information justified between left and right sides
+  // add owner and animal information justified between left and right sides
   doc.setFontSize(10);
   const leftColumnX = 10;
   const rightColumnX = doc.internal.pageSize.getWidth() / 2 + 40;
@@ -91,7 +100,14 @@ export const handleDownloadDoctorTestResult = async (testResult, resultFormat) =
   doc.text(`Phone: ${phone}`, leftColumnX, startY + 2 * infoLineSpacing);
   doc.text(`Address: ${address}`, rightColumnX, startY + 2 * infoLineSpacing);
 
-  let currentY = startY + 3 * lineSpacing;
+  // add animal information
+  doc.text(`Age: ${animalAge}`, leftColumnX, startY + 3 * infoLineSpacing);
+  doc.text(`Gender: ${animalGender}`, rightColumnX, startY + 3 * infoLineSpacing);
+
+  doc.text(`Body Weight: ${animalWeight}`, leftColumnX, startY + 4 * infoLineSpacing);
+  doc.text(`Breed: ${animalBreed}`, rightColumnX, startY + 4 * infoLineSpacing);
+
+  let currentY = startY + 5 * lineSpacing;
 
   doc.setFontSize(11);
   doc.setFont("helvetica", "bold");
@@ -140,7 +156,7 @@ export const handleDownloadDoctorTestResult = async (testResult, resultFormat) =
   doc.setFont("helvetica", "normal");
   doc.text(testResult?.data?.interpretation || "N/A", leftColumnX + 29, currentY);
 
-  currentY += lineSpacing;
+  currentY += lineSpacing - 3;
 
   doc.setFont("helvetica", "bold");
   doc.text("Lab Technician:", leftColumnX + 3, currentY);

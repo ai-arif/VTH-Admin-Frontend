@@ -22,9 +22,6 @@ const ViewResult = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [refetch, setRefetch] = useState(0);
 
-  // console.log(incomingTest);
-  // console.log(testAllResults);
-
   const handleTabSwitch = async (testId, index) => {
     setActiveTab(testId);
     setArrIndex(index);
@@ -76,8 +73,6 @@ const ViewResult = () => {
       });
   }, [activeTab, incomingTest?.data, refetch]);
 
-  // console.log(testAllResults?.data);
-
   if (isLoading) return <Loader />;
 
   return (
@@ -96,7 +91,7 @@ const ViewResult = () => {
       <div className="app-card px-3 pb-3 shadow-sm">
         <div className="mb-2">
           {/* owner info */}
-          <div className="d-flex justify-content-between align-items-center">
+          <div className="d-flex justify-content-between align-items-center pt-1">
             <p>Case No: {incomingTest?.data?.appointmentId?.caseNo}</p>
             <p>
               Status: <span className={`${results?.includes(activeTab) ? "text-success fw-medium" : "text-danger fw-medium"}`}>{results?.includes(activeTab) ? "Added" : "To be add"}</span>
@@ -113,6 +108,19 @@ const ViewResult = () => {
               <div className="">
                 <p className="mb-1">Upazila: {incomingTest?.data?.appointmentId?.upazila}</p>
                 <p className="m-0">Address: {incomingTest?.data?.appointmentId?.address}</p>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h6 className="text-center w-50 mx-auto text-bg-secondary rounded-1 py-2">Animal Information</h6>
+            <div className="d-flex justify-content-between">
+              <div className="">
+                <p className="mb-1">Age: {incomingTest?.data?.age}</p>
+                <p className="m-0">Body Weight: {incomingTest?.data?.weight}</p>
+              </div>
+              <div className="">
+                <p className="mb-1">Breed: {incomingTest?.data?.appointmentId?.breed?.breed}</p>
+                <p className="m-0 text-capitalize">Gender: {incomingTest?.data?.sex}</p>
               </div>
             </div>
           </div>
@@ -169,9 +177,11 @@ const ViewResult = () => {
                     </table>
                   </div>
                 ))} */}
-                <button onClick={() => handleDownloadDoctorTestResult(testAllResults, incomingTest?.data?.tests?.[arrIndex])} className="btn btn-info text-white">
-                  <MdPrint size={18} /> Print
-                </button>
+                <div className="text-start pt-2">
+                  <button onClick={() => handleDownloadDoctorTestResult(testAllResults, incomingTest?.data?.tests?.[arrIndex])} className="btn btn-info text-white">
+                    <MdPrint size={18} /> Print
+                  </button>
+                </div>
                 <form onSubmit={handleUpdate(onUpdate)}>
                   {incomingTest?.data?.tests?.[arrIndex]?.tests?.map((test, idx) => (
                     <div key={idx}>

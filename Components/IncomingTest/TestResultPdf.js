@@ -7,35 +7,11 @@ export const handleDownloadTestResult = async (testResult) => {
   const doc = new jsPDF();
 
   // load images from URLs
-  // const loadImage = async (url) => {
-  //   try {
-  //     const response = await fetch(url);
-  //     console.log(`Fetching image from: ${url}`); // Debug log
-  //     if (!response.ok) throw new Error("Image failed to load");
-  //     const blob = await response.blob();
-  //     const dataUrl = await new Promise((resolve) => {
-  //       const reader = new FileReader();
-  //       reader.onload = () => resolve(reader.result);
-  //       reader.readAsDataURL(blob);
-  //     });
-  //     return dataUrl;
-  //   } catch (error) {
-  //     console.error(`Failed to load image from ${url}:`, error);
-  //     return null;
-  //   }
-  // };
-
-  // Load images from URLs using axios
   const loadImage = async (url) => {
-    console.log(`Attempting to fetch image from: ${url}`); // Debug log
-
     try {
-      const response = await axios.get(url, { responseType: "blob" });
-      console.log("hello");
-      console.log(`Fetching image from: ${url}`); // Debug log
-
+      const response = await fetch(url);
       if (!response.ok) throw new Error("Image failed to load");
-      const blob = response.data;
+      const blob = await response.blob();
       const dataUrl = await new Promise((resolve) => {
         const reader = new FileReader();
         reader.onload = () => resolve(reader.result);
@@ -47,29 +23,25 @@ export const handleDownloadTestResult = async (testResult) => {
       return null;
     }
   };
+
   // images url
-
-  // these url get response in console
-  // const leftImageUrl = "https://i.ibb.co/8BdhH36/left-side.png";
-  // const rightImageUrl = "https://i.ibb.co/Nxhcc4v/right-side.png";
-
-  // these url can't get response in console
-  console.log("Before loading images"); // Debug log
-  const leftImageUrl = "https://storage.googleapis.com/vth-user/logo.png";
-  const rightImageUrl = "https://storage.googleapis.com/vth-user/logo1.png";
-  console.log("After loading images", { leftImageUrl, rightImageUrl }); // Debug log
+  const leftImageUrl = "https://i.ibb.co/y4wyLbJ/logo.png";
+  const rightImageUrl = "https://i.ibb.co/m465Fx5/logo1.png";
 
   const leftImage = await loadImage(leftImageUrl);
   const rightImage = await loadImage(rightImageUrl);
 
   // add images to PDF left and right side
-  const imageHeight = 17;
-  const imageWidth = 19;
+  const LeftImageHeight = 17;
+  const LeftImageWidth = 19;
+  const rightImageHeight = 17;
+  const rightImageWidth = 29;
+
   if (leftImage) {
-    doc.addImage(leftImage, "PNG", 10, 10, imageWidth, imageHeight);
+    doc.addImage(leftImage, "PNG", 10, 10, LeftImageWidth, LeftImageHeight);
   }
   if (rightImage) {
-    doc.addImage(rightImage, "PNG", doc.internal.pageSize.getWidth() - imageWidth - 10, 10, imageWidth, imageHeight);
+    doc.addImage(rightImage, "PNG", doc.internal.pageSize.getWidth() - rightImageWidth - 10, 10, rightImageWidth, rightImageHeight);
   }
 
   // extract owner information from appointment
@@ -89,6 +61,12 @@ export const handleDownloadTestResult = async (testResult) => {
   };
   const appointmentDate = formatDate(testResult?.appointmentId?.date);
 
+  // extract animal information from appointment
+  const animalAge = testResult?.registrationId?.age || "N/A";
+  const animalWeight = testResult?.registrationId?.weight || "N/A";
+  const animalBreed = testResult?.appointmentId?.breed?.breed || "N/A";
+  const animalGender = testResult?.registrationId?.sex || "N/A";
+
   // PDF HEADING & BODY
   // add titles and border
   doc.setFontSize(16);
@@ -105,7 +83,7 @@ export const handleDownloadTestResult = async (testResult) => {
   doc.setFont("helvetica", "normal");
   doc.text("Test Result", doc.internal.pageSize.getWidth() / 2, 45, { align: "center" });
 
-  // add owner and patient information justified between left and right sides
+  // add owner and animal information justified between left and right sides
   doc.setFontSize(10);
   const leftColumnX = 10;
   const rightColumnX = doc.internal.pageSize.getWidth() / 2 + 40;
@@ -123,7 +101,14 @@ export const handleDownloadTestResult = async (testResult) => {
   doc.text(`Phone: ${phone}`, leftColumnX, startY + 2 * infoLineSpacing);
   doc.text(`Address: ${address}`, rightColumnX, startY + 2 * infoLineSpacing);
 
-  let currentY = startY + 3 * lineSpacing;
+  // add animal information
+  doc.text(`Age: ${animalAge}`, leftColumnX, startY + 3 * infoLineSpacing);
+  doc.text(`Gender: ${animalGender}`, rightColumnX, startY + 3 * infoLineSpacing);
+
+  doc.text(`Body Weight: ${animalWeight}`, leftColumnX, startY + 4 * infoLineSpacing);
+  doc.text(`Breed: ${animalBreed}`, rightColumnX, startY + 4 * infoLineSpacing);
+
+  let currentY = startY + 5 * lineSpacing;
 
   doc.setFontSize(11);
   doc.setFont("helvetica", "bold");
@@ -172,7 +157,7 @@ export const handleDownloadTestResult = async (testResult) => {
   doc.setFont("helvetica", "normal");
   doc.text(testResult?.data?.interpretation || "N/A", leftColumnX + 29, currentY);
 
-  currentY += lineSpacing;
+  currentY += lineSpacing - 3;
 
   doc.setFont("helvetica", "bold");
   doc.text("Lab Technician:", leftColumnX + 3, currentY);
