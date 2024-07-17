@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -43,10 +44,11 @@ const customStyles = {
 const PrescriptionHome = () => {
   const [searchPhone, setSearchPhone] = useState("");
   const [patentInfo, setPatentInfo] = useState([]);
-  const [singlePrescription, setSinglePrescription] = useState({});
+  // const [singlePrescription, setSinglePrescription] = useState({});
   const [selectedPatentInfo, setSelectedPatentInfo] = useState({});
   const [isPrint, setIsPrint] = useState(false);
   const [selectedMedicines, setSelectedMedicines] = useState([]);
+  const router = useRouter();
 
   const dispatch = useDispatch();
 
@@ -107,8 +109,9 @@ const PrescriptionHome = () => {
       const response = await dispatch(createPrescription(prescriptionData));
 
       if (response?.payload?.success) {
+        router.push("/prescription/view");
+        // setSinglePrescription(response?.payload?.data?.data);
         toast.success("Prescription added successfully!");
-        setSinglePrescription(response?.payload?.data?.data);
         setIsPrint(true);
         setSearchPhone("");
         setSelectedPatentInfo({});
@@ -347,11 +350,11 @@ const PrescriptionHome = () => {
                   </button>
                 </div>
               </form>
-              <div className="pb-3 d-flex justify-content-end">
+              {/* <div className="pb-3 d-flex justify-content-end">
                 <button disabled={!isPrint} onClick={() => handleDownloadPrescription(singlePrescription)} className="btn btn-info text-white">
                   <MdPrint size={18} /> Print
                 </button>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

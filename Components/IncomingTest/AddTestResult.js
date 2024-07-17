@@ -118,6 +118,19 @@ const AddTestResult = () => {
               </div>
             </div>
           </div>
+          <div>
+            <h6 className="text-center w-50 mx-auto text-bg-secondary rounded-1 py-2">Animal Information</h6>
+            <div className="d-flex justify-content-between">
+              <div className="">
+                <p className="mb-1">Age: {incomingTest?.registrationId?.age}</p>
+                <p className="m-0">Body Weight: {incomingTest?.registrationId?.weight}</p>
+              </div>
+              <div className="">
+                <p className="mb-1">Breed: {incomingTest?.appointmentId?.breed?.breed}</p>
+                <p className="m-0 text-capitalize">Gender: {incomingTest?.registrationId?.sex}</p>
+              </div>
+            </div>
+          </div>
         </div>
         {/* table */}
         <div className="table-responsive text-end ">
