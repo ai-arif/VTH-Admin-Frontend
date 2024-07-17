@@ -3,15 +3,51 @@ import "jspdf-autotable";
 
 export const handleDownloadPrescription = async (prescription) => {
   const doc = new jsPDF();
+  console.log({ prescription });
+  // load images from URLs
+  const loadImage = async (url) => {
+    try {
+      const response = await fetch(url);
+      if (!response.ok) throw new Error("Image failed to load");
+      const blob = await response.blob();
+      const dataUrl = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.readAsDataURL(blob);
+      });
+      return dataUrl;
+    } catch (error) {
+      console.error(`Failed to load image from ${url}:`, error);
+      return null;
+    }
+  };
+
+  // images url
+  const leftImageUrl = "https://i.ibb.co/y4wyLbJ/logo.png";
+  const rightImageUrl = "https://i.ibb.co/m465Fx5/logo1.png";
+
+  const leftImage = await loadImage(leftImageUrl);
+  const rightImage = await loadImage(rightImageUrl);
+
+  // add images to PDF left and right side
+  const LeftImageHeight = 17;
+  const LeftImageWidth = 19;
+  const rightImageHeight = 17;
+  const rightImageWidth = 29;
+
+  if (leftImage) {
+    doc.addImage(leftImage, "PNG", 10, 10, LeftImageWidth, LeftImageHeight);
+  }
+  if (rightImage) {
+    doc.addImage(rightImage, "PNG", doc.internal.pageSize.getWidth() - rightImageWidth - 10, 10, rightImageWidth, rightImageHeight);
+  }
 
   // Extract owner information from appointment
   const ownerName = prescription?.appointment?.ownerName || "N/A";
   const caseNo = prescription?.appointment?.caseNo || "N/A";
   const phone = prescription?.appointment?.phone || "N/A";
-  // const district = prescription?.appointment?.district || "N/A";
   const upazila = prescription?.appointment?.upazila || "N/A";
   const address = prescription?.appointment?.address || "N/A";
-
   const formatDate = (date) => {
     if (!date) return "N/A";
     const d = new Date(date);
@@ -20,6 +56,12 @@ export const handleDownloadPrescription = async (prescription) => {
     const year = d.getFullYear();
     return `${day}-${month}-${year}`;
   };
+
+  // Extract animal information from appointment
+  const animalAge = prescription?.patient?.age || "N/A";
+  const animalWeight = prescription?.patient?.weight || "N/A";
+  const animalBreed = prescription?.appointment?.breed?.breed || "N/A";
+  const animalGender = prescription?.patient?.sex || "N/A";
 
   const prescriptionWritingDate = formatDate(prescription?.date);
   const nextVisitDate = formatDate(prescription?.nextVisit);
@@ -36,10 +78,13 @@ export const handleDownloadPrescription = async (prescription) => {
   const postOperativeCare = prescription?.postOperativeCare || "N/A";
   const briefSurgical = prescription?.briefSurgical || "N/A";
 
-  // Add titles and border
+  // PDF HEADING & BODY
+  // add titles and border
   doc.setFontSize(16);
   doc.setFont("helvetica", "bold");
+  doc.setTextColor(0, 111, 192);
   doc.text("VETERINARY TEACHING HOSPITAL", doc.internal.pageSize.getWidth() / 2, 20, { align: "center" });
+  doc.setTextColor(0, 0, 0);
   doc.setFontSize(14);
   doc.setFont("helvetica", "normal");
   doc.text("Bangladesh Agriculture University, Mymensingh-2202", doc.internal.pageSize.getWidth() / 2, 30, { align: "center" });
@@ -67,51 +112,62 @@ export const handleDownloadPrescription = async (prescription) => {
   doc.text(`Phone: ${phone}`, leftColumnX, startY + 2 * infoLineSpacing);
   doc.text(`Address: ${address}`, rightColumnX, startY + 2 * infoLineSpacing);
 
+  //Add animal information
+  doc.text(`Age: ${animalAge}`, leftColumnX, startY + 3 * infoLineSpacing);
+  doc.text(`Gender: ${animalGender}`, rightColumnX, startY + 3 * infoLineSpacing);
+
+  doc.text(`Body Weight: ${animalWeight}`, leftColumnX, startY + 4 * infoLineSpacing);
+  doc.text(`Breed: ${animalBreed}`, rightColumnX, startY + 4 * infoLineSpacing);
+
   // Add prescription details
-  doc.text("Diagnosis: ", leftColumnX, startY + 3 * lineSpacing);
-  doc.text(diagnosis, leftColumnX + 22, startY + 3 * lineSpacing);
+  doc.text("Diagnosis: ", leftColumnX, startY + 5 * infoLineSpacing);
+  doc.text(diagnosis, leftColumnX + 22, startY + 5 * infoLineSpacing);
 
-  doc.text("Prognosis: ", leftColumnX, startY + 4 * lineSpacing);
-  doc.text(prognosis, leftColumnX + 22, startY + 4 * lineSpacing);
+  doc.text("Prognosis: ", leftColumnX, startY + 6 * infoLineSpacing);
+  doc.text(prognosis, leftColumnX + 22, startY + 6 * infoLineSpacing);
 
-  doc.text("Advice: ", leftColumnX, startY + 5 * lineSpacing);
-  doc.text(advice, leftColumnX + 22, startY + 5 * lineSpacing);
+  doc.text("Advice: ", leftColumnX, startY + 7 * infoLineSpacing);
+  doc.text(advice, leftColumnX + 22, startY + 7 * infoLineSpacing);
 
-  doc.text("Next Visit: ", leftColumnX, startY + 6 * lineSpacing);
-  doc.text(nextVisitDate, leftColumnX + 22, startY + 6 * lineSpacing);
+  doc.text("Next Visit: ", leftColumnX, startY + 8 * infoLineSpacing);
+  doc.text(nextVisitDate, leftColumnX + 22, startY + 8 * infoLineSpacing);
+
+  let currentY = startY + 9 * infoLineSpacing + 10;
 
   // Add medicines table
   {
     prescription?.therapeutics?.length > 0 &&
       doc.autoTable({
-        startY: startY + 7 * lineSpacing,
+        startY: currentY,
         head: [["Medicine Name", "Dose", "Route", "Frequency"]],
         body: prescription?.therapeutics?.map((medicine) => [medicine?.medicine_name || "N/A", medicine?.first || "N/A", medicine?.second || "N/A", medicine?.third || "N/A"]),
         theme: "grid",
       });
   }
 
-  // Add surgical notes
-  const surgicalNotesStartY = doc.previousAutoTable ? doc.previousAutoTable.finalY + 10 : startY + 8 * lineSpacing;
+  currentY = doc.lastAutoTable.finalY + 10;
 
+  // Add surgical notes
   doc.setFontSize(11);
-  doc.text("Surgical Notes", leftColumnX, surgicalNotesStartY);
+  doc.setFont("helvetica", "bold");
+  doc.text("Surgical Notes:", leftColumnX, currentY);
 
   doc.setFontSize(10);
-  doc.text("Pre-Anesthetic used: ", leftColumnX, surgicalNotesStartY + lineSpacing);
-  doc.text(preAnestheticUsed, leftColumnX + 50, surgicalNotesStartY + lineSpacing);
+  doc.setFont("helvetica", "normal");
+  doc.text("Pre-Anesthetic used: ", leftColumnX, currentY + infoLineSpacing);
+  doc.text(preAnestheticUsed, leftColumnX + 45, currentY + infoLineSpacing);
 
-  doc.text("Suture materials used: ", leftColumnX, surgicalNotesStartY + 2 * lineSpacing);
-  doc.text(sutureMaterialsUsed, leftColumnX + 50, surgicalNotesStartY + 2 * lineSpacing);
+  doc.text("Suture materials used: ", leftColumnX, currentY + 2 * infoLineSpacing);
+  doc.text(sutureMaterialsUsed, leftColumnX + 45, currentY + 2 * infoLineSpacing);
 
-  doc.text("Type of surgery: ", leftColumnX, surgicalNotesStartY + 3 * lineSpacing);
-  doc.text(typeOfSurgery, leftColumnX + 50, surgicalNotesStartY + 3 * lineSpacing);
+  doc.text("Type of surgery: ", leftColumnX, currentY + 3 * infoLineSpacing);
+  doc.text(typeOfSurgery, leftColumnX + 45, currentY + 3 * infoLineSpacing);
 
-  doc.text("Post operative care: ", leftColumnX, surgicalNotesStartY + 4 * lineSpacing);
-  doc.text(postOperativeCare, leftColumnX + 50, surgicalNotesStartY + 4 * lineSpacing);
+  doc.text("Post operative care: ", leftColumnX, currentY + 4 * infoLineSpacing);
+  doc.text(postOperativeCare, leftColumnX + 45, currentY + 4 * infoLineSpacing);
 
-  doc.text("Brief Surgical Procedure: ", leftColumnX, surgicalNotesStartY + 5 * lineSpacing);
-  doc.text(briefSurgical, leftColumnX + 50, surgicalNotesStartY + 5 * lineSpacing);
+  doc.text("Brief Surgical Procedure: ", leftColumnX, currentY + 5 * infoLineSpacing);
+  doc.text(briefSurgical, leftColumnX + 45, currentY + 5 * infoLineSpacing);
 
   // Save the PDF
   doc.save(`prescription-${caseNo}.pdf`);
