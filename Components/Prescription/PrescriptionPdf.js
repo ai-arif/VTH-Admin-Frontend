@@ -3,7 +3,6 @@ import "jspdf-autotable";
 
 export const handleDownloadPrescription = async (prescription) => {
   const doc = new jsPDF();
-  console.log({ prescription });
   // load images from URLs
   const loadImage = async (url) => {
     try {
