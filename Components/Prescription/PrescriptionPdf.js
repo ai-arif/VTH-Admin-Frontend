@@ -114,7 +114,7 @@ export const handleDownloadPrescription = async (prescription) => {
   doc.text(`Address: ${address}`, rightColumnX, startY + 2 * infoLineSpacing);
 
   //Add animal information
-  doc.text(`Age: ${caseNo}`, leftColumnX, startY + 3 * infoLineSpacing);
+  doc.text(`Age: ${animalAge}`, leftColumnX, startY + 3 * infoLineSpacing);
   doc.text(`Gender: ${animalGender}`, rightColumnX, startY + 3 * infoLineSpacing);
 
   doc.text(`Body Weight: ${animalWeight}`, leftColumnX, startY + 4 * infoLineSpacing);

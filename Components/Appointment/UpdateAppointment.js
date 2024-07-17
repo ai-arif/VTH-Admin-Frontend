@@ -76,7 +76,6 @@ const UpdateAppointment = () => {
     if (id) {
       dispatch(fetchAppointmentById(id)).then((res) => fetchBreedsAndComplaint(res?.payload?.data?.species));
     }
-    dispatch(fetchDepartment({ limit: 500 }));
   }, [dispatch, id]);
 
   // transform complaints data
@@ -84,7 +83,7 @@ const UpdateAppointment = () => {
     value: complaint._id,
     label: complaint.complaint,
   }));
-  // find selected tests then matching
+  // find selected complaint then matching
   const selectedComplaint = appointment?.complaint;
   const matchingComplaint = complaintOptions?.filter((data) => selectedComplaint?.includes(data.value));
 
@@ -102,10 +101,26 @@ const UpdateAppointment = () => {
     }
   }, [matchingComplaint, setValue]);
 
+  useEffect(() => {
+    dispatch(fetchDepartment({ limit: 500 })).then((res) => {
+      const selectedId = appointment?.department;
+      const departmentsData = res?.payload?.data?.data;
+      const matchingDepartment = departmentsData?.find((data) => data._id === selectedId);
+
+      if (matchingDepartment) {
+        setValue("department", matchingDepartment._id);
+      }
+    });
+  }, [dispatch, appointment, setValue]);
+
   const onSubmit = async (appointmentData) => {
     try {
       appointmentData.id = Number(id);
       appointmentData.complaint = appointmentData?.complaint?.value;
+
+      // Convert appointment date to UTC
+      appointmentData.date = new Date(appointmentData.date).toISOString();
+
       const response = await dispatch(updateExistingAppointment(appointmentData));
 
       if (response?.payload?.success) {
@@ -138,10 +153,10 @@ const UpdateAppointment = () => {
     if (appointment && appointment.date) {
       setValue("date", formatDate(appointment.date));
     }
-  }, [appointment]);
+  }, [appointment, setValue]);
 
   //   loader
-  if (status === "loading") return <Loader />;
+  // if (status === "loading") return <Loader />;
 
   return (
     <div className="container-fluid">
