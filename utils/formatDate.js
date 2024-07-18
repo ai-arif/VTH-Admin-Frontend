@@ -1,14 +1,33 @@
-import { format } from "date-fns";
-import { toZonedTime } from "date-fns-tz";
-
+// Format date function
 export const formatDate = (dateString) => {
-  const date = new Date(dateString);
-  const hoursToSubtract = 6;
-  const timeZone = "Asia/Dhaka"; // Specify the timezone for Dhaka, Bangladesh
-  const zonedDate = toZonedTime(date, timeZone, `UTC${-hoursToSubtract}`);
+  // FIRST TIME CHANGE
+  // const options = { weekday: "long", month: "long", day: "numeric", year: "numeric", hour: "numeric", minute: "numeric", hour12: true };
+  // return new Date(dateString).toLocaleString("en-US", options);
 
-  // Format the date and time as "Jul 18, 2024, 1:00 PM"
-  const formattedDate = format(zonedDate, "MMM d, yyyy, h:mm a");
+  // SECOND TIME CHANGE
+  // const date = new Date(dateString);
+  // const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000); // Convert UTC to local time
+  // const options = {
+  //   weekday: "long",
+  //   month: "long",
+  //   day: "numeric",
+  //   year: "numeric",
+  //   hour: "numeric",
+  //   minute: "numeric",
+  //   hour12: true,
+  // };
+  // return localDate.toLocaleString("en-US", options);
 
-  return formattedDate;
+  const options = {
+    weekday: "short",
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  };
+
+  const localDate = new Date(dateString).toLocaleDateString(undefined, options);
+
+  return localDate;
 };

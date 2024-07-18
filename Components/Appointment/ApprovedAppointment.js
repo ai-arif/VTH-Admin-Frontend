@@ -177,8 +177,7 @@ const ApprovedAppointment = () => {
                     <td>{appointment.caseNo}</td>
                     <td>{appointment.ownerName}</td>
                     <td>{appointment.phone}</td>
-                    {/* <td>{formatDate(appointment.date)}</td> */}
-                    <td>{new Date(appointment?.date).toUTCString()}</td>
+                    <td>{formatDate(appointment.date)}</td>
                     <td className="text-center">
                       {appointment?.amount ? (
                         appointment?.amount
