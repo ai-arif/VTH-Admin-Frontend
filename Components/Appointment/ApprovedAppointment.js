@@ -6,7 +6,11 @@ import { RiDeleteBinLine, RiImageLine } from "react-icons/ri";
 import { TiEdit } from "react-icons/ti";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
-import { deleteExistingAppointment, fetchApprovedAppointments, searchApprovedAppointmentsData } from "../../features/appointment/appointmentSlice";
+import {
+  deleteExistingAppointment,
+  fetchApprovedAppointments,
+  searchApprovedAppointmentsData,
+} from "../../features/appointment/appointmentSlice";
 import axiosInstance from "../../utils/axiosInstance";
 import { formatDate } from "../../utils/formatDate";
 import TestPaymentModal from "../IncomingTest/TestPaymentModal";
@@ -21,7 +25,9 @@ const ApprovedAppointment = () => {
   const [search, setSearch] = useState("");
   const router = useRouter();
   const dispatch = useDispatch();
-  const { appointments, status, totalPages } = useSelector((state) => state.appointment);
+  const { appointments, status, totalPages } = useSelector(
+    (state) => state.appointment
+  );
   const currentPage = parseInt(router.query.page) || 1;
 
   // handling delete single appointment
@@ -76,15 +82,20 @@ const ApprovedAppointment = () => {
   };
 
   const handlePaymentAndStatus = (amount) => {
-    axiosInstance.patch(`/appointment/${appointmentId}`, { payment: "paid", amount: amount }).then((res) => {
-      let result = res.data;
+    axiosInstance
+      .patch(`/appointment/${appointmentId}`, {
+        payment: "paid",
+        amount: amount,
+      })
+      .then((res) => {
+        let result = res.data;
 
-      if (result.success) {
-        setAmount(null);
-        dispatch(fetchApprovedAppointments());
-        toast.success("Payment and status updated successfully!");
-      }
-    });
+        if (result.success) {
+          setAmount(null);
+          dispatch(fetchApprovedAppointments());
+          toast.success("Payment and status updated successfully!");
+        }
+      });
   };
 
   const handleSearch = async () => {
@@ -127,8 +138,19 @@ const ApprovedAppointment = () => {
       <div className="app-card p-5 mt-4 text-center shadow-sm">
         <div className="d-flex align-items-center justify-content-between mb-4">
           <div className="input-group w-50">
-            <input onChange={(e) => setSearch(e.target.value)} onKeyDown={handleKeyPress} type="search" className="form-control" placeholder="Recipient's name, phone, case no" />
-            <button onClick={handleSearch} className="btn btn-primary text-white" type="button" id="button-addon2">
+            <input
+              onChange={(e) => setSearch(e.target.value)}
+              onKeyDown={handleKeyPress}
+              type="search"
+              className="form-control"
+              placeholder="Recipient's name, phone, case no"
+            />
+            <button
+              onClick={handleSearch}
+              className="btn btn-primary text-white"
+              type="button"
+              id="button-addon2"
+            >
               Search
             </button>
           </div>
@@ -155,7 +177,8 @@ const ApprovedAppointment = () => {
                     <td>{appointment.caseNo}</td>
                     <td>{appointment.ownerName}</td>
                     <td>{appointment.phone}</td>
-                    <td>{formatDate(appointment.date)}</td>
+                    {/* <td>{formatDate(appointment.date)}</td> */}
+                    <td>{new Date(appointment?.date).toUTCString()}</td>
                     <td className="text-center">
                       {appointment?.amount ? (
                         appointment?.amount
@@ -176,9 +199,20 @@ const ApprovedAppointment = () => {
 
                     <td className="d-flex gap-3 justify-content-center">
                       <Link href={`/appointment/${appointment.caseNo}`}>
-                        <TiEdit type="button" title="edit" className="edit-icon" />
+                        <TiEdit
+                          type="button"
+                          title="edit"
+                          className="edit-icon"
+                        />
                       </Link>
-                      <RiDeleteBinLine type="button" onClick={() => handleDeleteAppointment(appointment.caseNo)} title="delete" className="delete-icon" />
+                      <RiDeleteBinLine
+                        type="button"
+                        onClick={() =>
+                          handleDeleteAppointment(appointment.caseNo)
+                        }
+                        title="delete"
+                        className="delete-icon"
+                      />
                       {/* <button
                         disabled={appointment?.images?.length == 0}
                         title={appointment?.images?.length == 0 ? "No image available" : "View images"}
@@ -200,11 +234,20 @@ const ApprovedAppointment = () => {
           </div>
         </div>
         {/* pagination */}
-        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
       </div>
       {/* modals  */}
       {/* <AppointmentImagesModal modalImages={modalImages} /> */}
-      <TestPaymentModal handleTestCost={handlePaymentAndStatus} setAmount={setAmount} amount={amount} title={"appointment"} />
+      <TestPaymentModal
+        handleTestCost={handlePaymentAndStatus}
+        setAmount={setAmount}
+        amount={amount}
+        title={"appointment"}
+      />
     </div>
   );
 };
