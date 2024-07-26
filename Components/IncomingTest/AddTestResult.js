@@ -6,7 +6,6 @@ import { MdPrint } from "react-icons/md";
 import { useDispatch } from "react-redux";
 import Swal from "sweetalert2";
 import axiosInstance from "../../utils/axiosInstance";
-import { formatDate } from "../../utils/formatDate";
 import Loader from "../UI/Loader";
 import { handleDownloadTestResult } from "./TestResultPdf";
 
@@ -103,7 +102,8 @@ const AddTestResult = () => {
             <p>
               Status: <span className={`${incomingTest?.status ? "text-success fw-medium" : "text-danger fw-medium"}`}>{incomingTest?.status ? "Added" : "To be add"}</span>
             </p>
-            <p>Date: {formatDate(incomingTest?.appointmentId?.date)}</p>
+            {/* <p>Date: {formatDate(incomingTest?.appointmentId?.date)}</p> */}
+            <p>Date: {new Date(incomingTest?.createdAt).toDateString()}</p>
           </div>
           <div>
             <h6 className="text-center w-50 mx-auto text-bg-secondary rounded-1 py-2">Owner Information</h6>

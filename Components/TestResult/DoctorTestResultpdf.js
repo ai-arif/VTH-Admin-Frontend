@@ -3,6 +3,7 @@ import "jspdf-autotable";
 import autoTable from "jspdf-autotable";
 
 export const handleDownloadDoctorTestResult = async (testResult, resultFormat) => {
+  console.log({ testResult });
   const doc = new jsPDF();
 
   // load images from URLs
@@ -58,7 +59,7 @@ export const handleDownloadDoctorTestResult = async (testResult, resultFormat) =
     const year = d.getFullYear();
     return `${day}-${month}-${year}`;
   };
-  const appointmentDate = formatDate(testResult?.appointmentId?.date);
+  const appointmentDate = formatDate(testResult?.data?.createdAt);
 
   // extract animal information from appointment
   const animalAge = testResult?.registrationId?.age || "N/A";
