@@ -524,7 +524,7 @@ const UpdatePatientRegistration = () => {
                         </div>
                         <div className="mb-3 col-md-6">
                           <label className="form-label">Heart beat /minute</label>
-                          <input type="text" {...register("heartBeat", { required: true })} className="form-control" />
+                          <input type="text" {...register("heartBeat", { required: true })} className={`form-control ${errors.heartBeat && "border-danger"}`} />
                           {errors.heartBeat && <small className="text-danger">Please write heart beat rate</small>}
                         </div>
                       </div>
