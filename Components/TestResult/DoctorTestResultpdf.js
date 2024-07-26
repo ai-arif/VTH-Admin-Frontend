@@ -3,7 +3,6 @@ import "jspdf-autotable";
 import autoTable from "jspdf-autotable";
 
 export const handleDownloadDoctorTestResult = async (testResult, resultFormat) => {
-  console.log({ testResult });
   const doc = new jsPDF();
 
   // load images from URLs
