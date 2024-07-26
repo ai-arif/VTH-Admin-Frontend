@@ -58,7 +58,7 @@ export const handleDownloadTestResult = async (testResult) => {
     const year = d.getFullYear();
     return `${day}-${month}-${year}`;
   };
-  const appointmentDate = formatDate(testResult?.appointmentId?.date);
+  const testResultDate = formatDate(testResult?.data?.createdAt);
 
   // extract animal information from appointment
   const animalAge = testResult?.registrationId?.age || "N/A";
@@ -92,7 +92,7 @@ export const handleDownloadTestResult = async (testResult) => {
 
   // add owner information
   doc.text(`Case No: ${caseNo}`, leftColumnX, startY);
-  doc.text(`Date: ${appointmentDate}`, rightColumnX, startY);
+  doc.text(`Date: ${testResultDate}`, rightColumnX, startY);
 
   doc.text(`Owner Name: ${ownerName}`, leftColumnX, startY + infoLineSpacing);
   doc.text(`Upazila: ${upazila}`, rightColumnX, startY + infoLineSpacing);

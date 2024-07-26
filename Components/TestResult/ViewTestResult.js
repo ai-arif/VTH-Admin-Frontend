@@ -96,7 +96,7 @@ const ViewResult = () => {
             <p>
               Status: <span className={`${results?.includes(activeTab) ? "text-success fw-medium" : "text-danger fw-medium"}`}>{results?.includes(activeTab) ? "Added" : "To be add"}</span>
             </p>
-            <p>Date: {formatDate(incomingTest?.data?.appointmentId?.date)}</p>
+            <p>Date: {new Date(incomingTest?.data?.createdAt).toDateString()}</p>
           </div>
           <div>
             <h6 className="text-center w-50 mx-auto text-bg-secondary rounded-1 py-2">Owner Information</h6>
