@@ -49,7 +49,10 @@ const AddTestResult = () => {
   } = useForm();
   const onSubmit = async (data) => {
     try {
-      axiosInstance.post(`/test/test-result`, { data, id }).then((res) => {
+      // Add current date and time to the data object
+      const resultDate = new Date().toISOString();
+      const updatedData = { ...data, resultDate };
+      axiosInstance.post(`/test/test-result`, { data: updatedData, id }).then((res) => {
         if (res.data?.success) {
           setRefetch(refetch + 1);
           // reset();
