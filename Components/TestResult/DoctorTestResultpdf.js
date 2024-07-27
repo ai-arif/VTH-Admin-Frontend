@@ -58,7 +58,7 @@ export const handleDownloadDoctorTestResult = async (testResult, resultFormat) =
     const year = d.getFullYear();
     return `${day}-${month}-${year}`;
   };
-  const appointmentDate = formatDate(testResult?.data?.createdAt);
+  const appointmentDate = formatDate(testResult?.data?.resultDate);
 
   // extract animal information from appointment
   const animalAge = testResult?.registrationId?.age || "N/A";

@@ -127,8 +127,11 @@ export const handleDownloadPrescription = async (prescription) => {
   doc.text("Prognosis: ", leftColumnX, startY + 6 * infoLineSpacing);
   doc.text(prognosis, leftColumnX + 22, startY + 6 * infoLineSpacing);
 
-  doc.text("Advice: ", leftColumnX, startY + 7 * infoLineSpacing);
-  doc.text(advice, leftColumnX + 22, startY + 7 * infoLineSpacing);
+  doc.text("Advice: ", leftColumnX, startY + 7 * infoLineSpacing, { maxWidth: doc.internal.pageSize.getWidth() - leftColumnX - 20 });
+  doc.text(advice, leftColumnX + 22, startY + 7 * infoLineSpacing, { maxWidth: doc.internal.pageSize.getWidth() - leftColumnX - 32 });
+
+  // doc.text("Advice: ", leftColumnX, startY + 7 * infoLineSpacing);
+  // doc.text(advice, leftColumnX + 22, startY + 7 * infoLineSpacing);
 
   doc.text("Next Visit: ", leftColumnX, startY + 8 * infoLineSpacing);
   doc.text(nextVisitDate, leftColumnX + 22, startY + 8 * infoLineSpacing);

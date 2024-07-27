@@ -40,6 +40,7 @@ const AppointmentHome = () => {
   const [oldPatentData, setOldPatentData] = useState({});
   const [speciesByBreeds, setSpeciesByBreeds] = useState([]);
   const [speciesByComplaints, setSpeciesByComplaint] = useState([]);
+  const router = useRouter();
   const dispatch = useDispatch();
 
   const { departments } = useSelector((state) => state.department);
@@ -127,6 +128,7 @@ const AppointmentHome = () => {
       const response = await dispatch(addNewAppointment(appointmentData));
 
       if (response?.payload?.success) {
+        router.push("/appointment/view");
         reset();
         toast.success("Appointment added successfully!");
       } else {
