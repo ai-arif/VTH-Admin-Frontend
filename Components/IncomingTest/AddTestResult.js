@@ -192,7 +192,7 @@ const AddTestResult = () => {
                   </div>
                   <div className="pt-2">
                     <h6>Name of laboratory technician: </h6>
-                    <input type="text" {...register2("lab_technician")} className="form-control w-50" />
+                    <input required type="text" {...register2("lab_technician")} className="form-control w-50" />
                   </div>
                 </div>
                 <div className="d-flex justify-content-start justify-content-end">
@@ -259,7 +259,7 @@ const AddTestResult = () => {
                 </div>
                 <div className="pt-2">
                   <h6>Name of laboratory technician: </h6>
-                  <input type="text" {...register("lab_technician")} className="form-control w-50" />
+                  <input required type="text" {...register("lab_technician")} className="form-control w-50" />
                 </div>
               </div>
               <div className="d-flex justify-content-start justify-content-end">
