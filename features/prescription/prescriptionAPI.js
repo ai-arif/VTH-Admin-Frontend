@@ -2,6 +2,7 @@ import axiosInstance from "../../utils/axiosInstance";
 
 export const getPrescriptions = async ({ page = 1, limit = 15 }) => {
   try {
+    console.log({ page });
     const response = await axiosInstance.get(`/prescription?page=${page}&limit=${limit}`);
     return response.data;
   } catch (error) {

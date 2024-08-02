@@ -59,6 +59,7 @@ export const handleDownloadPrescription = async (prescription) => {
 
   const prescriptionWritingDate = formatDate(prescription?.date);
   const nextVisitDate = formatDate(prescription?.nextVisit);
+  const prescribedBy = prescription?.prescribedBy?.fullName || "N/A";
 
   // Extract patient prescription data from prescription
   const diagnosis = prescription?.diagnosis || "N/A";
@@ -113,22 +114,26 @@ export const handleDownloadPrescription = async (prescription) => {
   doc.text(`Phone: ${phone}`, leftColumnX, startY + 2 * infoLineSpacing);
   doc.text(`Address: ${address}`, rightColumnX, startY + 2 * infoLineSpacing);
 
-  //Add animal information
+  // Add animal information
   doc.text(`Age: ${animalAge}`, leftColumnX, startY + 3 * infoLineSpacing);
   doc.text(`Gender: ${animalGender}`, rightColumnX, startY + 3 * infoLineSpacing);
 
   doc.text(`Body Weight: ${animalWeight}`, leftColumnX, startY + 4 * infoLineSpacing);
   doc.text(`Breed: ${animalBreed}`, rightColumnX, startY + 4 * infoLineSpacing);
 
+  // Add prescribed information
+  doc.text(`Prescribed By: ${prescribedBy}`, leftColumnX, startY + 5 * infoLineSpacing);
+
   // Add prescription details
   const splitTextAndAdd = (label, text, yPosition, labelWidth = 22) => {
     doc.text(label, leftColumnX, yPosition);
     const splitText = doc.splitTextToSize(text, doc.internal.pageSize.getWidth() - leftColumnX - labelWidth - 10);
     doc.text(splitText, leftColumnX + labelWidth, yPosition);
-    return yPosition + splitText.length * 6; // Adjust line height as needed
+    // line height
+    return yPosition + splitText.length * 6;
   };
 
-  let currentY = startY + 5 * infoLineSpacing;
+  let currentY = startY + 6 * infoLineSpacing;
   currentY = splitTextAndAdd("Diagnosis: ", diagnosis, currentY);
   currentY = splitTextAndAdd("Prognosis: ", prognosis, currentY);
   currentY = splitTextAndAdd("Advice: ", advice, currentY);
