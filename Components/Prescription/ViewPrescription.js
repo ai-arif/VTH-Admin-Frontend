@@ -23,7 +23,7 @@ const ViewPrescription = () => {
   const { prescriptions, status, totalPages } = useSelector((state) => state.prescription);
   const currentPage = parseInt(router.query.page) || 1;
 
-  console.log(prescriptions);
+  // console.log(prescriptions);
 
   // handling delete single prescription
   const handleDeletePrescription = async (id) => {
