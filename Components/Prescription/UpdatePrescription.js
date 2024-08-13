@@ -81,8 +81,16 @@ const UpdatePrescription = () => {
         third: data[`third_${index}`],
       }));
 
+      // Create a new object excluding the unwanted keys
+      const filteredData = Object.keys(data).reduce((acc, key) => {
+        if (!key.startsWith("first_") && !key.startsWith("second_") && !key.startsWith("third_")) {
+          acc[key] = data[key];
+        }
+        return acc;
+      }, {});
+
       const prescriptionData = {
-        ...data,
+        ...filteredData,
         id: id,
         medicines: data?.medicines?.map((medicine) => medicine.value),
         therapeutics,

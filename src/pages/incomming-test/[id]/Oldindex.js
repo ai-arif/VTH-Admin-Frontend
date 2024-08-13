@@ -61,7 +61,7 @@ const oldIndex = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         axiosInstance.delete(`/test/test-result/${testAllResults?._id}`).then((res) => {
-          console.log({ res: res.data });
+          // console.log({ res: res.data });
           if (res.data?.success) {
             dispatch(fetchAllTestInfo(activeTab));
             setRefetchPrescription(refetch + 1);
@@ -113,7 +113,7 @@ const oldIndex = () => {
       };
 
       axiosInstance.post(`/test/test-result`, data).then((res) => {
-        console.log({ res: res.data });
+        // console.log({ res: res.data });
         if (res.data?.success) {
           setRefetch(refetch + 1);
           toast.success("Test result added successfully");

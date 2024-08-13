@@ -48,7 +48,6 @@ const UpdatePatientRegistration = () => {
   const { tests } = useSelector((state) => state.test);
 
   // convert date string to a Date object and Format the date
-  const date = patient?.date ? new Date(patient.date).toISOString().split("T")[0] : "";
   const dop = patient?.dop ? new Date(patient.dop).toISOString().split("T")[0] : "";
   const doo = patient?.doo ? new Date(patient.doo).toISOString().split("T")[0] : "";
 
@@ -69,7 +68,7 @@ const UpdatePatientRegistration = () => {
     setValue,
     watch,
     formState: { errors },
-  } = useForm({ values: { ...patient, date, dop, doo, tests: matchingTests } });
+  } = useForm({ values: { ...patient, dop, doo, tests: matchingTests } });
 
   const totalAnimals = watch("totalAnimals");
   const totalSickAnimals = watch("totalSickAnimals");
@@ -215,13 +214,6 @@ const UpdatePatientRegistration = () => {
                         <div className="mb-3 col-md-6">
                           <label className="form-label">Registration Type</label>
                           <input type="text" readOnly required value={patient?.appointmentId?.registrationType} className="form-control" />
-                        </div>
-                      </div>
-                      <div className="row">
-                        <div className="mb-3 col-md-6">
-                          <label className="form-label">Date</label>
-                          <input type="date" {...register("date", { required: true })} className={`form-control ${errors.date && "border-danger"}`} />
-                          {errors.date && <small className="text-danger">Please select date</small>}
                         </div>
                       </div>
                       <h6 className="text-center text-decoration-underline py-2">Patient Information</h6>

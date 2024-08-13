@@ -196,7 +196,7 @@ const PatientRegistrationForm = () => {
                         onKeyDown={handleKeyPress}
                         type="text"
                         className="form-control"
-                        placeholder="Patent's Phone"
+                        placeholder="Recipient's phone or case"
                         aria-label="Patent's phone"
                         aria-describedby="button-addon2"
                       />
@@ -274,13 +274,6 @@ const PatientRegistrationForm = () => {
                         <div className="mb-3 col-md-6">
                           <label className="form-label">Registration Type</label>
                           <input type="text" readOnly required value={selectedPatientInfo?.registrationType} className="form-control" />
-                        </div>
-                      </div>
-                      <div className="row">
-                        <div className="mb-3 col-md-6">
-                          <label className="form-label">Date</label>
-                          <input type="date" {...register("date", { required: true })} className={`form-control ${errors.date && "border-danger"}`} />
-                          {errors.date && <small className="text-danger">Please select date</small>}
                         </div>
                       </div>
                       <h6 className="text-center text-decoration-underline py-2">Patient Information</h6>

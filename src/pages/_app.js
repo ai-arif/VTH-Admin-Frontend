@@ -7,17 +7,10 @@ import store from "../../store/store";
 
 export default function App({ Component, pageProps }) {
   const router = useRouter();
-  const authRoutes = [
-    "/auth/login",
-    "/auth/register",
-    "404",
-    "/auth/forget-password",
-    "/auth/reset-password",
-  ];
+  const authRoutes = ["/auth/login", "/auth/register", "404", "/auth/forget-password", "/auth/reset-password"];
   const { asPath } = router;
-  const is404Page =
-    asPath === "/404" ||
-    (pageProps.error && pageProps.error.statusCode === 404);
+  const is404Page = asPath === "/404" || (pageProps.error && pageProps.error.statusCode === 404);
+
   return (
     <>
       <Provider store={store}>

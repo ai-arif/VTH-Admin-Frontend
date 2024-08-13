@@ -8,23 +8,6 @@ import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import axiosInstance from "../../../../utils/axiosInstance";
 import loginImg from "/public/assets/images/vth-login.png";
 
-export const getServerSideProps = async (context) => {
-  const token = context.req.cookies.token;
-
-  if (token && token != "undefined") {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
-
-  return {
-    props: {},
-  };
-};
-
 const index = () => {
   const [userObj, setUserObj] = useState({ phone: "", password: "" });
   const [loading, setLoading] = useState(false);
@@ -63,7 +46,7 @@ const index = () => {
           <div className="d-flex flex-column align-content-end">
             <div className="app-auth-body mx-auto">
               <div className="app-auth-branding mb-4">
-                <Link className="app-logo" href="/auth/login">
+                <Link className="app-logo" href="/">
                   <img className="logo-icon me-2" src="/assets/images/logo.png" alt="logo" />
                 </Link>
               </div>
