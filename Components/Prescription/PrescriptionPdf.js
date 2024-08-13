@@ -122,7 +122,7 @@ export const handleDownloadPrescription = async (prescription) => {
   doc.text(`Breed: ${animalBreed}`, rightColumnX, startY + 4 * infoLineSpacing);
 
   // Add prescribed information
-  doc.text(`Prescribed By: ${prescribedBy}`, leftColumnX, startY + 5 * infoLineSpacing);
+  doc.text(`Doctor Name: ${prescribedBy}`, leftColumnX, startY + 5 * infoLineSpacing);
 
   // Add prescription details
   const splitTextAndAdd = (label, text, yPosition, labelWidth = 22) => {
