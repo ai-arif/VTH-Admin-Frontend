@@ -11,7 +11,7 @@ import axiosInstance from "../../../utils/axiosInstance";
 export default function TestPrescription() {
   const { testAllInfo, tests, status, parameterList, allSubParameterList } = useSelector((state) => state.test);
 
-  console.log(testAllInfo);
+  // console.log(testAllInfo);
 
   const [selectedTest, setSelectedTest] = useState({
     testName: "",
@@ -81,7 +81,7 @@ export default function TestPrescription() {
         name: selectedTest?.testName,
         data: testData,
       };
-      console.log({ data });
+      // console.log({ data });
 
       axiosInstance.post(`/test/test-result`, data).then((res) => {
         if (res.data?.success) {

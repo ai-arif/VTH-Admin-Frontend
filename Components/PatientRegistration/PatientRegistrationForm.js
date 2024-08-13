@@ -196,7 +196,7 @@ const PatientRegistrationForm = () => {
                         onKeyDown={handleKeyPress}
                         type="text"
                         className="form-control"
-                        placeholder="Patent's Phone"
+                        placeholder="Recipient's phone or case"
                         aria-label="Patent's phone"
                         aria-describedby="button-addon2"
                       />
