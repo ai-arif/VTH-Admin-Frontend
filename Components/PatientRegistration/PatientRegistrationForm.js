@@ -194,16 +194,16 @@ const PatientRegistrationForm = () => {
                           setSearchPhone(e.target.value);
                         }}
                         onKeyDown={handleKeyPress}
-                        type="text"
+                        type="search"
                         className="form-control"
-                        placeholder="Recipient's phone or case"
+                        placeholder="Recipient's name, phone, case no"
                         aria-label="Patent's phone"
                         aria-describedby="button-addon2"
                       />
                       <button onClick={getPatientByPhone} className="btn my-2 mx-1 btn-primary text-white" type="button" id="button-addon2">
                         Search
                       </button>
-                      <span className="small opacity-75">(First search appointment using owner's phone)</span>
+                      <span className="small opacity-75 ps-2">(First search using recipient's name, phone, case no)</span>
                     </div>
                     <div className="col-md-6"></div>
                   </div>
