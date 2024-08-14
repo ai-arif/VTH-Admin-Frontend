@@ -84,6 +84,8 @@ const StaffsHome = () => {
         if (res?.payload?.data?.users?.length <= 0) {
           toast.error("Data Not Found!");
         }
+      } else {
+        await dispatch(fetchStaffs({ page: currentPage }));
       }
     } catch (error) {
       console.log(error);

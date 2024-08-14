@@ -98,6 +98,8 @@ const PendingAppointment = () => {
         if (res?.payload?.data?.appointments?.length <= 0) {
           toast.error("Data Not Found!");
         }
+      } else {
+        await dispatch(fetchPendingAppointments({ page: currentPage }));
       }
     } catch (error) {
       console.log(error);

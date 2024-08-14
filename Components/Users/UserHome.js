@@ -20,6 +20,8 @@ const UserHome = () => {
         if (res?.payload?.data?.users?.length <= 0) {
           toast.error("Data Not Found!");
         }
+      } else {
+        await dispatch(fetchAllUserPatient({ page: currentPage }));
       }
     } catch (error) {
       console.log(error);
