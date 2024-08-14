@@ -50,5 +50,6 @@ export const config = {
     "/test-result/:path*",
     "/tests/:path*",
     "/users/:path*",
+    "/payments-overview/:path*",
   ],
 };

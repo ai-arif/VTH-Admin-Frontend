@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import Select from "react-select";
+import CreatableSelect from "react-select/creatable";
 import { fetchMedicineBrandName } from "../../features/medicine/medicineSlice";
 import { fetchMedicineParams } from "../../features/medicineParam/MedicineParamsSlice";
 import { fetchPrescription, fetchSinglePrescription, updatePrescriptionData } from "../../features/prescription/prescriptionSlice";
@@ -204,9 +204,10 @@ const UpdatePrescription = () => {
                       control={control}
                       defaultValue={selectedMedicineOptions}
                       render={({ field }) => (
-                        <Select
+                        <CreatableSelect
                           options={medicineOptions}
                           isMulti
+                          isClearable
                           {...field}
                           styles={customStyles}
                           onChange={(selected) => {
