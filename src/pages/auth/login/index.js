@@ -9,22 +9,22 @@ import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import axiosInstance from "../../../../utils/axiosInstance";
 import loginImg from "/public/assets/images/vth-login.png";
 
-// export const getServerSideProps = async (context) => {
-//   const token = context.req.cookies.token;
+export const getServerSideProps = async (context) => {
+  const token = context.req.cookies.token;
 
-//   if (token && token != "undefined") {
-//     return {
-//       redirect: {
-//         destination: "/",
-//         permanent: false,
-//       },
-//     };
-//   }
+  if (token && token != "undefined") {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
 
-//   return {
-//     props: {},
-//   };
-// };
+  return {
+    props: {},
+  };
+};
 
 const index = () => {
   const [showPassword, setShowPassword] = useState(false);

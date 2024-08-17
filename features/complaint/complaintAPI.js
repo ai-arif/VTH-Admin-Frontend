@@ -36,11 +36,11 @@ export const deleteComplaint = async (id) => {
   }
 };
 
-// export const searchComplaint = async ({ search, page = 1, limit = 40 }) => {
-//   try {
-//     const response = await axiosInstance.get(`/complaint/search?search=${search}&page=${page}&limit=${limit}`);
-//     return response.data;
-//   } catch (error) {
-//     return Promise.reject(error);
-//   }
-// };
+export const searchComplaint = async ({ search, page = 1, limit = 40 }) => {
+  try {
+    const response = await axiosInstance.get(`/complaint/search?search=${search}&page=${page}&limit=${limit}`);
+    return response.data;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};

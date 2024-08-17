@@ -389,7 +389,7 @@ const PatientRegistrationForm = () => {
                           {errors.totalSickAnimals && <small className="text-danger">Please write total sick animals</small>}
                         </div>
                         <div className="mb-3 col-md-6">
-                          <label className="form-label">Mortality (%)</label>
+                          <label className="form-label">Morbidity (%)</label>
                           <Controller
                             name="totalMortality"
                             control={control}
