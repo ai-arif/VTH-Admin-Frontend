@@ -159,9 +159,9 @@ export const handleDownloadTestResult = async (testResult) => {
   currentY += lineSpacing - 3;
 
   doc.setFont("helvetica", "bold");
-  doc.text("Lab Technician:", leftColumnX + 3, currentY);
+  doc.text("Lab Technician/Consultant:", leftColumnX + 3, currentY);
   doc.setFont("helvetica", "normal");
-  doc.text(testResult?.data?.lab_technician || "N/A", leftColumnX + 32, currentY);
+  doc.text(testResult?.data?.lab_technician || "N/A", leftColumnX + 51, currentY);
 
   // Save the PDF
   doc.save(`test_result_${caseNo}.pdf`);

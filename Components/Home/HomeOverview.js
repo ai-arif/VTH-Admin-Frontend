@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import toast from "react-hot-toast";
 import { BsCardChecklist, BsShop } from "react-icons/bs";
 import { FaFilePrescription } from "react-icons/fa";
 import { FcDepartment } from "react-icons/fc";
@@ -13,16 +16,56 @@ import axiosInstance from "../../utils/axiosInstance";
 import HomeDiagrams from "./HomeDiagrams";
 
 const HomeOverview = () => {
+  // Get today's date
+  const today = new Date();
+  // Get the date 7 days ago
+  const sevenDaysAgo = new Date(today);
+  sevenDaysAgo.setDate(today.getDate() - 7);
+
+  const [startDate, setStartDate] = useState(sevenDaysAgo);
+  const [endDate, setEndDate] = useState(today);
   const { data } = useSelector((state) => state.loggedInUser);
 
   const [allData, setAllData] = useState({});
   const [days, setDays] = useState(1);
 
+  const handleDateChange = (dates) => {
+    const [start, end] = dates;
+    setStartDate(start);
+    setEndDate(end);
+  };
+
+  const handleFilter = async () => {
+    if (!startDate || !endDate) return;
+
+    try {
+      const formattedStartDate = startDate.toISOString().split("T")[0];
+      const formattedEndDate = endDate.toISOString().split("T")[0];
+
+      const response = await axiosInstance.get(`/overview`, {
+        params: {
+          start_date: formattedStartDate,
+          end_date: formattedEndDate,
+        },
+      });
+
+      if (response?.data?.success) {
+        setAllData(response.data?.data);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
   useEffect(() => {
-    axiosInstance.get(`/overview?daysBefore=${days}`).then((res) => {
-      setAllData(res.data?.data);
-    });
-  }, [days]);
+    handleFilter();
+  }, []);
+
+  // useEffect(() => {
+  //   axiosInstance.get(`/overview?daysBefore=${days}`).then((res) => {
+  //     setAllData(res.data?.data);
+  //   });
+  // }, [days]);
 
   const {
     totalRoles,
@@ -55,7 +98,24 @@ const HomeOverview = () => {
           <h6>Welcome {data?.fullName || "back"}</h6>
           <p>Have a nice day at great work</p>
         </div>
-        <div style={{ width: "fit-content" }}>
+        <form className="d-flex align-items-center gap-3">
+          <div>
+            <DatePicker
+              selected={startDate}
+              onChange={handleDateChange}
+              startDate={startDate}
+              endDate={endDate}
+              selectsRange
+              isClearable
+              className="form-control"
+              placeholderText="Select a date range"
+            />
+          </div>
+          <button type="button" className="btn btn-primary text-white" onClick={handleFilter} disabled={!startDate || !endDate}>
+            Filter
+          </button>
+        </form>
+        {/* <div style={{ width: "fit-content" }}>
           <p>
             Showing data of last {days == 365 && "1 year"}
             {days == 180 && "6 months"}
@@ -66,7 +126,7 @@ const HomeOverview = () => {
           </p>
           <div style={{ width: "fit-content" }} className="d-flex gap-2 align-items-center">
             <label style={{ width: "fit-content", whiteSpace: "nowrap" }}>Filter overviews</label>
-            {/* select drop down for district */}
+  
             <select defaultValue={days} onChange={(e) => setDays(e.target.value)} className="form-select" aria-label="Default select example">
               <option value="1">1 days</option>
               <option value="7">7 days</option>
@@ -76,7 +136,7 @@ const HomeOverview = () => {
               <option value="365">1 year</option>
             </select>
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* main contents  */}
