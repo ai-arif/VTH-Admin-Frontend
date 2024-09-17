@@ -1,15 +1,14 @@
+import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { MdPrint } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
-import Select from "react-select";
+import CreatableSelect from "react-select/creatable";
 import { fetchAppointmentsByPhone } from "../../features/appointment/appointmentSlice";
 import { fetchMedicineBrandName } from "../../features/medicine/medicineSlice";
 import { fetchMedicineParams } from "../../features/medicineParam/MedicineParamsSlice";
 import { createPrescription } from "../../features/prescription/prescriptionSlice";
 import { formatDate } from "../../utils/formatDate";
-import { handleDownloadPrescription } from "./PrescriptionPdf";
 
 // Define custom styles
 const customStyles = {
@@ -43,10 +42,10 @@ const customStyles = {
 const PrescriptionHome = () => {
   const [searchPhone, setSearchPhone] = useState("");
   const [patentInfo, setPatentInfo] = useState([]);
-  const [singlePrescription, setSinglePrescription] = useState({});
+  // const [singlePrescription, setSinglePrescription] = useState({});
   const [selectedPatentInfo, setSelectedPatentInfo] = useState({});
-  const [isPrint, setIsPrint] = useState(false);
   const [selectedMedicines, setSelectedMedicines] = useState([]);
+  const router = useRouter();
 
   const dispatch = useDispatch();
 
@@ -98,8 +97,16 @@ const PrescriptionHome = () => {
         third: data[`third_${index}`],
       }));
 
+      // Create a new object excluding the unwanted keys
+      const filteredData = Object.keys(data).reduce((acc, key) => {
+        if (!key.startsWith("first_") && !key.startsWith("second_") && !key.startsWith("third_")) {
+          acc[key] = data[key];
+        }
+        return acc;
+      }, {});
+
       const prescriptionData = {
-        ...data,
+        ...filteredData,
         medicines: data?.medicines?.map((medicine) => medicine.value),
         therapeutics,
       };
@@ -107,9 +114,9 @@ const PrescriptionHome = () => {
       const response = await dispatch(createPrescription(prescriptionData));
 
       if (response?.payload?.success) {
+        router.push("/prescription/view");
+        // setSinglePrescription(response?.payload?.data?.data);
         toast.success("Prescription added successfully!");
-        setSinglePrescription(response?.payload?.data?.data);
-        setIsPrint(true);
         setSearchPhone("");
         setSelectedPatentInfo({});
         setPatentInfo([]);
@@ -151,16 +158,16 @@ const PrescriptionHome = () => {
                       setSearchPhone(e.target.value);
                     }}
                     onKeyDown={handleKeyPress}
-                    type="text"
+                    type="search"
                     className="form-control"
-                    placeholder="Patent's Phone"
+                    placeholder="Recipient's name, phone, case no"
                     aria-label="Patent's phone"
                     aria-describedby="button-addon2"
                   />
                   <button onClick={getPatentByPhone} className="btn my-2 mx-1 btn-primary text-white" type="button" id="button-addon2">
                     Search
                   </button>
-                  <span className="small opacity-75 ps-2">(Search patent's phone for prescription)</span>
+                  <span className="small opacity-75 ps-2">(First search using recipient's name, phone, case no)</span>
                 </div>
                 <div className="col-md-6"></div>
               </div>
@@ -220,9 +227,10 @@ const PrescriptionHome = () => {
                       control={control}
                       defaultValue={[]}
                       render={({ field }) => (
-                        <Select
+                        <CreatableSelect
                           options={medicineOptions}
                           isMulti
+                          isClearable
                           {...field}
                           styles={customStyles}
                           onChange={(selected) => {
@@ -347,11 +355,11 @@ const PrescriptionHome = () => {
                   </button>
                 </div>
               </form>
-              <div className="pb-3 d-flex justify-content-end">
+              {/* <div className="pb-3 d-flex justify-content-end">
                 <button disabled={!isPrint} onClick={() => handleDownloadPrescription(singlePrescription)} className="btn btn-info text-white">
                   <MdPrint size={18} /> Print
                 </button>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

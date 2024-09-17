@@ -2,7 +2,7 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 import autoTable from "jspdf-autotable";
 
-export const handleDownloadTestResult = async (testResult) => {
+export const handleDownloadDoctorTestResult = async (testResult, resultFormat) => {
   const doc = new jsPDF();
 
   // load images from URLs
@@ -58,7 +58,7 @@ export const handleDownloadTestResult = async (testResult) => {
     const year = d.getFullYear();
     return `${day}-${month}-${year}`;
   };
-  const testResultDate = formatDate(testResult?.data?.resultDate);
+  const appointmentDate = formatDate(testResult?.data?.resultDate);
 
   // extract animal information from appointment
   const animalAge = testResult?.registrationId?.age || "N/A";
@@ -92,7 +92,7 @@ export const handleDownloadTestResult = async (testResult) => {
 
   // add owner information
   doc.text(`Case No: ${caseNo}`, leftColumnX, startY);
-  doc.text(`Date: ${testResultDate}`, rightColumnX, startY);
+  doc.text(`Date: ${appointmentDate}`, rightColumnX, startY);
 
   doc.text(`Owner Name: ${ownerName}`, leftColumnX, startY + infoLineSpacing);
   doc.text(`Upazila: ${upazila}`, rightColumnX, startY + infoLineSpacing);
@@ -114,12 +114,12 @@ export const handleDownloadTestResult = async (testResult) => {
   doc.text("Test Name: ", leftColumnX + 3, currentY);
   const testNameWidth = doc.getTextWidth("Test Name: ");
   doc.setFont("helvetica", "normal");
-  doc.text(testResult?.testId?.testName, leftColumnX + testNameWidth + 4, currentY);
+  doc.text(resultFormat?.testName, leftColumnX + testNameWidth + 4, currentY);
 
-  const totalTestNameWidth = testNameWidth + 4 + doc.getTextWidth(testResult?.testId?.testName);
+  const totalTestNameWidth = testNameWidth + 4 + doc.getTextWidth(resultFormat?.testName);
   doc.line(leftColumnX + 3, currentY + 1, leftColumnX + 3 + totalTestNameWidth, currentY + 1);
 
-  testResult?.testId?.tests?.forEach((test, index) => {
+  resultFormat?.tests?.forEach((test, index) => {
     if (index > 0) {
       currentY += lineSpacing;
     }

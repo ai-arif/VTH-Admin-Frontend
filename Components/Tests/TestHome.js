@@ -86,6 +86,8 @@ const TestHome = () => {
         if (res?.payload?.data?.data?.length <= 0) {
           toast.error("Data Not Found!");
         }
+      } else {
+        await dispatch(fetchTest({ page: currentPage }));
       }
     } catch (error) {
       console.log(error);

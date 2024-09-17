@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -42,6 +43,7 @@ const PatientRegistrationForm = () => {
   const [searchPhone, setSearchPhone] = useState("");
   const [patientInfo, setPatientInfo] = useState([]);
   const [selectedPatientInfo, setSelectedPatientInfo] = useState({});
+  const router = useRouter();
   const dispatch = useDispatch();
 
   const { tests } = useSelector((state) => state.test);
@@ -122,6 +124,7 @@ const PatientRegistrationForm = () => {
       const response = await dispatch(createPatient(patientData));
 
       if (response?.payload?.success) {
+        router.push("/patient-registration/view");
         toast.success("Patient registration successfully!");
         setSearchPhone("");
         setSelectedPatientInfo({});
@@ -191,16 +194,16 @@ const PatientRegistrationForm = () => {
                           setSearchPhone(e.target.value);
                         }}
                         onKeyDown={handleKeyPress}
-                        type="text"
+                        type="search"
                         className="form-control"
-                        placeholder="Patent's Phone"
+                        placeholder="Recipient's name, phone, case no"
                         aria-label="Patent's phone"
                         aria-describedby="button-addon2"
                       />
                       <button onClick={getPatientByPhone} className="btn my-2 mx-1 btn-primary text-white" type="button" id="button-addon2">
                         Search
                       </button>
-                      <span className="small opacity-75">(First search appointment using owner's phone)</span>
+                      <span className="small opacity-75 ps-2">(First search using recipient's name, phone, case no)</span>
                     </div>
                     <div className="col-md-6"></div>
                   </div>
@@ -271,13 +274,6 @@ const PatientRegistrationForm = () => {
                         <div className="mb-3 col-md-6">
                           <label className="form-label">Registration Type</label>
                           <input type="text" readOnly required value={selectedPatientInfo?.registrationType} className="form-control" />
-                        </div>
-                      </div>
-                      <div className="row">
-                        <div className="mb-3 col-md-6">
-                          <label className="form-label">Date</label>
-                          <input type="date" {...register("date", { required: true })} className={`form-control ${errors.date && "border-danger"}`} />
-                          {errors.date && <small className="text-danger">Please select date</small>}
                         </div>
                       </div>
                       <h6 className="text-center text-decoration-underline py-2">Patient Information</h6>
@@ -393,7 +389,7 @@ const PatientRegistrationForm = () => {
                           {errors.totalSickAnimals && <small className="text-danger">Please write total sick animals</small>}
                         </div>
                         <div className="mb-3 col-md-6">
-                          <label className="form-label">Mortality (%)</label>
+                          <label className="form-label">Morbidity (%)</label>
                           <Controller
                             name="totalMortality"
                             control={control}
@@ -580,7 +576,7 @@ const PatientRegistrationForm = () => {
                         </div>
                         <div className="mb-3 col-md-6">
                           <label className="form-label">Heart beat /minute</label>
-                          <input type="text" {...register("heartBeat", { required: true })} className="form-control" />
+                          <input type="text" {...register("heartBeat", { required: true })} className={`form-control ${errors.heartBeat && "border-danger"}`} />
                           {errors.heartBeat && <small className="text-danger">Please write heart beat rate</small>}
                         </div>
                       </div>

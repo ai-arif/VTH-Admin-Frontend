@@ -6,7 +6,6 @@ import { MdPrint } from "react-icons/md";
 import { useDispatch } from "react-redux";
 import Swal from "sweetalert2";
 import axiosInstance from "../../utils/axiosInstance";
-import { formatDate } from "../../utils/formatDate";
 import Loader from "../UI/Loader";
 import { handleDownloadTestResult } from "./TestResultPdf";
 
@@ -50,7 +49,10 @@ const AddTestResult = () => {
   } = useForm();
   const onSubmit = async (data) => {
     try {
-      axiosInstance.post(`/test/test-result`, { data, id }).then((res) => {
+      // Add current date and time to the data object
+      const resultDate = new Date().toISOString();
+      const updatedData = { ...data, resultDate };
+      axiosInstance.post(`/test/test-result`, { data: updatedData, id }).then((res) => {
         if (res.data?.success) {
           setRefetch(refetch + 1);
           // reset();
@@ -89,7 +91,6 @@ const AddTestResult = () => {
   };
 
   // if (status === "loading") return <Loader />;
-  console.log(incomingTest);
 
   return (
     <div>
@@ -104,7 +105,8 @@ const AddTestResult = () => {
             <p>
               Status: <span className={`${incomingTest?.status ? "text-success fw-medium" : "text-danger fw-medium"}`}>{incomingTest?.status ? "Added" : "To be add"}</span>
             </p>
-            <p>Date: {formatDate(incomingTest?.appointmentId?.date)}</p>
+            {/* <p>Date: {formatDate(incomingTest?.appointmentId?.date)}</p> */}
+            <p>Date: {new Date(incomingTest?.createdAt).toDateString()}</p>
           </div>
           <div>
             <h6 className="text-center w-50 mx-auto text-bg-secondary rounded-1 py-2">Owner Information</h6>
@@ -116,6 +118,19 @@ const AddTestResult = () => {
               <div className="">
                 <p className="mb-1">Upazila: {incomingTest?.appointmentId?.upazila}</p>
                 <p className="m-0">Address: {incomingTest?.appointmentId?.address}</p>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h6 className="text-center w-50 mx-auto text-bg-secondary rounded-1 py-2">Animal Information</h6>
+            <div className="d-flex justify-content-between">
+              <div className="">
+                <p className="mb-1">Age: {incomingTest?.registrationId?.age}</p>
+                <p className="m-0">Body Weight: {incomingTest?.registrationId?.weight}</p>
+              </div>
+              <div className="">
+                <p className="mb-1">Breed: {incomingTest?.appointmentId?.breed?.breed}</p>
+                <p className="m-0 text-capitalize">Gender: {incomingTest?.registrationId?.sex}</p>
               </div>
             </div>
           </div>
@@ -177,7 +192,7 @@ const AddTestResult = () => {
                   </div>
                   <div className="pt-2">
                     <h6>Name of laboratory technician: </h6>
-                    <input type="text" {...register2("lab_technician")} className="form-control w-50" />
+                    <input required type="text" {...register2("lab_technician")} className="form-control w-50" />
                   </div>
                 </div>
                 <div className="d-flex justify-content-start justify-content-end">
@@ -244,7 +259,7 @@ const AddTestResult = () => {
                 </div>
                 <div className="pt-2">
                   <h6>Name of laboratory technician: </h6>
-                  <input type="text" {...register("lab_technician")} className="form-control w-50" />
+                  <input required type="text" {...register("lab_technician")} className="form-control w-50" />
                 </div>
               </div>
               <div className="d-flex justify-content-start justify-content-end">

@@ -23,6 +23,8 @@ const ViewPrescription = () => {
   const { prescriptions, status, totalPages } = useSelector((state) => state.prescription);
   const currentPage = parseInt(router.query.page) || 1;
 
+  // console.log(prescriptions);
+
   // handling delete single prescription
   const handleDeletePrescription = async (id) => {
     Swal.fire({
@@ -82,6 +84,8 @@ const ViewPrescription = () => {
         if (res?.payload?.data?.data?.length <= 0) {
           toast.error("Data Not Found!");
         }
+      } else {
+        await dispatch(fetchPrescription({ page: currentPage }));
       }
     } catch (error) {
       console.log(error);
@@ -139,7 +143,7 @@ const ViewPrescription = () => {
                   <tr key={prescription._id}>
                     <td>{(currentPage - 1) * 15 + idx + 1}</td>
                     <td className="text-nowrap">{prescription?.appointment?.ownerName}</td>
-                    <td className="">{prescription?.appointment?.department?.name}</td>
+                    <td className="">{prescription?.department?.name}</td>
                     <td className="">{formatDate(prescription?.appointment?.date)}</td>
                     <td className="d-flex gap-3 justify-content-end">
                       {prescription?.tests?.length > 0 && (

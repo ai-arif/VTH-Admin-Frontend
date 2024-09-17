@@ -1,7 +1,7 @@
 import { AiOutlineHome, AiOutlineMedicineBox } from "react-icons/ai";
 import { BsBarChartLine, BsCardList, BsColumnsGap, BsFolder } from "react-icons/bs";
 import { FaPhotoVideo } from "react-icons/fa";
-import { FaHospitalUser } from "react-icons/fa6";
+import { FaHospitalUser, FaRegCreditCard } from "react-icons/fa6";
 import { GiCow } from "react-icons/gi";
 import { GrTest, GrTestDesktop } from "react-icons/gr";
 import { HiOutlineUserGroup } from "react-icons/hi2";
@@ -95,13 +95,20 @@ export const menuConfig = {
       submenuNumber: "submenu-5",
     },
     {
+      href: "/payments-overview",
+      icon: <FaRegCreditCard size={22} />,
+      label: "Payments Overview",
+    },
+    {
       hrefParent: "/frontend-management",
       hrefOne: "/frontend-management/logo",
       hrefTwo: "/frontend-management/content",
+      hrefThree: "/frontend-management/feedback",
       icon: <FaPhotoVideo size={20} />,
       label: "Frontend Management",
       labelOne: "Logo",
       labelTwo: "Content",
+      labelThree: "Feedback",
       submenuNumber: "submenu-6",
     },
   ],

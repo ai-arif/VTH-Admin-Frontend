@@ -48,7 +48,7 @@ const StaffsHome = () => {
             Swal.fire({
               icon: "success",
               title: "Deleted!",
-              text: "Department has been deleted.",
+              text: "Staff has been deleted.",
               showConfirmButton: false,
               timer: 1500,
               color: "#eaeaea",
@@ -58,7 +58,7 @@ const StaffsHome = () => {
             Swal.fire({
               icon: "error",
               title: "Error!",
-              text: "Failed to delete department. Please try again later.",
+              text: "Failed to delete staff. Please try again later.",
               confirmButtonColor: "#15a362",
               color: "#eaeaea",
               background: "#161719",
@@ -84,6 +84,8 @@ const StaffsHome = () => {
         if (res?.payload?.data?.users?.length <= 0) {
           toast.error("Data Not Found!");
         }
+      } else {
+        await dispatch(fetchStaffs({ page: currentPage }));
       }
     } catch (error) {
       console.log(error);

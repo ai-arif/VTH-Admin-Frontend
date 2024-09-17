@@ -16,38 +16,33 @@ const IncomingTestHome = () => {
   const [search, setSearch] = useState("");
   const [refetch, setRefetch] = useState(0);
   const [testId, setTestId] = useState("");
-  const [amount, setAmount] = useState(null);
 
   const router = useRouter();
   const dispatch = useDispatch();
   const { testResults, status, totalPages } = useSelector((state) => state.incomingTest);
   const currentPage = parseInt(router.query.page) || 1;
 
-  const handleStatus = (status, id) => {
-    axiosInstance.patch(`/test/status/${id}`, { status: status }).then((res) => {
+  // const handleStatus = (status, id) => {
+  //   axiosInstance.patch(`/test/status/${id}`, { status: status }).then((res) => {
+  //     let result = res.data;
+  //     setRefetch(result);
+
+  //     if (result.success) {
+  //       toast.success("Status updated successfully!");
+  //     }
+  //   });
+  // };
+
+  const handleTestCost = (event) => {
+    event.preventDefault();
+    axiosInstance.patch(`/test/test-result/${testId}`, { amount: parseFloat(event?.target?.amount?.value)?.toFixed(2) }).then((res) => {
       let result = res.data;
-      setRefetch(result);
 
       if (result.success) {
-        toast.success("Status updated successfully!");
-      }
-    });
-  };
-
-  const handleTestCost = (amount) => {
-    if (!testId || !amount) {
-      return toast.error("Amount is required!");
-    }
-
-    // console.log({ amount, testId })
-    axiosInstance.patch(`/test/test-result/${testId}`, { amount: parseFloat(amount)?.toFixed(2) }).then((res) => {
-      let result = res.data;
-      // console.log({ result })
-
-      if (result.success) {
-        setAmount(null);
-        setRefetch(result);
-        toast.success("Payment and status updated successfully!");
+        setRefetch(refetch + 1);
+        document.getElementById("closeModal").click();
+        toast.success("Payment successful!");
+        event.target.reset();
       }
     });
   };
@@ -111,6 +106,8 @@ const IncomingTestHome = () => {
         if (res?.payload?.data?.data?.length <= 0) {
           toast.error("Data Not Found!");
         }
+      } else {
+        await dispatch(fetchAllTestResult({ page: currentPage }));
       }
     } catch (error) {
       console.log(error);
@@ -134,9 +131,7 @@ const IncomingTestHome = () => {
     if (router.isReady) {
       dispatch(fetchAllTestResult({ page: currentPage }));
     }
-  }, [router.isReady, dispatch, currentPage]);
-
-  // console.log({ testResults });
+  }, [router.isReady, dispatch, currentPage, refetch]);
 
   // loader
   // if (status === "loading" && currentPage < 2) return <Loader />;
@@ -218,7 +213,7 @@ const IncomingTestHome = () => {
           </div>
         </div>
         {/* payment modal */}
-        <TestPaymentModal handleTestCost={handleTestCost} setAmount={setAmount} amount={amount} title={"tests"} />
+        <TestPaymentModal handleTestCost={handleTestCost} title={"tests"} />
         {/* pagination */}
         <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
       </div>

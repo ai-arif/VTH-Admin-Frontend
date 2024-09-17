@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -39,6 +40,7 @@ const AppointmentHome = () => {
   const [oldPatentData, setOldPatentData] = useState({});
   const [speciesByBreeds, setSpeciesByBreeds] = useState([]);
   const [speciesByComplaints, setSpeciesByComplaint] = useState([]);
+  const router = useRouter();
   const dispatch = useDispatch();
 
   const { departments } = useSelector((state) => state.department);
@@ -120,11 +122,15 @@ const AppointmentHome = () => {
       }
       appointmentData.complaint = appointmentData?.complaint?.value;
 
+      // Convert appointment date to UTC
+      appointmentData.date = new Date(appointmentData.date).toISOString();
+
       const response = await dispatch(addNewAppointment(appointmentData));
 
       if (response?.payload?.success) {
-        toast.success("Appointment added successfully!");
+        router.push("/appointment/view");
         reset();
+        toast.success("Appointment added successfully!");
       } else {
         toast.error("Failed to add appointment! Please try again later.");
       }

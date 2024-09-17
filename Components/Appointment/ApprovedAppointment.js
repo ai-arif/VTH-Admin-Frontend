@@ -76,15 +76,20 @@ const ApprovedAppointment = () => {
   };
 
   const handlePaymentAndStatus = (amount) => {
-    axiosInstance.patch(`/appointment/${appointmentId}`, { payment: "paid", amount: amount }).then((res) => {
-      let result = res.data;
+    axiosInstance
+      .patch(`/appointment/${appointmentId}`, {
+        payment: "paid",
+        amount: amount,
+      })
+      .then((res) => {
+        let result = res.data;
 
-      if (result.success) {
-        setAmount(null);
-        dispatch(fetchApprovedAppointments());
-        toast.success("Payment and status updated successfully!");
-      }
-    });
+        if (result.success) {
+          setAmount(null);
+          dispatch(fetchApprovedAppointments());
+          toast.success("Payment and status updated successfully!");
+        }
+      });
   };
 
   const handleSearch = async () => {
@@ -94,6 +99,8 @@ const ApprovedAppointment = () => {
         if (res?.payload?.data?.appointments?.length <= 0) {
           toast.error("Data Not Found!");
         }
+      } else {
+        await dispatch(fetchApprovedAppointments({ page: currentPage }));
       }
     } catch (error) {
       console.log(error);

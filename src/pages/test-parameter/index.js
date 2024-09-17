@@ -196,7 +196,7 @@ export default function TestParameter() {
 
       const response = await dispatch(createAdditionalFields(data));
 
-      console.log(response);
+      // console.log(response);
 
       if (response.payload.success) {
         dispatch(fetchAllAdditionalFields(selectedAdditional.id));
@@ -241,7 +241,7 @@ export default function TestParameter() {
     }
 
     const response = await axiosInstance.post("/test/parameter/sub", newData);
-    console.log(response);
+    // console.log(response);
 
     if (response.status === 200) {
       toast.success(response.data.message);
@@ -439,7 +439,7 @@ export default function TestParameter() {
                                   fieldName: "",
                                 });
                                 // setType("text");
-                                console.log("kj", param._id);
+                                // console.log("kj", param._id);
                               }}
                             >
                               <IoMdAddCircleOutline /> additional
@@ -494,7 +494,7 @@ export default function TestParameter() {
                                   fieldName: "",
                                 });
                                 // setType("text");
-                                console.log("kj", param._id);
+                                // console.log("kj", param._id);
                               }}
                             >
                               <IoMdAddCircleOutline /> additional

@@ -84,6 +84,8 @@ const DepartmentHome = () => {
         if (res?.payload?.data?.data?.length <= 0) {
           toast.error("Data Not Found!");
         }
+      } else {
+        await dispatch(fetchDepartment({ page: currentPage }));
       }
     } catch (error) {
       console.log(error);

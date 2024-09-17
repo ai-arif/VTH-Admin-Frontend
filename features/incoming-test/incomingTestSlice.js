@@ -26,14 +26,14 @@ export const deleteIncomingTestData = createAsyncThunk("incomingTest/deleteIncom
   return response;
 });
 
-export const searchIncomingTestData = createAsyncThunk("incomingTest/searchIncomingTestData", async ({ search, page = 1, limit = 40 }) => {
-  const response = await searchIncomingTest({ search, page, limit });
-  return response;
-});
-
 // fetch all test results
 export const fetchAllTestResult = createAsyncThunk("incomingTest/fetchAllTestResult", async ({ page = 1, limit = 15 }) => {
   const response = await getTestResult({ page, limit });
+  return response;
+});
+
+export const searchIncomingTestData = createAsyncThunk("incomingTest/searchIncomingTestData", async ({ search, page = 1, limit = 40 }) => {
+  const response = await searchIncomingTest({ search, page, limit });
   return response;
 });
 
@@ -84,18 +84,6 @@ export const incomingTestSlice = createSlice({
       .addCase(deleteIncomingTestData.rejected, (state, action) => {
         state.status = "failed";
       })
-      .addCase(searchIncomingTestData.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(searchIncomingTestData.fulfilled, (state, action) => {
-        state.status = "success";
-        state.incomingTests = action.payload.data;
-        state.totalPages = action.payload.data.totalPages;
-      })
-      .addCase(searchIncomingTestData.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.error.message;
-      })
       // all test result
       .addCase(fetchAllTestResult.pending, (state) => {
         state.status = "loading";
@@ -106,6 +94,18 @@ export const incomingTestSlice = createSlice({
         state.totalPages = action.payload.data.totalPages;
       })
       .addCase(fetchAllTestResult.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(searchIncomingTestData.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(searchIncomingTestData.fulfilled, (state, action) => {
+        state.status = "success";
+        state.incomingTests = action.payload.data;
+        state.totalPages = action.payload.data.totalPages;
+      })
+      .addCase(searchIncomingTestData.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       })

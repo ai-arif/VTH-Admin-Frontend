@@ -67,7 +67,7 @@ const Index = () => {
         .get(`http://localhost:5000/api/v1/test/test-result/${id}`)
         .then((res) => {
           let result = res.data?.data?.data;
-          console.log({ result: res.data });
+          // console.log({ result: res.data });
           setTestResults(result);
           setLoading(false);
         })
