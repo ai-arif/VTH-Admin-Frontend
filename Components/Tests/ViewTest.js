@@ -70,7 +70,7 @@ const ViewTest = () => {
         ))}
         <div className="text-start pb-2">
           <h6>Interpretation:</h6>
-          <h6 className="pt-2">Name of laboratory technician:</h6>
+          <h6 className="pt-2">Name of laboratory technician/Consultant:</h6>
         </div>
       </div>
     </div>
