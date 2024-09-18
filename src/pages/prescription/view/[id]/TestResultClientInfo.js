@@ -28,7 +28,7 @@ const TestResultClientInfo = ({ ownerInfo }) => {
                 </div>
                 <div className="d-flex justify-content-center my-3 mb-3">
                   <div>
-                    <h4>Owner's Information</h4>
+                    <h4>Owners Information</h4>
                     <hr />
                   </div>
                 </div>
