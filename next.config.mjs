@@ -6,7 +6,8 @@ const nextConfig = {
     API_URL: "https://api.bauvth.com/api/v1",
   },
   images: {
-    domains: ["storage.googleapis.com"],
+    // domains: ["storage.googleapis.com"],
+    remotePatterns: ["https://storage.googleapis.com", "storage.googleapis.com"],
   },
 };
 

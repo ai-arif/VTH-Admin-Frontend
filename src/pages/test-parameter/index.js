@@ -328,7 +328,7 @@ export default function TestParameter() {
           <ul className="list-group">
             {selectedTest.testName &&
               parameterList.data?.map((param, index) => (
-                <li className="list-group-item mt-3">
+                <li key={index} className="list-group-item mt-3">
                   <UpdateTestParamsModal existingTestParamsName={param.name} handleSubmit={handleUpdateTestParams} />
                   <span>{param.name}</span>
                   <div className="d-flex justify-content-between align-items-center mt-4">
@@ -410,7 +410,7 @@ export default function TestParameter() {
                   {subParameterList.data?.map((param, index) => {
                     if (param.isInputField)
                       return (
-                        <li className="w-100 list-group-item mt-3">
+                        <li key={index} className="w-100 list-group-item mt-3">
                           <UpdateTestSubParamModal existingTestParamsName={param.value} handleSubmit={handleUpdateTestSubParams} />
                           <span>{param.title}</span>
                           <div className="d-flex justify-content-between">
@@ -465,7 +465,7 @@ export default function TestParameter() {
                   {subParameterList.data?.map((param, index) => {
                     if (!param.isInputField)
                       return (
-                        <li className="w-100 list-group-item mt-3">
+                        <li key={index} className="w-100 list-group-item mt-3">
                           <UpdateTestSubParamModal2 existingTestParamsName={param.title} handleSubmit={handleUpdateTestSubParams} />
                           <span>{param.title}</span>
                           <div className="d-flex justify-content-between">
@@ -538,8 +538,8 @@ export default function TestParameter() {
                   {allAdditionalFields?.data?.map((param, index) => {
                     if (param.isAdditionalFieldInput == true)
                       return (
-                        <>
-                          <UpdateAdditionalModal1 existingTestParamsName={param.additionalFieldTitle} handleSubmit={handleUpdateTestAdditionalField} />
+                        <div key={index}>
+                          <UpdateAdditionalModal1  existingTestParamsName={param.additionalFieldTitle} handleSubmit={handleUpdateTestAdditionalField} />
                           <li className="list-group-item mt-3 d-flex justify-content-between">
                             <span>{param.additionalFieldTitle}</span>
                             <div className="d-flex gap-3 mt-4">
@@ -556,7 +556,7 @@ export default function TestParameter() {
                               <MdOutlineDeleteForever type="button" size={23} color="red" onClick={() => handleAdditionalFieldDelete(param._id)} />
                             </div>
                           </li>
-                        </>
+                        </div>
                       );
                   })}
                 </ul>
@@ -581,7 +581,7 @@ export default function TestParameter() {
                   {allAdditionalFields?.data?.map((param, index) => {
                     if (param.isAdditionalFieldInput == false)
                       return (
-                        <>
+                        <div key={index}>
                           <UpdateAdditionalModal1 existingTestParamsName={param.additionalFieldTitle} handleSubmit={handleUpdateTestAdditionalField} />
                           <li className="list-group-item mt-3 d-flex justify-content-between">
                             <span>{param.additionalFieldTitle}</span>
@@ -599,7 +599,7 @@ export default function TestParameter() {
                               <MdOutlineDeleteForever type="button" size={23} color="red" onClick={() => handleAdditionalFieldDelete(param._id)} />
                             </div>
                           </li>
-                        </>
+                        </div>
                       );
                   })}
                 </ul>
