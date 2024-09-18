@@ -26,7 +26,7 @@ export const getServerSideProps = async (context) => {
   };
 };
 
-const index = () => {
+const Index = () => {
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
@@ -140,4 +140,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Index;
