@@ -19,7 +19,7 @@ export const getServerSideProps = async (context) => {
   };
 };
 
-const index = () => {
+const Index = () => {
   const { data } = useSelector((state) => state.loggedInUser);
 
   return (
@@ -35,4 +35,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Index;
