@@ -7,7 +7,13 @@ const nextConfig = {
   },
   images: {
     // domains: ["storage.googleapis.com"],
-    remotePatterns: ["https://storage.googleapis.com", "storage.googleapis.com"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "storage.googleapis.com",
+        pathname: "**",
+      },
+    ],
   },
 };
 
