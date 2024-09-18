@@ -14,7 +14,7 @@ const index = () => {
 			    <div className="app-card p-5 text-center shadow-sm">
 				    <h1 className="page-title mb-4">404<br/><span className="font-weight-light">Page Not Found</span></h1>
 				    <div className="mb-4">
-					    Sorry, we can't find the page you're looking for. 
+					    Sorry, we cant find the page youre looking for. 
 				    </div>
 				    <Link className="btn app-btn-primary" href="/">Go to home page</Link>
 			    </div>
