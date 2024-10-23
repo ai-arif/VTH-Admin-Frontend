@@ -12,6 +12,7 @@ import Pagination from "../UI/Pagination";
 
 const ViewMedicine = () => {
   const [search, setSearch] = useState("");
+  const [searchOn, setSearchOn] = useState(["name"]);
   const router = useRouter();
   const dispatch = useDispatch();
   const { medicines, status, totalPages } = useSelector((state) => state.medicine);
@@ -72,7 +73,7 @@ const ViewMedicine = () => {
   const handleSearch = async () => {
     try {
       if (search.trim()) {
-        const res = await dispatch(searchMedicineData({ search }));
+        const res = await dispatch(searchMedicineData({ search, searchOn: searchOn?.join('+') || "name" }));
         if (res?.payload?.data?.data?.length <= 0) {
           toast.error("Data Not Found!");
         }
@@ -97,6 +98,16 @@ const ViewMedicine = () => {
     });
   };
 
+  const handleSearchFields = (e) => {
+    if (e.target.checked) {
+      setSearchOn([...searchOn, e.target.name]);
+    }
+    else {
+      let updatedFields = searchOn?.filter(field => field !== e.target.name);
+      setSearchOn(updatedFields);
+    }
+  }
+
   useEffect(() => {
     if (router.isReady) {
       dispatch(fetchMedicine({ page: currentPage }));
@@ -109,15 +120,32 @@ const ViewMedicine = () => {
   return (
     <div className="container-fluid">
       <div className="app-card p-5 text-center shadow-sm">
-        <div className="d-flex align-items-center justify-content-between mb-4">
+        <div className="d-flex align-items-center justify-content-between mb-1">
           <div className="input-group w-50">
-            <input onChange={(e) => setSearch(e.target.value)} onKeyDown={handleKeyPress} type="search" className="form-control" placeholder="Search by medicine name or brand" />
+            <input onChange={(e) => setSearch(e.target.value)} onKeyDown={handleKeyPress} type="search" className="form-control" placeholder="Search here.." />
             <button onClick={handleSearch} className="btn btn-primary text-white" type="button" id="button-addon2">
               Search
             </button>
           </div>
           <h3 className="page-title">All Medicine</h3>
         </div>
+
+        {/* search fields  */}
+        <div className="d-flex gap-3 mb-3">
+          <div className="d-flex gap-1">
+            <input checked={searchOn.includes("name")} onChange={handleSearchFields} type="checkbox" name="name" id="sby-name" />
+            <label htmlFor="sby-name">Medicine name</label>
+          </div>
+          <div className="d-flex gap-1">
+            <input checked={searchOn.includes("class")} onChange={handleSearchFields} type="checkbox" name="class" id="sby-class" />
+            <label htmlFor="sby-class">Medicine class</label>
+          </div>
+          <div className="d-flex gap-1">
+            <input checked={searchOn.includes("brandName")} onChange={handleSearchFields} type="checkbox" name="brandName" id="sby-brandName" />
+            <label htmlFor="sby-brandName">Brand name</label>
+          </div>
+        </div>
+
         <div className="mb-4">
           <div className="table-responsive">
             <table className="table table-hover table-borderless table-striped table-dark">
