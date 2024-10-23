@@ -45,9 +45,9 @@ export const deleteMedicine = async (id) => {
   }
 };
 
-export const searchMedicine = async ({ search, page = 1, limit = 40 }) => {
+export const searchMedicine = async ({ search, searchOn, page = 1, limit = 40 }) => {
   try {
-    const response = await axiosInstance.get(`/medicine/search?search=${search}&page=${page}&limit=${limit}`);
+    const response = await axiosInstance.get(`/medicine/search?search=${search}&searchOn=${searchOn}&page=${page}&limit=${limit}`);
     return response.data;
   } catch (error) {
     return Promise.reject(error);
