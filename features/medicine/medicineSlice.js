@@ -35,8 +35,8 @@ export const fetchSingleMedicine = createAsyncThunk("medicine/fetchSingleMedicin
   return response;
 });
 
-export const searchMedicineData = createAsyncThunk("medicine/searchMedicineData", async ({ search, page = 1, limit = 40 }) => {
-  const response = await searchMedicine({ search, page, limit });
+export const searchMedicineData = createAsyncThunk("medicine/searchMedicineData", async ({ search, searchOn = "name", page = 1, limit = 40 }) => {
+  const response = await searchMedicine({ search, searchOn, page, limit });
   return response;
 });
 
