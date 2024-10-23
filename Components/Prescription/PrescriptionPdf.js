@@ -67,10 +67,10 @@ export const handleDownloadPrescription = async (prescription) => {
   const advice = prescription?.advice || "N/A";
 
   // Extract animal information from appointment
-  const animalAge = prescription?.patient?.age || "N/A";
-  const animalWeight = prescription?.patient?.weight || "N/A";
+  const animalAge = prescription?.appointment?.age || "N/A";
+  const animalWeight = prescription?.appointment?.weight || "N/A";
   const animalBreed = prescription?.appointment?.breed?.breed || "N/A";
-  const animalGender = prescription?.patient?.sex || "N/A";
+  const animalGender = prescription?.appointment?.sex || "N/A";
 
   // Extract surgical notes
   const preAnestheticUsed = prescription?.preAnestheticUsed || "N/A";
