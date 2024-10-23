@@ -115,53 +115,18 @@ export default function TestPrescription() {
         {/* <button className="btn btn-primary text-white" onClick={handleSubmit}>Confirm</button> */}
       </div>
 
-      {/* <ul class="list-group">
-        {selectedTest.testName &&
-          parameterList.data?.map((param, index) => (
-            <li class="list-group-item mt-3" key={index}>
-              <span className="fs-3">{param.name}</span>
-              {fetchSubParameterOfParameter(param._id)?.map(
-                (subParam, subIndex) =>
-                  subParam.sub_parameter_type === "text" ? (
-                    <div className="" key={subIndex}>
-                      <label className="text-secondary">{subParam.text}</label>
-                      <input
-                        className="form-control w-25 mt-2 mb-3"
-                        value={inputValues[subParam.text] || ""}
-                        onChange={(e) =>
-                          handleInputChange(subParam.text, e.target.value)
-                        }
-                      />
-                    </div>
-                  ) : (
-                    <div className="d-flex gap-2" key={subIndex}>
-                      <input
-                        className="form-check-input"
-                        type="checkbox"
-                        checked={inputValues[subParam.check] || false}
-                        onChange={(e) =>
-                          handleInputChange(subParam.check, e.target.checked)
-                        }
-                      />
-                      <label>{subParam.check}</label>
-                    </div>
-                  )
-              )}
-            </li>
-          ))}
-      </ul> */}
-
+      
       <form onSubmit={handleSubmit(onSubmit)} className="bg-white text-black p-3 m-1 rounded-1">
         <div className="">
           <h3 className="text-black bg-dark-subtle m-0 border border-black border-bottom-0 p-1 ">{testAllInfo?.testName}</h3>
           {testAllInfo?.testParams?.map((param, index) => (
-            <div className={`m-0 row border border-black ${index !== testAllInfo?.testParams?.length - 1 ? "border-bottom-0" : ""}`}>
+            <div key={index} className={`m-0 row border border-black ${index !== testAllInfo?.testParams?.length - 1 ? "border-bottom-0" : ""}`}>
               <div className="col-2 p-2 border-end border-black">
                 <h6 className="text-black">{param?.name}</h6>
               </div>
               <div className="col-10 p-2 d-flex align-items-center flex-wrap">
                 {testAllInfo?.testParams?.[index]?.subTestParams.map((sub, idx) => (
-                  <div className="d-flex align-items-center px-2">
+                  <div key={index+idx} className="d-flex align-items-center px-2">
                     {/* <h4 className="text-info">{sub?.title}</h4> */}
                     {sub?.isInputField ? (
                       <div className="d-flex align-items-center gap-2">
@@ -191,7 +156,7 @@ export default function TestPrescription() {
                         </p>
 
                         {testAllInfo?.testParams?.[index]?.subTestParams?.[idx]?.additionalFields?.map((additional, idx2) => (
-                          <div>
+                          <div key={idx2}>
                             {/* <h4 className="text-warning">{additional?.additionalFieldTitle}</h4> */}
                             {additional?.isAdditionalFieldInput ? (
                               <div className="mx-2 d-flex gap-2 align-items-center">

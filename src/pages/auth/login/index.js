@@ -26,7 +26,7 @@ export const getServerSideProps = async (context) => {
   };
 };
 
-const index = () => {
+const Index = () => {
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
@@ -128,7 +128,7 @@ const index = () => {
               <div className="overlay-content p-3 p-lg-4 rounded">
                 <h5 className="mb-3 overlay-title">Veterinary Doctor Login Portal</h5>
                 <div>
-                  Welcome to the Veterinary Doctor Login Portal. This platform provides access for veterinary doctors to manage their appointments, patients' records, and other administrative tasks
+                  Welcome to the Veterinary Doctor Login Portal. This platform provides access for veterinary doctors to manage their appointments, patients records, and other administrative tasks
                   efficiently.{" "}
                 </div>
               </div>
@@ -140,4 +140,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Index;
