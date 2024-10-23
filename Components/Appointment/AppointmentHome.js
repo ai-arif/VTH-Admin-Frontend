@@ -112,8 +112,28 @@ const AppointmentHome = () => {
     setValue,
     control,
     reset,
+    watch,
     formState: { errors },
   } = useForm();
+
+  // animal related calculation
+  const totalAnimals = watch("totalAnimals");
+  const totalSickAnimals = watch("totalSickAnimals");
+  const totalDeadAnimals = watch("totalDeadAnimals");
+
+  useEffect(() => {
+    if (totalAnimals > 0 && totalSickAnimals >= 0) {
+      const totalMortality = (totalSickAnimals / totalAnimals) * 100;
+      setValue("totalMortality", Number(totalMortality).toFixed(2));
+    }
+  }, [totalAnimals, totalSickAnimals, setValue]);
+
+  useEffect(() => {
+    if (totalSickAnimals > 0 && totalDeadAnimals >= 0) {
+      const totalFatality = (totalDeadAnimals / totalSickAnimals) * 100;
+      setValue("totalFatality", Number(totalFatality).toFixed(2));
+    }
+  }, [totalSickAnimals, totalDeadAnimals, setValue]);
 
   const onSubmit = async (appointmentData) => {
     try {
@@ -218,11 +238,14 @@ const AppointmentHome = () => {
                   </div>
                 </div>
                 <div className="row">
-                  <div className="mb-3 col-md-6">
+                  <div className="mb-3">
                     <label className="form-label">Address</label>
                     <textarea type="text" {...register("address", { required: true })} className={`form-control ${errors.address && "border-danger"}`}></textarea>
                     {errors.address && <small className="text-danger">Please write address</small>}
                   </div>
+                </div>
+
+                <div className="row">
                   <div className="mb-3 col-md-6">
                     <label className="form-label">Species (Animal Type)</label>
                     <select
@@ -240,8 +263,6 @@ const AppointmentHome = () => {
                     </select>
                     {errors.species && <small className="text-danger">Please select any species</small>}
                   </div>
-                </div>
-                <div className="row">
                   <div className="mb-3 col-md-6">
                     <label className="form-label">Owner Complaints</label>
                     <Controller
@@ -259,6 +280,8 @@ const AppointmentHome = () => {
                       ))}
                     </select> */}
                   </div>
+                </div>
+                <div className="row">
                   <div className="mb-3 col-md-6">
                     <label className="form-label">Breed</label>
                     <select {...register("breed", { required: true })} className={`form-select ${errors.breed && "border-danger"}`} aria-label="Default select example">
@@ -271,7 +294,94 @@ const AppointmentHome = () => {
                     </select>
                     {errors.breed && <small className="text-danger">Please select any breed</small>}
                   </div>
+                  <div className="mb-3 col-md-6">
+                    <label className="form-label">Age</label>
+                    <input type="text" {...register("age", { required: true })} className={`form-control ${errors.age && "border-danger"}`} />
+                    {errors.age && <small className="text-danger">Please write age</small>}
+                  </div>
                 </div>
+                <div className="row">
+                  <div className="mb-3 col-md-6">
+                    <label className="form-label">Body Weight</label>
+                    <input type="text" {...register("weight", { required: true })} className={`form-control ${errors.weight && "border-danger"}`} />
+                    {errors.weight && <small className="text-danger">Please write weight</small>}
+                  </div>
+                  <div className="mb-3 col-md-6">
+                    <label className="form-label">Sex (M/F)</label>
+                    <select {...register("sex", { required: true })} className={`form-select ${errors.sex && "border-danger"}`} aria-label="Default select example">
+                      <option value="">Select</option>
+                      <option value="male">Male</option>
+                      <option value="female">Female</option>
+                    </select>
+                    {errors.sex && <small className="text-danger">Please select an sex</small>}
+                  </div>
+                </div>
+
+                {/* <h6 className="text-center text-decoration-underline pb-2">Disease History</h6> */}
+                <div className="row">
+                  <div className="mb-3 col-md-6">
+                    <label className="form-label">Duration of Illness</label>
+                    <input type="text" {...register("illnessDuration", { required: true })} className={`form-control ${errors.illnessDuration && "border-danger"}`} />
+                    {errors.illnessDuration && <small className="text-danger">Please write illness duration</small>}
+                  </div>
+                  <div className="mb-3 col-md-6">
+                    <label className="form-label">Total number of animals</label>
+                    <input
+                      type="number"
+                      {...register("totalAnimals", {
+                        required: true,
+                        valueAsNumber: true,
+                      })}
+                      className={`form-control ${errors.totalAnimals && "border-danger"}`}
+                    />
+                    {errors.totalAnimals && <small className="text-danger">Please write total animals</small>}
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="mb-3 col-md-6">
+                    <label className="form-label">Total number of sick animals</label>
+                    <input
+                      type="number"
+                      {...register("totalSickAnimals", {
+                        required: true,
+                        valueAsNumber: true,
+                      })}
+                      className={`form-control ${errors.totalSickAnimals && "border-danger"}`}
+                    />
+                    {errors.totalSickAnimals && <small className="text-danger">Please write total sick animals</small>}
+                  </div>
+                  <div className="mb-3 col-md-6">
+                    <label className="form-label">Morbidity (%)</label>
+                    <Controller
+                      name="totalMortality"
+                      control={control}
+                      render={({ field }) => <input type="number" {...field} readOnly className={`form-control ${errors.totalMortality && "border-danger"}`} />}
+                    />
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="mb-3 col-md-6">
+                    <label className="form-label">Total number of dead animals</label>
+                    <input
+                      type="number"
+                      {...register("totalDeadAnimals", {
+                        required: true,
+                        valueAsNumber: true,
+                      })}
+                      className={`form-control ${errors.totalDeadAnimals && "border-danger"}`}
+                    />
+                    {errors.totalDeadAnimals && <small className="text-danger">Please write total dead animals</small>}
+                  </div>
+                  <div className="mb-3 col-md-6">
+                    <label className="form-label">Case fatality (%)</label>
+                    <Controller
+                      name="totalFatality"
+                      control={control}
+                      render={({ field }) => <input type="number" {...field} readOnly className={`form-control ${errors.totalFatality && "border-danger"}`} />}
+                    />
+                  </div>
+                </div>
+
                 <div className="row">
                   <div className="mb-3 col-md-6">
                     <label className="form-label">Status</label>

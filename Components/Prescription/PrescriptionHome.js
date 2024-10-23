@@ -83,6 +83,7 @@ const PrescriptionHome = () => {
   };
 
   const getPatentInfo = (id) => {
+    // console.log(id);
     const selectedPatent = patentInfo?.find((patent) => patent._id === id);
     setSelectedPatentInfo(selectedPatent);
   };
@@ -211,7 +212,7 @@ const PrescriptionHome = () => {
                 </div>
                 <div className="mb-3">
                   <label className="form-label">Address</label>
-                  <input readOnly required value={selectedPatentInfo?.address} className="form-control"></input>
+                  <input readOnly required value={selectedPatentInfo?.address} className="form-control" />
                 </div>
                 <div className="row">
                   <div className="mb-3">
@@ -249,47 +250,50 @@ const PrescriptionHome = () => {
                       <div className="col-12 col-md-3 border rounded-1 p-2">
                         <div className="mb-3">
                           <label className="form-label">Medicine Name</label>
-                          <input readOnly type="text" value={medicine.label} className="form-control"></input>
+                          <input readOnly type="text" value={medicine.label} className="form-control" />
                         </div>
                       </div>
                       {/* example parameter inputs */}
                       <div className="col-12 col-md-3 border rounded-1 p-2">
                         <div>
                           <label className="form-label pb-1">Dose</label>
-                          <select type="text" {...register(`first_${index}`)} className="form-select">
+                          <input type="text" {...register(`first_${index}`)} className="form-control" />
+                          {/* <select type="text" {...register(`first_${index}`)} className="form-select">
                             <option value="">Select</option>
                             {medicineParams?.first?.map((param, idx) => (
                               <option key={idx} value={param.param_name}>
                                 {param.param_name}
                               </option>
                             ))}
-                          </select>
+                          </select> */}
                         </div>
                       </div>
                       <div className="col-12 col-md-3 border rounded-1 p-2">
                         <div>
                           <label className="form-label pb-1">Route</label>
-                          <select type="text" {...register(`second_${index}`)} className="form-select">
+                          <input type="text" {...register(`second_${index}`)} className="form-control" />
+                          {/* <select type="text" {...register(`second_${index}`)} className="form-select">
                             <option value="">Select</option>
                             {medicineParams?.second?.map((param, idx) => (
                               <option key={idx} value={param.param_name}>
                                 {param.param_name}
                               </option>
                             ))}
-                          </select>
+                          </select> */}
                         </div>
                       </div>
                       <div className="col-12 col-md-3 border rounded-1 p-2">
                         <div>
                           <label className="form-label pb-1">Frequency</label>
-                          <select type="text" {...register(`third_${index}`)} className="form-select">
+                          <input type="text" {...register(`third_${index}`)} className="form-control" />
+                          {/* <select type="text" {...register(`third_${index}`)} className="form-select">
                             <option value="">Select</option>
                             {medicineParams?.third?.map((param, idx) => (
                               <option key={idx} value={param.param_name}>
                                 {param.param_name}
                               </option>
                             ))}
-                          </select>
+                          </select> */}
                         </div>
                       </div>
                     </div>
