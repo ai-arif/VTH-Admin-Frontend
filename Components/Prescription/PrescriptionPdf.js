@@ -2,6 +2,7 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 
 export const handleDownloadPrescription = async (prescription) => {
+  console.log(prescription);
   const doc = new jsPDF();
   // load images from URLs
   const loadImage = async (url) => {
@@ -67,10 +68,11 @@ export const handleDownloadPrescription = async (prescription) => {
   const advice = prescription?.advice || "N/A";
 
   // Extract animal information from appointment
-  const animalAge = prescription?.appointment?.age || "N/A";
-  const animalWeight = prescription?.appointment?.weight || "N/A";
+  /* As per earlier system we used to get this data during registration but now we get the data during appointment that's why use || operator */
+  const animalAge = prescription?.appointment?.age || prescription?.patient?.age || "N/A";
+  const animalWeight = prescription?.appointment?.weight || prescription?.patient?.weight || "N/A";
   const animalBreed = prescription?.appointment?.breed?.breed || "N/A";
-  const animalGender = prescription?.appointment?.sex || "N/A";
+  const animalGender = prescription?.appointment?.sex || prescription?.patient?.sex || "N/A";
 
   // Extract surgical notes
   const preAnestheticUsed = prescription?.preAnestheticUsed || "N/A";

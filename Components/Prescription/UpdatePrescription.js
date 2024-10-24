@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -7,6 +8,7 @@ import CreatableSelect from "react-select/creatable";
 import { fetchMedicineBrandName } from "../../features/medicine/medicineSlice";
 import { fetchMedicineParams } from "../../features/medicineParam/MedicineParamsSlice";
 import { fetchPrescription, fetchSinglePrescription, updatePrescriptionData } from "../../features/prescription/prescriptionSlice";
+import axiosInstance from "../../utils/axiosInstance";
 import { formatDate } from "../../utils/formatDate";
 import Loader from "../UI/Loader";
 
@@ -41,6 +43,7 @@ const customStyles = {
 
 const UpdatePrescription = () => {
   const [selectedMedicines, setSelectedMedicines] = useState([]);
+  const [testResults, setTestResults] = useState([]);
   const router = useRouter();
   const { id } = router.query;
   const dispatch = useDispatch();
@@ -137,6 +140,12 @@ const UpdatePrescription = () => {
     }
   }, [prescription, setValue]);
 
+  useEffect(() => {
+    if (prescription?.data?.appointment) {
+      axiosInstance.get(`/test/test-result/${prescription?.data?.appointment?._id}`).then((res) => setTestResults(res?.data?.data?.data));
+    }
+  }, [prescription]);
+
   //   loader
   // if (status === "loading") return <Loader />;
 
@@ -161,9 +170,50 @@ const UpdatePrescription = () => {
                       className="form-control"
                     />
                   </div>
+                  {/* Show Test Result */}
                   <div className="mb-3 col-md-6">
-                    <label className="form-label">CASE NO</label>
-                    <input type="number" readOnly required value={prescription?.data?.appointment?.caseNo} className="form-control" />
+                    <label className="form-label">Test Assign & Result</label>
+                    <div className="accordion" id="accordionExample">
+                      <div className="accordion-item">
+                        <h2 className="accordion-header">
+                          <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            {/* Check if tests are assigned */}
+                            {testResults?.length > 0 ? (
+                              // Check if all tests or some have results
+                              testResults?.some((test) => test.status) ? (
+                                <span style={{ color: "#18ba70" }}>Test Assigned - Results Available</span>
+                              ) : (
+                                <span className="text-warning">Test Assigned - No Results Yet</span>
+                              )
+                            ) : (
+                              <span className="text-danger">Test Not Assigned</span>
+                            )}
+                          </button>
+                        </h2>
+                        <div id="collapseThree" className="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                          <div className="accordion-body">
+                            {testResults?.length > 0 ? (
+                              testResults?.map((test, index) => (
+                                <div key={index} className="d-flex gap-2 text-white justify-content-between">
+                                  <p>
+                                    {index + 1}. {test.name}
+                                  </p>
+                                  {test?.status ? (
+                                    <Link style={{ color: "#3b82f6" }} className="text-decoration-underline" href={`/test-result/${test.registrationId._id}`} target="_blank">
+                                      View Result
+                                    </Link>
+                                  ) : (
+                                    <p className="text-danger">No Result</p>
+                                  )}
+                                </div>
+                              ))
+                            ) : (
+                              <div className="text-danger text-center">Not available</div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div className="row">
