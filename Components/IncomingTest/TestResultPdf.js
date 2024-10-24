@@ -61,10 +61,11 @@ export const handleDownloadTestResult = async (testResult) => {
   const testResultDate = formatDate(testResult?.data?.resultDate);
 
   // extract animal information from appointment
-  const animalAge = testResult?.registrationId?.age || "N/A";
-  const animalWeight = testResult?.registrationId?.weight || "N/A";
+  /* As per earlier system we used to get this data during registration but now we get the data during appointment that's why use || operator */
+  const animalAge = testResult?.appointmentId?.age || testResult?.registrationId?.age || "N/A";
+  const animalWeight = testResult?.appointmentId?.weight || testResult?.registrationId?.weight || "N/A";
   const animalBreed = testResult?.appointmentId?.breed?.breed || "N/A";
-  const animalGender = testResult?.registrationId?.sex || "N/A";
+  const animalGender = testResult?.appointmentId?.sex || testResult?.registrationId?.sex || "N/A";
 
   // PDF HEADING & BODY
   // add titles and border

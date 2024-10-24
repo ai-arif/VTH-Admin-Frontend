@@ -125,12 +125,13 @@ const AddTestResult = () => {
             <h6 className="text-center w-50 mx-auto text-bg-secondary rounded-1 py-2">Animal Information</h6>
             <div className="d-flex justify-content-between">
               <div className="">
-                <p className="mb-1">Age: {incomingTest?.registrationId?.age}</p>
-                <p className="m-0">Body Weight: {incomingTest?.registrationId?.weight}</p>
+                {/* As per earlier system we used to get this data during registration but now we get the data during appointment that's why use || operator */}
+                <p className="mb-1">Age: {incomingTest?.appointmentId?.age || incomingTest?.registrationId?.age}</p>
+                <p className="m-0">Body Weight: {incomingTest?.appointmentId?.weight || incomingTest?.registrationId?.weight}</p>
               </div>
               <div className="">
                 <p className="mb-1">Breed: {incomingTest?.appointmentId?.breed?.breed}</p>
-                <p className="m-0 text-capitalize">Gender: {incomingTest?.registrationId?.sex}</p>
+                <p className="m-0 text-capitalize">Gender: {incomingTest?.appointmentId?.sex || incomingTest?.registrationId?.sex}</p>
               </div>
             </div>
           </div>
