@@ -14,6 +14,7 @@ import { RiFileList3Line } from "react-icons/ri";
 import { useSelector } from "react-redux";
 import axiosInstance from "../../utils/axiosInstance";
 import HomeDiagrams from "./HomeDiagrams";
+import Species_Diseases_Chart from "./Species_Diseases_Chart";
 
 const HomeOverview = () => {
   // Get today's date
@@ -28,6 +29,8 @@ const HomeOverview = () => {
 
   const [allData, setAllData] = useState({});
   const [days, setDays] = useState(1);
+
+  const [overview2, setOverview2] = useState(null);
 
   const handleDateChange = (dates) => {
     const [start, end] = dates;
@@ -61,11 +64,11 @@ const HomeOverview = () => {
     handleFilter();
   }, []);
 
-  // useEffect(() => {
-  //   axiosInstance.get(`/overview?daysBefore=${days}`).then((res) => {
-  //     setAllData(res.data?.data);
-  //   });
-  // }, [days]);
+  useEffect(() => {
+    axiosInstance.get(`/overview/species-department?daysBefore=${days}`).then((res) => {
+      setOverview2(res.data?.data);
+    });
+  }, [days]);
 
   const {
     totalRoles,
@@ -237,6 +240,31 @@ const HomeOverview = () => {
 
       {/* diagram */}
       <HomeDiagrams diagramData={{ allAppointments, speciesComplaints, staffs, monthlyOrders, dailyOrders }} />
+
+      <div style={{ display: "flex", alignItems: "start", marginTop: "100px", marginBottom: "30px" }}>
+        <div style={{ marginLeft: "25px" }}>
+          <h3>Showing appointments of last {days == 365 && "1 year"}
+            {days == 180 && "6 months"}
+            {days == 30 && "1 month"}
+            {days == 15 && "15 days"}
+            {days == 7 && "7 days"}
+            {days == 1 && "24 hours"}</h3>
+          <p>Total appointments: {overview2?.Species?.[0]?.totalAppointment}</p>
+        </div>
+        <div style={{ width: "fit-content", marginLeft: "auto" }} className="d-flex gap-2 align-items-center">
+          <label style={{ width: "fit-content", whiteSpace: "nowrap" }}>Filter appointments</label>
+
+          <select defaultValue={days} onChange={(e) => setDays(e.target.value)} className="form-select" aria-label="Default select example">
+            <option value="1">1 days</option>
+            <option value="7">7 days</option>
+            <option value="15">15 days</option>
+            <option value="30">1 month</option>
+            <option value="180">6 month</option>
+            <option value="365">1 year</option>
+          </select>
+        </div>
+      </div>
+      <Species_Diseases_Chart data={overview2} />
     </div>
   );
 };
