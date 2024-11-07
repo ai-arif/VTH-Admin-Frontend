@@ -118,10 +118,11 @@ const ViewResult = () => {
                 {/* As per earlier system we used to get this data during registration but now we get the data during appointment that's why use || operator */}
                 <p className="mb-1">Age: {incomingTest?.data?.appointmentId?.age || incomingTest?.data?.age}</p>
                 <p className="m-0">Body Weight: {incomingTest?.data?.appointmentId?.weight || incomingTest?.data?.weight}</p>
+                <p className="m-0 text-capitalize">Gender: {incomingTest?.data?.appointmentId?.sex || incomingTest?.data?.sex}</p>
               </div>
               <div className="">
+                <p className="mb-1">Species: {incomingTest?.data?.appointmentId?.species?.name}</p>
                 <p className="mb-1">Breed: {incomingTest?.data?.appointmentId?.breed?.breed}</p>
-                <p className="m-0 text-capitalize">Gender: {incomingTest?.data?.appointmentId?.sex || incomingTest?.data?.sex}</p>
               </div>
             </div>
           </div>

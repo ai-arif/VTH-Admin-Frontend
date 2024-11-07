@@ -65,6 +65,7 @@ export const handleDownloadDoctorTestResult = async (testResult, resultFormat) =
   const animalAge = testResult?.appointmentId?.age || testResult?.registrationId?.age || "N/A";
   const animalWeight = testResult?.appointmentId?.weight || testResult?.registrationId?.weight || "N/A";
   const animalBreed = testResult?.appointmentId?.breed?.breed || "N/A";
+  const animalSpecies = testResult?.appointmentId?.species?.name || "N/A";
   const animalGender = testResult?.appointmentId?.sex || testResult?.registrationId?.sex || "N/A";
 
   // PDF HEADING & BODY
@@ -76,7 +77,7 @@ export const handleDownloadDoctorTestResult = async (testResult, resultFormat) =
   doc.setTextColor(0, 0, 0);
   doc.setFontSize(14);
   doc.setFont("helvetica", "normal");
-  doc.text("Bangladesh Agriculture University, Mymensingh-2202", doc.internal.pageSize.getWidth() / 2, 30, { align: "center" });
+  doc.text("Bangladesh Agricultural University, Mymensingh-2202", doc.internal.pageSize.getWidth() / 2, 30, { align: "center" });
   doc.setLineWidth(0.5);
   doc.line(10, 35, doc.internal.pageSize.getWidth() - 10, 35);
   doc.setFontSize(12);
@@ -108,7 +109,9 @@ export const handleDownloadDoctorTestResult = async (testResult, resultFormat) =
   doc.text(`Body Weight: ${animalWeight}`, leftColumnX, startY + 4 * infoLineSpacing);
   doc.text(`Breed: ${animalBreed}`, rightColumnX, startY + 4 * infoLineSpacing);
 
-  let currentY = startY + 5 * lineSpacing;
+  doc.text(`Species: ${animalSpecies}`, leftColumnX, startY + 5 * infoLineSpacing);
+
+  let currentY = startY + 6 * lineSpacing;
 
   doc.setFontSize(11);
   doc.setFont("helvetica", "bold");
