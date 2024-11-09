@@ -44,7 +44,6 @@ const Index = () => {
   const onSubmit = async (data) => {
     try {
       const response = await axiosInstance.post("/staffs/login", data);
-      console.log({ response });
       if (response?.data?.success) {
         Cookies.set("token", response.data?.data?.token);
         reset();

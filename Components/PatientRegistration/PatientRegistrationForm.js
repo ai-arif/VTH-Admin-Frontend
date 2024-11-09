@@ -332,7 +332,7 @@ const PatientRegistrationForm = () => {
                       <div className="row">
                         <div className="mb-3 col-md-6">
                           <label className="form-label">Treated before</label>
-                          <select {...register("treatedBefore", { required: true })} className={`form-select ${errors.treatedBefore && "border-danger"}`} aria-label="Default select example">
+                          <select {...register("treatedBefore", { required: false })} className={`form-select ${errors.treatedBefore && "border-danger"}`} aria-label="Default select example">
                             <option value="">Select</option>
                             <option value="yes">Yes</option>
                             <option value="no">No</option>
@@ -341,7 +341,7 @@ const PatientRegistrationForm = () => {
                         </div>
                         <div className="mb-3 col-md-6">
                           <label className="form-label">Drugs</label>
-                          <input type="text" {...register("drugs", { required: true })} className={`form-control ${errors.drugs && "border-danger"}`} />
+                          <input type="text" {...register("drugs", { required: false })} className={`form-control ${errors.drugs && "border-danger"}`} />
                           {errors.drugs && <small className="text-danger">Please write drugs</small>}
                         </div>
                       </div>
@@ -349,24 +349,24 @@ const PatientRegistrationForm = () => {
                       <div className="row">
                         <div className="mb-3 col-md-6">
                           <label className="form-label">Breeding</label>
-                          <input type="text" {...register("breeding", { required: true })} className={`form-control ${errors.breeding && "border-danger"}`} />
+                          <input type="text" {...register("breeding", { required: false })} className={`form-control ${errors.breeding && "border-danger"}`} />
                           {errors.breeding && <small className="text-danger">Please write breeding</small>}
                         </div>
                         <div className="mb-3 col-md-6">
                           <label className="form-label">Feed provided</label>
-                          <input type="text" {...register("feedProvided", { required: true })} className={`form-control ${errors.feedProvided && "border-danger"}`} />
+                          <input type="text" {...register("feedProvided", { required: false })} className={`form-control ${errors.feedProvided && "border-danger"}`} />
                           {errors.feedProvided && <small className="text-danger">Please write feed provided</small>}
                         </div>
                       </div>
                       <div className="row">
                         <div className="mb-3 col-md-6">
                           <label className="form-label">Vaccinations</label>
-                          <input type="text" {...register("vaccinations", { required: true })} className={`form-control ${errors.vaccinations && "border-danger"}`} />
+                          <input type="text" {...register("vaccinations", { required: false })} className={`form-control ${errors.vaccinations && "border-danger"}`} />
                           {errors.vaccinations && <small className="text-danger">Please write vaccinations</small>}
                         </div>
                         <div className="mb-3 col-md-6">
                           <label className="form-label">Deworming</label>
-                          <select {...register("deworming", { required: true })} className={`form-select ${errors.deworming && "border-danger"}`} aria-label="Default select example">
+                          <select {...register("deworming", { required: false })} className={`form-select ${errors.deworming && "border-danger"}`} aria-label="Default select example">
                             <option value="">Select</option>
                             <option value="yes">Yes</option>
                             <option value="no">No</option>

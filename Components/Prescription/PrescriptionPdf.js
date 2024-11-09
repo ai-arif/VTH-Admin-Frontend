@@ -2,7 +2,6 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 
 export const handleDownloadPrescription = async (prescription) => {
-  console.log(prescription);
   const doc = new jsPDF();
   // load images from URLs
   const loadImage = async (url) => {
@@ -58,7 +57,7 @@ export const handleDownloadPrescription = async (prescription) => {
     return `${day}-${month}-${year}`;
   };
 
-  const prescriptionWritingDate = formatDate(prescription?.date);
+  const prescriptionWritingDate = formatDate(prescription?.updatedAt);
   const nextVisitDate = formatDate(prescription?.nextVisit);
   const prescribedBy = prescription?.prescribedBy?.fullName || "N/A";
 
@@ -72,6 +71,7 @@ export const handleDownloadPrescription = async (prescription) => {
   const animalAge = prescription?.appointment?.age || prescription?.patient?.age || "N/A";
   const animalWeight = prescription?.appointment?.weight || prescription?.patient?.weight || "N/A";
   const animalBreed = prescription?.appointment?.breed?.breed || "N/A";
+  const animalSpecies = prescription?.appointment?.species?.name || "N/A";
   const animalGender = prescription?.appointment?.sex || prescription?.patient?.sex || "N/A";
 
   // Extract surgical notes
@@ -89,7 +89,7 @@ export const handleDownloadPrescription = async (prescription) => {
   doc.setTextColor(0, 0, 0);
   doc.setFontSize(14);
   doc.setFont("helvetica", "normal");
-  doc.text("Bangladesh Agriculture University, Mymensingh-2202", doc.internal.pageSize.getWidth() / 2, 30, { align: "center" });
+  doc.text("Bangladesh Agricultural University, Mymensingh-2202", doc.internal.pageSize.getWidth() / 2, 30, { align: "center" });
   doc.setLineWidth(0.5);
   doc.line(10, 35, doc.internal.pageSize.getWidth() - 10, 35);
   doc.setFontSize(12);
@@ -121,10 +121,11 @@ export const handleDownloadPrescription = async (prescription) => {
   doc.text(`Gender: ${animalGender}`, rightColumnX, startY + 3 * infoLineSpacing);
 
   doc.text(`Body Weight: ${animalWeight}`, leftColumnX, startY + 4 * infoLineSpacing);
-  doc.text(`Breed: ${animalBreed}`, rightColumnX, startY + 4 * infoLineSpacing);
+  doc.text(`Species: ${animalSpecies}`, rightColumnX, startY + 4 * infoLineSpacing);
 
   // Add prescribed information
   doc.text(`Doctor Name: ${prescribedBy}`, leftColumnX, startY + 5 * infoLineSpacing);
+  doc.text(`Breed: ${animalBreed}`, rightColumnX, startY + 5 * infoLineSpacing);
 
   // Add prescription details
   const splitTextAndAdd = (label, text, yPosition, labelWidth = 22) => {

@@ -128,10 +128,11 @@ const AddTestResult = () => {
                 {/* As per earlier system we used to get this data during registration but now we get the data during appointment that's why use || operator */}
                 <p className="mb-1">Age: {incomingTest?.appointmentId?.age || incomingTest?.registrationId?.age}</p>
                 <p className="m-0">Body Weight: {incomingTest?.appointmentId?.weight || incomingTest?.registrationId?.weight}</p>
+                <p className="m-0 text-capitalize">Gender: {incomingTest?.appointmentId?.sex || incomingTest?.registrationId?.sex}</p>
               </div>
               <div className="">
+                <p className="mb-1">Species: {incomingTest?.appointmentId?.species?.name}</p>
                 <p className="mb-1">Breed: {incomingTest?.appointmentId?.breed?.breed}</p>
-                <p className="m-0 text-capitalize">Gender: {incomingTest?.appointmentId?.sex || incomingTest?.registrationId?.sex}</p>
               </div>
             </div>
           </div>
