@@ -39,29 +39,12 @@ const customStyles = {
 const UpdateAppointment = () => {
   const [speciesByBreeds, setSpeciesByBreeds] = useState([]);
   const [speciesByComplaints, setSpeciesByComplaint] = useState([]);
-  const [division, setDivision] = useState("");
-  const [district, setDistrict] = useState("");
   const router = useRouter();
   const { id } = router.query;
   const dispatch = useDispatch();
   const { appointment, status } = useSelector((state) => state.appointment);
   const { departments } = useSelector((state) => state.department);
   const { species } = useSelector((state) => state.specie);
-
-  const handleDivisionChange = (e) => {
-    setDivision(e.target.value);
-    setDistrict("");
-  };
-
-  const handleDistrictChange = (e) => {
-    setDistrict(e.target.value);
-  };
-
-  // Get the list of districts based on the selected division
-  const filteredDistricts = bdData?.find((data) => data.division === division)?.districts || [];
-
-  // Get the list of upazilas based on the selected district
-  const filteredUpazilas = filteredDistricts?.find((dist) => dist.district === district)?.upazilas || [];
 
   const fetchBreedsAndComplaint = async (speciesId) => {
     try {
@@ -201,13 +184,7 @@ const UpdateAppointment = () => {
                 <div className="row">
                   <div className="mb-3 col-md-6">
                     <label className="form-label">Division</label>
-                    <select
-                      {...register("division", { required: true })}
-                      value={division}
-                      onChange={handleDivisionChange}
-                      className={`form-select ${errors.division && "border-danger"}`}
-                      aria-label="Default select example"
-                    >
+                    <select {...register("division", { required: true })} className={`form-select ${errors.division && "border-danger"}`} aria-label="Default select example">
                       <option value="">Select</option>
                       {bdData?.map((data, idx) => (
                         <option key={idx} value={data.division}>
@@ -219,13 +196,15 @@ const UpdateAppointment = () => {
                   </div>
                   <div className="mb-3 col-md-6">
                     <label className="form-label">District</label>
-                    <select {...register("district", { required: true })} value={district} onChange={handleDistrictChange} className={`form-select ${errors.district && "border-danger"}`}>
+                    <select {...register("district", { required: true })} className={`form-select ${errors.district && "border-danger"}`}>
                       <option value="">Select</option>
-                      {filteredDistricts?.map((dist, idx) => (
-                        <option key={idx} value={dist.district}>
-                          {dist.district}
-                        </option>
-                      ))}
+                      {bdData.map((divisionData, index) =>
+                        divisionData.districts.map((district, idx) => (
+                          <option key={`${index}-${idx}`} value={district.district}>
+                            {district.district}
+                          </option>
+                        ))
+                      )}
                     </select>
                     {errors.district && <small className="text-danger">Please select any district</small>}
                   </div>
@@ -235,11 +214,15 @@ const UpdateAppointment = () => {
                     <label className="form-label">Upazila</label>
                     <select {...register("upazila", { required: true })} className={`form-select ${errors.upazila && "border-danger"}`}>
                       <option value="">Select</option>
-                      {filteredUpazilas?.map((upazila, idx) => (
-                        <option key={idx} value={upazila}>
-                          {upazila}
-                        </option>
-                      ))}
+                      {bdData.map((divisionData, divisionIndex) =>
+                        divisionData.districts.map((district, districtIndex) =>
+                          district.upazilas.map((upazila, upazilaIndex) => (
+                            <option key={`${divisionIndex}-${districtIndex}-${upazilaIndex}`} value={upazila}>
+                              {upazila}
+                            </option>
+                          ))
+                        )
+                      )}
                     </select>
                     {errors.upazila && <small className="text-danger">Please select any upazilla</small>}
                   </div>
