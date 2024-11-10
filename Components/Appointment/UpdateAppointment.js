@@ -7,6 +7,7 @@ import CreatableSelect from "react-select/creatable";
 import { fetchAppointmentById, fetchApprovedAppointments, fetchPendingAppointments, updateExistingAppointment } from "../../features/appointment/appointmentSlice";
 import { fetchDepartment } from "../../features/department/departmentSlice";
 import { fetchSpecies } from "../../features/specie/speciesSlice";
+import bdData from "../../public/data.json";
 import axiosInstance from "../../utils/axiosInstance";
 import Loader from "../UI/Loader";
 
@@ -182,42 +183,55 @@ const UpdateAppointment = () => {
                 </div>
                 <div className="row">
                   <div className="mb-3 col-md-6">
-                    <label className="form-label">District</label>
-                    <select {...register("district", { required: true })} className={`form-select ${errors.district && "border-danger"}`} aria-label="Default select example">
-                      <option defaultValue>Mymensingh</option>
+                    <label className="form-label">Division</label>
+                    <select {...register("division", { required: true })} className={`form-select ${errors.division && "border-danger"}`} aria-label="Default select example">
+                      <option value="">Select</option>
+                      {bdData?.map((data, idx) => (
+                        <option key={idx} value={data.division}>
+                          {data.division}
+                        </option>
+                      ))}
                     </select>
-                    {errors.district && <small className="text-danger">Please select district</small>}
+                    {errors.division && <small className="text-danger">Please select any division</small>}
                   </div>
                   <div className="mb-3 col-md-6">
-                    <label className="form-label">Upazila</label>
-                    <select {...register("upazila", { required: true })} className={`form-select ${errors.upazila && "border-danger"}`} aria-label="Default select example">
+                    <label className="form-label">District</label>
+                    <select {...register("district", { required: true })} className={`form-select ${errors.district && "border-danger"}`}>
                       <option value="">Select</option>
-                      <option value="Mymensingh Sadar">Mymensingh Sadar</option>
-                      <option value="Trishal">Trishal</option>
-                      <option value="Bhaluka">Bhaluka</option>
-                      <option value="Fulbaria">Fulbaria</option>
-                      <option value="Muktagacha">Muktagacha</option>
-                      <option value="Gafargaon">Gafargaon</option>
-                      <option value="Gauripur">Gauripur</option>
-                      <option value="Ishwarganj">Ishwarganj</option>
-                      <option value="Nandail">Nandail</option>
-                      <option value="Tarakanda">Tarakanda</option>
-                      <option value="Fulpur">Fulpur</option>
-                      <option value="Haluaghat">Haluaghat</option>
-                      <option value="Dhubaura">Dhubaura</option>
-                      <option value="Pagla">Pagla</option>
+                      {bdData.map((divisionData, index) =>
+                        divisionData.districts.map((district, idx) => (
+                          <option key={`${index}-${idx}`} value={district.district}>
+                            {district.district}
+                          </option>
+                        ))
+                      )}
                     </select>
-                    {errors.upazila && <small className="text-danger">Please select any upazilla</small>}
+                    {errors.district && <small className="text-danger">Please select any district</small>}
                   </div>
                 </div>
                 <div className="row">
+                  <div className="mb-3 col-md-6">
+                    <label className="form-label">Upazila</label>
+                    <select {...register("upazila", { required: true })} className={`form-select ${errors.upazila && "border-danger"}`}>
+                      <option value="">Select</option>
+                      {bdData.map((divisionData, divisionIndex) =>
+                        divisionData.districts.map((district, districtIndex) =>
+                          district.upazilas.map((upazila, upazilaIndex) => (
+                            <option key={`${divisionIndex}-${districtIndex}-${upazilaIndex}`} value={upazila}>
+                              {upazila}
+                            </option>
+                          ))
+                        )
+                      )}
+                    </select>
+                    {errors.upazila && <small className="text-danger">Please select any upazilla</small>}
+                  </div>
                   <div className="mb-3 col-md-6">
                     <label className="form-label">Address</label>
                     <textarea type="text" {...register("address", { required: true })} className={`form-control ${errors.address && "border-danger"}`}></textarea>
                     {errors.address && <small className="text-danger">Please write address</small>}
                   </div>
                 </div>
-
                 <div className="row">
                   <div className="mb-3 col-md-6">
                     <label className="form-label">Species (Animal Type)</label>
