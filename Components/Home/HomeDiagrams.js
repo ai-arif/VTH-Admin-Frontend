@@ -16,7 +16,25 @@ const HomeDiagrams = ({ diagramData }) => {
         return { name: staff?.dept, value: staff?.members };
     });
 
-    const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+    const COLORS = [
+        '#FF8042',
+        '#00C49F',
+        '#FFBB28',
+        '#0088FE',
+        "#4CAF50", // Green
+        "#2196F3", // Blue
+        "#FFEB3B", // Yellow
+        "#FF5722", // Orange
+        "#9C27B0", // Purple
+        "#FF9800", // Amber
+        "#009688", // Teal
+        "#3F51B5", // Indigo
+        "#E91E63", // Pink
+        "#CDDC39", // Lime
+        "#607D8B", // Blue-grey
+        "#795548"  // Brown
+    ];
+
     const RADIAN = Math.PI / 180;
     const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
         const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
@@ -106,7 +124,7 @@ const HomeDiagrams = ({ diagramData }) => {
             </div>
 
             {/* bar chart  */}
-            <div className='mt-5'>
+            {/* <div className='mt-5'>
                 <div className='mt-5'>
                     <h3 className='text-center'>Daily Order Statistics</h3>
                     <ResponsiveContainer width="100%" height={400}>
@@ -142,7 +160,7 @@ const HomeDiagrams = ({ diagramData }) => {
                         </BarChart>
                     </ResponsiveContainer>
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 };
