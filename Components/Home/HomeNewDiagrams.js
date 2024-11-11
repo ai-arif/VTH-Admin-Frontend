@@ -37,10 +37,10 @@ const HomeNewDiagrams = ({ overview2, start, end }) => {
     };
 
     return (
-        <div>
+        <div className='mb-5 pb-5'>
             {/* Day-wise Chart */}
             <div style={{ width: "100%", height: 400 }}>
-                <h3 className='text-center mt-4'>Species wise Daily Statistics (Based on appointment)</h3>
+                {/* <h3 className='text-center mt-4'>Species wise Daily Statistics (Based on appointment)</h3> */}
                 <ResponsiveContainer width="100%" height="100%">
                     <ComposedChart
                         data={formattedDayData}

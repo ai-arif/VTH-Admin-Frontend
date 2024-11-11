@@ -14,6 +14,8 @@ import { RiFileList3Line } from "react-icons/ri";
 import { useSelector } from "react-redux";
 import axiosInstance from "../../utils/axiosInstance";
 import HomeDiagrams from "./HomeDiagrams";
+import HomeMorbidityDiagram from "./HomeMorbidityDiagram";
+import HomeMorbiditySummery from "./HomeMorbiditySummery";
 import HomeNewDiagrams from "./HomeNewDiagrams";
 import Species_Diseases_Chart from "./Species_Diseases_Chart";
 
@@ -31,6 +33,10 @@ const HomeOverview = () => {
 
   const [startDateM, setStartDateM] = useState(ThirtyDaysAgo);
   const [endDateM, setEndDateM] = useState(today);
+  const [startDate3, setStartDate3] = useState(sevenDaysAgo);
+  const [endDate3, setEndDate3] = useState(today);
+  const [selectedDays, setSelectedDays] = useState(7);
+
 
   const { data } = useSelector((state) => state.loggedInUser);
 
@@ -38,6 +44,7 @@ const HomeOverview = () => {
   const [days, setDays] = useState(30);
 
   const [overview2, setOverview2] = useState({});
+  const [overview3, setOverview3] = useState({});
 
   const handleDateChange = (dates) => {
     const [start, end] = dates;
@@ -49,6 +56,17 @@ const HomeOverview = () => {
     const [start, end] = dates;
     setStartDateM(start);
     setEndDateM(end);
+  };
+
+  const handleDateChangeMorbidity = (dates) => {
+    const [start, end] = dates;
+    setStartDate3(start);
+    setEndDate3(end);
+
+    if (start && end) {
+      const daysSelected = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+      setSelectedDays(daysSelected + 1)
+    }
   };
 
   const handleFilter = async () => {
@@ -95,16 +113,33 @@ const HomeOverview = () => {
     }
   };
 
+  const handleFilterMorbidity = async () => {
+    if (!startDate3 || !endDate3) return;
+
+    try {
+      const formattedStartDate = startDate3.toISOString().split("T")[0];
+      const formattedEndDate = endDate3.toISOString().split("T")[0];
+
+      const response = await axiosInstance.get(`/overview/morbidity`, {
+        params: {
+          start_date: formattedStartDate,
+          end_date: formattedEndDate,
+        },
+      });
+
+      if (response?.data?.success) {
+        setOverview3(response.data?.data);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
   useEffect(() => {
     handleFilter();
     handleFilterM();
+    handleFilterMorbidity();
   }, []);
-
-  // useEffect(() => {
-  //   axiosInstance.get(`/overview/species-department?daysBefore=${30}`).then((res) => {
-  //     setOverview2(res.data?.data);
-  //   });
-  // }, []);
 
   const {
     totalRoles,
@@ -255,27 +290,66 @@ const HomeOverview = () => {
       {/* diagram */}
       <HomeDiagrams diagramData={{ allAppointments, speciesComplaints, staffs, monthlyOrders, dailyOrders }} />
 
-      <div className="d-flex justify-content-end mt-5">
-        <form className="d-flex align-items-center gap-3">
-          <div>
-            <DatePicker
-              selected={startDate}
-              onChange={handleDateChangeM}
-              startDate={startDateM}
-              endDate={endDateM}
-              selectsRange
-              isClearable
-              className="form-control"
-              placeholderText="Select a date range"
-            />
-          </div>
-          <button type="button" className="btn btn-primary text-white" onClick={handleFilterM} disabled={!startDateM || !endDate} M>
-            Filter
-          </button>
-        </form>
+      <div className="d-flex justify-content-between mt-5">
+        <h3 className='text-center mt-4'>Species wise Daily Statistics (Based on appointment)</h3>
+        <div className="d-flex justify-content-end">
+          <form className="d-flex align-items-center gap-3">
+            <div>
+              <DatePicker
+                selected={startDate}
+                onChange={handleDateChangeM}
+                startDate={startDateM}
+                endDate={endDateM}
+                selectsRange
+                isClearable
+                className="form-control"
+                placeholderText="Select a date range"
+              />
+            </div>
+            <button type="button" className="btn btn-primary text-white" onClick={handleFilterM} disabled={!startDateM || !endDateM}>
+              Filter
+            </button>
+          </form>
+        </div>
       </div>
       <HomeNewDiagrams overview2={overview2} start={startDateM} end={endDateM} />
-      {/* 
+
+      {/* morbidity =============> */}
+      <div className="d-flex justify-content-between align-items-start mt-5 pt-5 mb-3">
+        <div>
+          <h4>Morbidity & Fatality statistics (Based on appointment)</h4>
+          {/* <p>Showing statistics of {overview3?.statistics?.length} days (out of {selectedDays} days)</p> */}
+          <p>Showing statistics of {selectedDays} days</p>
+        </div>
+        <div className="d-flex justify-content-end">
+          <form className="d-flex align-items-center gap-3">
+            <div>
+              <DatePicker
+                selected={startDate}
+                onChange={handleDateChangeMorbidity}
+                startDate={startDate3}
+                endDate={endDate3}
+                selectsRange
+                isClearable
+                className="form-control"
+                placeholderText="Select a date range"
+              />
+            </div>
+            <button type="button" className="btn btn-primary text-white" onClick={handleFilterMorbidity} disabled={!startDate3 || !endDate3}>
+              Filter
+            </button>
+          </form>
+        </div>
+      </div>
+      <HomeMorbidityDiagram data={overview3?.statistics} start={startDateM} end={endDateM} />
+      <HomeMorbiditySummery data={overview3?.summery} start={startDateM} end={endDateM} />
+    </div>
+  );
+};
+
+export default HomeOverview;
+
+{/* 
       <div style={{ display: "flex", alignItems: "start", marginTop: "100px", marginBottom: "30px" }}>
         <div style={{ marginLeft: "25px" }}>
           <h3>Showing appointments of last {days == 365 && "1 year"}
@@ -300,8 +374,3 @@ const HomeOverview = () => {
         </div>
       </div>
       <Species_Diseases_Chart data={overview2} /> */}
-    </div>
-  );
-};
-
-export default HomeOverview;
