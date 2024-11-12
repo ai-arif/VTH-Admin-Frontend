@@ -164,6 +164,9 @@ const AppointmentHome = () => {
       // Convert appointment date to UTC
       appointmentData.date = new Date(appointmentData.date).toISOString();
 
+      console.log(appointmentData);
+      return;
+
       const response = await dispatch(addNewAppointment(appointmentData));
 
       if (response?.payload?.success) {
@@ -363,6 +366,7 @@ const AppointmentHome = () => {
                       {...register("totalAnimals", {
                         required: true,
                         valueAsNumber: true,
+                        min: 0,
                       })}
                       className={`form-control ${errors.totalAnimals && "border-danger"}`}
                     />
@@ -377,6 +381,7 @@ const AppointmentHome = () => {
                       {...register("totalSickAnimals", {
                         required: true,
                         valueAsNumber: true,
+                        min: 0,
                       })}
                       className={`form-control ${errors.totalSickAnimals && "border-danger"}`}
                     />
@@ -399,6 +404,7 @@ const AppointmentHome = () => {
                       {...register("totalDeadAnimals", {
                         required: true,
                         valueAsNumber: true,
+                        min: 0,
                       })}
                       className={`form-control ${errors.totalDeadAnimals && "border-danger"}`}
                     />
