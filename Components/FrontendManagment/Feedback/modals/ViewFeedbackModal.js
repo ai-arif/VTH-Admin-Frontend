@@ -12,7 +12,7 @@ const ViewFeedbackModal = ({ existingData }) => {
     register,
     reset,
     formState: { errors },
-  } = useForm({ defaultValues: existingData });
+  } = useForm({ values: existingData });
 
   const onSubmit = async (data) => {
     try {
